@@ -1,0 +1,88 @@
+{
+ "questions": [
+  {
+   "id": "q1",
+   "type": "single",
+   "prompt": "The pyramid principle:",
+   "options": [
+    "Answer last",
+    "Answer first; support beneath; evidence on demand",
+    "Three points/slide",
+    "Charts first"
+   ],
+   "answer": 1,
+   "explanation": "First sentence = whole message.",
+   "difficulty": "core"
+  },
+  {
+   "id": "q2",
+   "type": "single",
+   "prompt": "The deletion test:",
+   "options": [
+    "Cut 40%",
+    "Delete all but sentence one \u2014 did they get what they need?",
+    "Kill adjectives",
+    "Drop appendix"
+   ],
+   "answer": 1,
+   "explanation": "Buried answers die.",
+   "difficulty": "core"
+  },
+  {
+   "id": "q3",
+   "type": "single",
+   "prompt": "Chart titles should be:",
+   "options": [
+    "Metric names",
+    "Findings-as-claims that argue in sequence",
+    "Short",
+    "Date ranges"
+   ],
+   "answer": 1,
+   "explanation": "Most readers read only titles.",
+   "difficulty": "core"
+  },
+  {
+   "id": "q4",
+   "type": "single",
+   "prompt": "'We'd be surprised outside X\u2013Y' works because:",
+   "options": [
+    "Politeness",
+    "It states the range AS confidence",
+    "Avoids numbers",
+    "Hedges"
+   ],
+   "answer": 1,
+   "explanation": "A range with a spine.",
+   "difficulty": "core"
+  },
+  {
+   "id": "q5",
+   "type": "single",
+   "prompt": "The cardinal audience sin:",
+   "options": [
+    "Too many slides",
+    "One artifact for all three rooms",
+    "Jargon with analysts",
+    "No SCQA"
+   ],
+   "answer": 1,
+   "explanation": "The rendering is the work.",
+   "difficulty": "core"
+  },
+  {
+   "id": "q6",
+   "type": "single",
+   "prompt": "After an AI punch-up, check:",
+   "options": [
+    "Grammar",
+    "Range intact, assumption named, trigger alive",
+    "Word count",
+    "Tone"
+   ],
+   "answer": 1,
+   "explanation": "AI may compress caveats, never remove them.",
+   "difficulty": "core"
+  }
+ ]
+}

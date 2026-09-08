@@ -1,0 +1,52 @@
+{
+ "id": "13-capstone",
+ "number": "13",
+ "part": "capstone",
+ "title": "Capstone",
+ "subtitle": "One dataset, the whole ladder, shipped",
+ "estimatedMinutes": 1200,
+ "status": "published",
+ "prerequisites": [
+  "12b-storytelling"
+ ],
+ "learningOutcomes": [
+  "Take one dataset through the full ladder",
+  "Ship notebook, app, memo and Trust Report",
+  "Self-assess against the 100-point rubric",
+  "Disclose AI use completely"
+ ],
+ "pages": [
+  {
+   "slug": "content",
+   "title": "Capstone",
+   "file": "pages/01-content.mdx"
+  }
+ ],
+ "notebooks": [
+  {
+   "id": "13_capstone_starter",
+   "title": "Capstone Starter Notebook",
+   "file": "notebooks/13_capstone_starter.ipynb",
+   "colabEnabled": true,
+   "solutionFile": null
+  }
+ ],
+ "quiz": {
+  "file": "quiz.json",
+  "passingScore": 70
+ },
+ "exercises": {
+  "file": "exercises.json"
+ },
+ "streamlitApps": [
+  {
+   "id": "capstone_app",
+   "title": "Capstone App Skeleton",
+   "file": "streamlit/capstone_app.py",
+   "runInstructions": "pip install streamlit pandas numpy matplotlib, place data/ alongside, then: streamlit run capstone_app.py",
+   "datasets": [
+    "client_book.csv"
+   ]
+  }
+ ]
+}

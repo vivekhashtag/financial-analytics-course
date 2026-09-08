@@ -1,0 +1,19 @@
+---
+title: Why SQL (Still)
+slug: why-sql
+---
+
+In real finance teams, data doesn't live in CSVs. It lives in **databases**, core banking systems, trade repositories, CRM platforms, ERP ledgers, and SQL is how you ask them questions. It has been "about to be replaced" for thirty years; meanwhile every analyst job posting in India still lists it, usually second after Excel.
+
+**The good news:** you already know the concepts. Module 3 taught you filtering, grouping, joining, ranking, in pandas. SQL is the same ideas in a different syntax, and this module is built as a Rosetta Stone: every query beside its pandas twin.
+
+## The professional division of labour
+
+- **SQL**: get and pre-shape the data *where it lives*, filter, join, aggregate close to the source, move less data
+- **pandas**: explore, iterate, chart, model, once the data is yours
+
+Fluent analysts do both in the same hour. The final exercise makes you prove fluency the honest way: answer five business questions in SQL, then reproduce every number in pandas. **They must match exactly.**
+
+<Callout type="info">
+Why PostgreSQL: it's the most widely deployed open-source database in fintech, its SQL dialect is the de-facto standard, and free hosted tiers (Neon, Supabase) mean you can practice on a real cloud database without installing anything.
+</Callout>

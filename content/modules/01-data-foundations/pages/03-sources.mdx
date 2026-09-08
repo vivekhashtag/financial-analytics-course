@@ -1,0 +1,29 @@
+---
+title: Where Data Comes From (And What It Costs)
+slug: where-data-comes-from
+---
+
+The honest map for a student in India.
+
+<SourceTable />
+
+| Source | What you get | Cost | Used in this course |
+|---|---|---|---|
+| **yfinance** (Python) | NSE/BSE prices via `.NS` / `.BO` tickers, indices `^NSEI` `^BSESN`, fundamentals | Free | Our workhorse from Module 3 |
+| **NSE / BSE websites** | Official prices, indices, announcements, bhavcopy | Free | Reference |
+| **RBI DBIE** | Repo rate, money supply, credit growth, FX reserves | Free | Modules 6, 9 |
+| **MOSPI / data.gov.in** | CPI, IIP, GDP | Free | Module 6 |
+| Annual reports, exchange filings | Statements and narrative | Free | Module 8 |
+| **FRED** (St. Louis Fed) | Global macro, for comparison | Free | Secondary |
+| **Bloomberg / LSEG / FactSet / CapIQ** | Everything, curated, real-time | ~$25k+/seat/year | Concept only — but every employer uses one |
+| Alt-data vendors | Card panels, satellite, sentiment | $$$$ | Awareness only |
+
+## The golden source
+
+Professionals never ask "what's the price?" They ask: **"what's the price, according to which source, as of when?"**
+
+The same stock shows different closing prices across free sources, different exchanges, different adjustment conventions, different time zones. This is why reconciliation exists as a job.
+
+<PriceDiscrepancy exerciseId="m1-e-price" />
+
+Three sources report yesterday's close for the same stock as ₹102.50, ₹102.50 and ₹101.87. The third isn't wrong, it's **unadjusted for a dividend**. Adjusted vs unadjusted prices is a trap that returns with real consequences in Module 3, and it's sitting inside one of your own datasets right now.

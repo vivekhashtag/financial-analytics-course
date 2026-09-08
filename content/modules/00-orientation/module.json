@@ -1,0 +1,135 @@
+{
+ "id": "00-orientation",
+ "number": "0",
+ "part": "A",
+ "title": "Orientation: How This Course Works",
+ "subtitle": "And how to learn with AI",
+ "estimatedMinutes": 120,
+ "status": "published",
+ "prerequisites": [],
+ "learningOutcomes": [
+  "Set up a working Python environment using Google Colab in under 10 minutes",
+  "Navigate the course map and know what each Part delivers",
+  "Apply the AI Learning Charter \u2014 knowing when AI helps and when it misleads",
+  "Run your first notebook and produce your first financial chart"
+ ],
+ "pages": [
+  {
+   "slug": "full-content",
+   "title": "Full Module Text",
+   "file": "pages/00-full-content.mdx"
+  },
+  {
+   "slug": "why-this-course",
+   "title": "Why This Course Exists",
+   "file": "pages/01-why-this-course.mdx"
+  },
+  {
+   "slug": "course-map",
+   "title": "The Course Map",
+   "file": "pages/02-course-map.mdx"
+  },
+  {
+   "slug": "setup",
+   "title": "Setting Up (Colab First)",
+   "file": "pages/03-setup.mdx"
+  },
+  {
+   "slug": "ai-charter",
+   "title": "The AI Learning Charter",
+   "file": "pages/04-ai-charter.mdx"
+  },
+  {
+   "slug": "datasets",
+   "title": "Meet the Cast \u2014 Your Datasets",
+   "file": "pages/05-datasets.mdx"
+  }
+ ],
+ "notebooks": [
+  {
+   "id": "00_setup_check",
+   "title": "Setup Check \u2014 Your First Notebook",
+   "file": "notebooks/00_setup_check.ipynb",
+   "colabEnabled": true,
+   "datasets": [],
+   "packages": [
+    "pandas",
+    "numpy",
+    "matplotlib"
+   ],
+   "solutionFile": null
+  }
+ ],
+ "streamlitApps": [],
+ "quiz": {
+  "file": "quiz.json",
+  "passingScore": 6
+ },
+ "exercises": null,
+ "biasCheck": {
+  "enabled": false,
+  "prompt": null
+ },
+ "aiSidebar": {
+  "green": [
+   {
+    "situation": "Explain code",
+    "prompt": "Explain this Python code line by line as if I'm a complete beginner: [paste code]"
+   },
+   {
+    "situation": "Decode an error",
+    "prompt": "I got this error: [paste full error]. Here's my code: [paste]. Explain what went wrong in simple terms, then show the fix."
+   },
+   {
+    "situation": "Analogy on demand",
+    "prompt": "Explain [concept] using a real-life analogy, no maths."
+   },
+   {
+    "situation": "Quiz me",
+    "prompt": "Ask me 5 questions about [topic], one at a time. Tell me if my answer is right before the next one."
+   }
+  ],
+  "red": [
+   {
+    "danger": "Financial figures & statistics",
+    "why": "LLMs invent numbers confidently \u2014 'the market returned 11.3% in 2019'",
+    "rule": "Every number needs a source you can click"
+   },
+   {
+    "danger": "Citations & references",
+    "why": "AI fabricates plausible-looking papers and URLs",
+    "rule": "If you can't open it, it doesn't exist"
+   },
+   {
+    "danger": "'Just give me the answer'",
+    "why": "You'll pass the exercise and fail the capstone",
+    "rule": "Attempt first, AI second"
+   },
+   {
+    "danger": "Code you don't understand",
+    "why": "Code that works for the wrong reason fails silently later",
+    "rule": "Only run AI code you can explain line by line"
+   },
+   {
+    "danger": "Financial advice",
+    "why": "It doesn't know your situation, and this course is simulation",
+    "rule": "Never"
+   }
+  ]
+ },
+ "streamConnector": null,
+ "badge": {
+  "id": "environment-ready",
+  "label": "Environment Ready",
+  "icon": "rocket"
+ },
+ "caseStudy": null,
+ "widgets": [
+  "StatCounter",
+  "CourseMetroMap",
+  "AICharterCards",
+  "NotebookCard",
+  "Quiz",
+  "DatasetPreview"
+ ]
+}

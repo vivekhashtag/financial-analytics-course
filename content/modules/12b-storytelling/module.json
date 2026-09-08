@@ -1,0 +1,34 @@
+{
+ "id": "12b-storytelling",
+ "number": "12.5",
+ "part": "D",
+ "title": "Data Storytelling",
+ "subtitle": "From analysis to influence",
+ "estimatedMinutes": 180,
+ "status": "published",
+ "prerequisites": [
+  "12-lab-portfolio"
+ ],
+ "learningOutcomes": [
+  "Lead with the answer; survive the deletion test",
+  "Write titles that argue in sequence",
+  "State ranges with a spine; name the assumption",
+  "Render one analysis for three rooms",
+  "Guard AI edits with the honesty checklist"
+ ],
+ "pages": [
+  {
+   "slug": "content",
+   "title": "Data Storytelling",
+   "file": "pages/01-content.mdx"
+  }
+ ],
+ "notebooks": [],
+ "quiz": {
+  "file": "quiz.json",
+  "passingScore": 70
+ },
+ "exercises": {
+  "file": "exercises.json"
+ }
+}

@@ -1,0 +1,40 @@
+{
+ "exercises": [
+  {
+   "id": "ex1",
+   "title": "Additive world, multiplicative tool",
+   "notebookRef": "9A Ex1",
+   "requiresAttempt": true
+  },
+  {
+   "id": "ex2",
+   "title": "The December defence",
+   "notebookRef": "9A Ex2",
+   "requiresAttempt": true
+  },
+  {
+   "id": "ex3",
+   "title": "Break the tool: level shift",
+   "notebookRef": "9A Ex3",
+   "requiresAttempt": true
+  },
+  {
+   "id": "ex4",
+   "title": "Sales ACF: why 12 and 24",
+   "notebookRef": "9B Ex1",
+   "requiresAttempt": true
+  },
+  {
+   "id": "ex5",
+   "title": "Calibrate your eye on noise",
+   "notebookRef": "9B Ex3",
+   "requiresAttempt": true
+  },
+  {
+   "id": "ex6",
+   "title": "Forecast the un-forecastable",
+   "notebookRef": "9C Ex3",
+   "requiresAttempt": true
+  }
+ ]
+}

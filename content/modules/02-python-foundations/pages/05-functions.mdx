@@ -1,0 +1,51 @@
+---
+title: "Functions: Writing Reusable Tools"
+slug: functions
+---
+
+A function is named, reusable logic. Write it once, trust it forever.
+
+<CodePeek code={`def simple_return(buy_price, sell_price):
+    return (sell_price - buy_price) / buy_price * 100
+
+
+simple_return(3450.75, 3502.15)   // 1.49`} />
+
+- `def` starts the definition
+- a string on the first line inside is a **docstring**, what the function does
+- `return` hands a value back to whoever called it
+
+## Why this matters more in finance than elsewhere
+
+If your return calculation lives in **one** function, you fix a bug in one place. If it's copy-pasted across forty notebook cells, you have forty bugs and no way to know which ones you've fixed.
+
+That is the entire argument for functions, and it's also an audit argument: Module 1's **lineage** pillar, expressed in code.
+
+## Default arguments
+
+<CodePeek code={`def cagr(start_value, end_value, years=1):
+    return ((end_value / start_value) ** (1 / years) - 1) * 100
+
+cagr(100, 112)             // 12.0  - uses the default
+cagr(100, 180, years=5)    // 12.47 - override it`} />
+
+## The tracer bullet — non-negotiable
+
+Before trusting a function on real data, test it on an input whose answer you can verify in your head.
+
+<CodePeek code={`portfolio_value({"X": 10}, {"X": 100})   // expect exactly 1000`} />
+
+<Callout type="danger">
+This habit, not syntax fluency, is what separates an analyst whose numbers get trusted from one whose numbers get re-checked by someone else.
+</Callout>
+
+## List comprehensions
+
+A compact loop that builds a list. Same result, one line.
+
+<CodePeek code={`rounded = [round(p) for p in closes]
+above = [p for p in closes if p > 3460]`} />
+
+You'll see these everywhere in real Python, so you need to *read* them fluently even before you write them by choice.
+
+→ **Now finish notebook 2B, then do the 2C mini-project.**

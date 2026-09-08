@@ -1,0 +1,252 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    /* Set per Part by ModuleShell / PartTheme so any child can accent itself. */
+    --accent: theme('colors.primary.DEFAULT');
+    --accent-soft: theme('colors.primary.DEFAULT');
+  }
+
+  html {
+    scroll-behavior: smooth;
+    -webkit-text-size-adjust: 100%;
+  }
+
+  body {
+    @apply bg-bg text-ink font-sans antialiased;
+  }
+
+  ::selection {
+    background: color-mix(in srgb, var(--accent) 22%, white);
+  }
+
+  :focus-visible {
+    @apply outline-none ring-2 ring-offset-2;
+    --tw-ring-color: var(--accent);
+  }
+
+  h1,
+  h2,
+  h3,
+  h4 {
+    @apply font-semibold tracking-[-0.01em] text-ink;
+    text-wrap: balance;
+  }
+
+  code,
+  pre {
+    @apply font-mono;
+  }
+}
+
+@layer components {
+  /* ---------------------------------------------------------------- prose */
+  /* Markdown bodies come from MDX, so the styling lives here rather than in
+     per-element component overrides. Tuned for long-form study reading. */
+
+  /* One step up from UI text (see font.prose in schema/tokens.json). Applies to
+     content prose only — buttons, sidebar, badges and cards stay on text-base.
+     Nested sizes below are in `em`, so they scale with this one automatically. */
+  .prose-course {
+    @apply text-prose text-ink;
+  }
+
+  .prose-course > * + * {
+    @apply mt-4;
+  }
+
+  .prose-course h1 {
+    @apply text-3xl mt-12 mb-4;
+  }
+
+  .prose-course h2 {
+    @apply text-2xl mt-12 mb-3 pb-2 border-b border-border;
+  }
+
+  .prose-course h3 {
+    @apply text-xl mt-8 mb-2;
+  }
+
+  .prose-course h4 {
+    @apply text-lg mt-6 mb-2;
+  }
+
+  .prose-course p {
+    @apply text-ink;
+  }
+
+  .prose-course a {
+    @apply font-medium underline decoration-2 underline-offset-2 transition-colors duration-fast;
+    color: var(--accent);
+    text-decoration-color: color-mix(in srgb, var(--accent) 35%, white);
+  }
+
+  .prose-course a:hover {
+    text-decoration-color: var(--accent);
+  }
+
+  .prose-course strong {
+    @apply font-semibold text-ink;
+  }
+
+  .prose-course ul {
+    @apply list-none pl-0 space-y-2;
+  }
+
+  .prose-course ul > li {
+    @apply relative pl-6;
+  }
+
+  .prose-course ul > li::before {
+    content: '';
+    @apply absolute left-1 top-[0.6em] h-[6px] w-[6px] rounded-full;
+    background: var(--accent);
+  }
+
+  .prose-course ol {
+    @apply list-decimal pl-6 space-y-2;
+  }
+
+  .prose-course ol > li::marker {
+    @apply font-semibold;
+    color: var(--accent);
+  }
+
+  .prose-course li > ul,
+  .prose-course li > ol {
+    @apply mt-2;
+  }
+
+  .prose-course blockquote {
+    @apply my-6 rounded-r-md border-l-4 bg-surface py-3 pl-5 pr-4 text-ink;
+    border-color: var(--accent);
+  }
+
+  .prose-course blockquote p {
+    @apply my-0;
+  }
+
+  .prose-course blockquote > * + * {
+    @apply mt-2;
+  }
+
+  .prose-course hr {
+    @apply my-12 border-0 border-t border-border;
+  }
+
+  .prose-course :not(pre) > code {
+    @apply rounded-sm bg-surface-alt px-1.5 py-0.5 text-[0.85em] text-ink;
+  }
+
+  .prose-course pre {
+    @apply my-6 overflow-x-auto rounded-md border border-border bg-[#FBFCFE] p-4 leading-relaxed;
+    font-size: theme('fontSize.prose-code[0]');
+  }
+
+  .prose-course pre code {
+    @apply bg-transparent p-0 text-[1em];
+  }
+
+  /* Tables are load-bearing in this content — many pages are mostly table.
+     Kept a shade below body size so wide tables still fit. */
+  .prose-course table {
+    @apply my-6 w-full border-collapse overflow-hidden rounded-md border border-border text-[0.9em];
+    display: table;
+  }
+
+  .prose-course thead {
+    @apply bg-surface;
+  }
+
+  .prose-course th {
+    @apply border-b border-border px-3 py-2 text-left align-bottom font-semibold text-ink;
+  }
+
+  .prose-course td {
+    @apply border-b border-border px-3 py-2 align-top text-ink;
+  }
+
+  .prose-course tbody tr:last-child td {
+    @apply border-b-0;
+  }
+
+  .prose-course tbody tr:nth-child(even) {
+    @apply bg-surface/60;
+  }
+
+  .prose-course img {
+    @apply my-6 rounded-md;
+  }
+
+  /* Widgets set their own spacing; keep the prose rhythm from doubling up. */
+  .prose-course .widget {
+    @apply my-8;
+  }
+
+  /* ----------------------------------------------------------- primitives */
+
+  .card {
+    @apply rounded-lg border border-border bg-bg shadow-card;
+  }
+
+  .btn {
+    @apply inline-flex items-center justify-center gap-2 rounded-md px-4 py-2 text-sm font-semibold
+           transition-all duration-fast ease-token disabled:cursor-not-allowed disabled:opacity-50;
+  }
+
+  .btn-primary {
+    @apply btn text-white shadow-sm hover:brightness-110 active:brightness-95;
+    background: var(--accent);
+  }
+
+  .btn-secondary {
+    @apply btn border border-border bg-bg text-ink hover:bg-surface;
+  }
+
+  .btn-ghost {
+    @apply btn text-muted hover:bg-surface hover:text-ink;
+  }
+
+  .chip {
+    @apply inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-xs font-semibold;
+  }
+
+  .accent-text {
+    color: var(--accent);
+  }
+
+  .accent-bg-soft {
+    background: color-mix(in srgb, var(--accent) 10%, white);
+  }
+
+  .accent-border {
+    border-color: color-mix(in srgb, var(--accent) 35%, white);
+  }
+}
+
+@layer utilities {
+  .no-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+
+  .no-scrollbar {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}

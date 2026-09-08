@@ -1,0 +1,88 @@
+{
+ "questions": [
+  {
+   "id": "q1",
+   "type": "single",
+   "prompt": "A complete forecast is:",
+   "options": [
+    "A point",
+    "Estimate + range + assumptions",
+    "Model + R\u00b2",
+    "Bounds only"
+   ],
+   "answer": 1,
+   "explanation": "A naked number is a guess wearing a suit.",
+   "difficulty": "core"
+  },
+  {
+   "id": "q2",
+   "type": "single",
+   "prompt": "The only legal time-series split:",
+   "options": [
+    "Random 80/20",
+    "A date \u2014 train past, test future",
+    "Stratified",
+    "LOO"
+   ],
+   "answer": 1,
+   "explanation": "Shuffling is look-ahead in a methodology costume.",
+   "difficulty": "core"
+  },
+  {
+   "id": "q3",
+   "type": "single",
+   "prompt": "Nothing is proven until it:",
+   "options": [
+    "Hits R\u00b2>0.9",
+    "Beats naive out-of-sample",
+    "Uses 5 features",
+    "Passes a t-test"
+   ],
+   "answer": 1,
+   "explanation": "Naive is the floor.",
+   "difficulty": "core"
+  },
+  {
+   "id": "q4",
+   "type": "single",
+   "prompt": "Naive is hard to beat on prices because:",
+   "options": [
+    "Noise",
+    "Predictability gets traded away \u2014 prices eat their own forecasts",
+    "Law",
+    "High vol"
+   ],
+   "answer": 1,
+   "explanation": "Reliable patterns move today's price until they vanish.",
+   "difficulty": "core"
+  },
+  {
+   "id": "q5",
+   "type": "single",
+   "prompt": "Tuning on test scores makes the report:",
+   "options": [
+    "Robust",
+    "Contaminated \u2014 the exam chose the student",
+    "Unbiased",
+    "Conservative"
+   ],
+   "answer": 1,
+   "explanation": "Choose on train/validation; touch test once.",
+   "difficulty": "core"
+  },
+  {
+   "id": "q6",
+   "type": "single",
+   "prompt": "Decent R\u00b2 across a regime break means:",
+   "options": [
+    "R\u00b2 is useless",
+    "One model across an earthquake describes neither era",
+    "Need more data",
+    "Use polynomials"
+   ],
+   "answer": 1,
+   "explanation": "Which past continues is a judgment \u2014 surface it.",
+   "difficulty": "core"
+  }
+ ]
+}

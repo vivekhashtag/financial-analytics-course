@@ -1,0 +1,129 @@
+# Module 9 · Lab 1: Time Series: Reading the Language of Sequences
+
+*Reading time: about 70 minutes, interleaved with three notebooks: **9A** (decomposition), **9B** (memory & stationarity), **9C** (forecasting a seasonal series). This opens Part D, the four labs, and with it a change of law: **the Bias Check ritual now sits at the top of every lab notebook**, filled in before anything runs. Thirty seconds, four questions, no exceptions. By Module 12 it will be reflex; that reflex is Part D's real deliverable.*
+
+---
+
+## Lesson 9.1 — Welcome to the Labs
+
+Parts A–C built tools, methods, and a map. Part D is **craft**, four flagship problems done properly, at the depth an internship expects. The rules change accordingly:
+
+- Every lab notebook opens with the **Bias Check**: look-ahead (was everything knowable at decision time?), survivorship (who's missing?), point-in-time (original prints or restated?), regime (any earthquakes in the window?). You *write answers* before running cells.
+- Every claim gets an **honest floor** to beat and an **out-of-sample** judgment (Module 6's harness, now law).
+- Every result ships as a **range with assumptions**, never a naked number.
+
+Lab 1 is time series, kept deliberately simple, as promised in the syllabus, because the deep lesson here isn't a fancier model. It's a question:
+
+> **Which series can be forecast at all, and how would you know?**
+
+The lab answers it with a designed contrast: a *seasonal business series* (where structure survives and models genuinely pay) against *market prices* (where Module 6 taught you structure gets eaten). Same tools on both; opposite verdicts; and the verdict-reading skill is the lab.
+
+---
+
+## Lesson 9.2 — Decomposition: Every Series Is a Sentence (9A)
+
+Every time series is built from parts:
+
+> **observed = trend + seasonality + noise** (± the occasional structural break)
+
+**Decomposition** separates them, and 9A does it with an unusually honest design: you *build* the series first, from known parts, then test whether decomposition recovers them. When ground truth is known, you learn what the tool actually does, and where it smears.
+
+The series is one every Indian retailer would recognise: **MoneyMart's monthly sales with the festive spike**: October running ~22% above trend (Navratri→Diwali), December sagging ~17% below. Three constructed components: a steady trend, a **multiplicative** seasonal pattern, and ordinary noise. (Multiplicative vs additive is a real modelling choice with an eyeball test: if seasonal swings *grow with the level*, multiply; if they stay constant-sized, add. Choosing wrong doesn't crash, it quietly mis-sizes every seasonal forecast, and Exercise 1 makes you feel exactly how.)
+
+The recovery, step by step:
+
+**Trend via the centred 12-month moving average**, a window containing exactly one full seasonal cycle steamrolls the season flat. It tracks the true trend beautifully, with one honest defect the notebook refuses to hide: **the edges are blank.** A centred window needs six months on each side, so the most recent trend, the part you most want, is precisely what this estimator can't see.
+
+**Seasonality via the seasonal index**, detrend (divide, in a multiplicative world), average by calendar month, normalise. The recovered indices match the constructed truth to within a few thousandths, decomposition *works*, and the index becomes a **translator**: October's 1.22 means "an October ₹800 crore is a trend-level ₹656 crore wearing festive clothes." This is how professionals answer the question that wrecks naive dashboards every winter: *"sales fell 30% from November, panic?"* Deseasonalise first, then judge. (Exercise 2 makes you run that exact defence.)
+
+**The residual as the verdict**, what's left after removing trend and season must be *boring*: structureless wobble. If it still shows waves, the decomposition missed something and modelling should not proceed. Module 6's residual-as-lie-detector, promoted to time series.
+
+Then the humbling finale: **decompose NIFTY.** Its "seasonal index" spans a whisper, 0.98 to 1.02 against sales' 0.83–1.22 roar, indistinguishable from noise. And you know why: *any loud calendar pattern in prices would be traded away by whoever saw it first.* Decomposition is a superb tool **for series where structure is allowed to survive**, sales, deposits, loan demand, power consumption. Pointed at asset prices, it mostly decomposes noise into prettier noise.
+
+> **📓 Do notebook 9A now.** Exercise 3 is the sleeper: inject a level shift (a new store format, +₹120 crore from month 40) and watch where the break's damage *shows up*, the moving average ramps for a full year instead of stepping, and a residual wave betrays it. Moral: eyeball for breaks *before* decomposing. The tool assumes there are none.
+
+---
+
+## Lesson 9.3 — Memory and Stationarity: Can This Series Be Modelled? (9B)
+
+Two properties decide whether a series can be modelled at all, and 9B measures both by hand, no black boxes.
+
+### Memory: the lag scatter and the ACF
+
+Plot each day against the day before. **Prices** form a razor line, near-perfect memory of level. **Returns** form a shapeless cloud, almost no memory of direction. One picture, the deepest fact in market statistics, and Module 6's "prices eat their own forecasts" made visible as geometry.
+
+Then measure it: **autocorrelation** at lag k is just the series' correlation with itself shifted k steps, one pandas line per lag. And the crucial honesty device: the **noise band** at ±2/√N. For pure noise, ~95% of autocorrelation bars fall inside it, so with 24 lags, chance alone pokes about one bar out, and a single escapee proves *nothing*. Prices: every bar towers over the band for months of lags. Returns: bars live inside it.
+
+Then the twist that keeps practitioners employed: the *direction* of returns is memoryless, but their **size is not**. The ACF of |returns| is positive and significant for many lags — big days cluster with big days, calm with calm. **Volatility has memory even when direction doesn't.** This is why Module 3's rolling volatility chart was informative, and it is the entire foundation of the volatility forecasting that sizes positions on real desks every morning.
+
+### Stationarity: does it hold still while you measure it?
+
+Every statistic, a mean, a correlation, a regression, silently assumes the thing being measured *stays put during measurement*. The four-panel eyeball test (rolling mean and rolling std, for prices and returns) delivers three verdicts: prices' mean **wanders relentlessly** (non-stationary in level); returns' mean hugs zero (stationary in direction); and returns' rolling std **steps up mid-series**, the dataset registry's planted regime change, caught red-handed by four lines of code. Returns are stationary in direction, *not in risk*.
+
+And the fix for a wandering level has been in your hands all course: **differencing**. `pct_change()` *is* the differencing that turns unusable prices into workable returns, which is the real reason finance computes returns at all. Not convention: statistical necessity. (Formal tests, ADF, KPSS, automate this judgment in one statsmodels line; the lab teaches the eyeball first so the test's verdict means something.)
+
+### The MA crossover — a description, not yet a strategy
+
+9B closes by building the 50/200-day crossover and shading the "uptrend regime" it defines, then counting the regime flips and refusing the leap: each flip is a potential trade, each trade a potential cost, and whether the label is *tradeable* after costs and whipsaw is **Module 11's entire agenda**. The restraint is deliberate pedagogy: you'll make the leap there, properly, with the harness on.
+
+> **📓 Do notebook 9B now.** Exercise 3 is the vaccine: generate pure noise five times and count how many ACF bars escape the band by chance alone. Calibrating your eye for what "nothing" looks like is the single best protection against seeing patterns in noise, a protection Module 11 will lean on hard.
+
+---
+
+## Lesson 9.4 — Forecasting the Seasonal Series: The Harness, Deployed (9C)
+
+The finale reassembles everything: Module 6's evaluation harness, 9A's structure, 9B's stationarity, pointed at MoneyMart's monthly sales, five years of training data, one year held out.
+
+**The floor, upgraded.** Plain naive ("next month = this month") is a *bad* floor for seasonal data, systematically wrong every October and December. The honest floor is **seasonal naive: next month = the same month last year.** It costs nothing and already knows the festive rhythm; in the bake-off it crushes plain naive on calendar knowledge alone. Everything smarter must now beat *it*, floors, like models, must fit the series.
+
+**Holt-Winters**: Module 6's SES grown up: three smoothers running together (level, trend, twelve seasonal factors), each updating as data arrives. You built SES by hand in 6B, so here you've earned the library (`statsmodels`), and the satisfying check: the forecast's October towers over its December, the model *learned 9A's season on its own*.
+
+**A gentle ARIMA**, exactly as the syllabus promised, fit-and-forecast, zero theory-terror. The honest one-paragraph version: **ARIMA(p,d,q)** differences the series *d* times until stationary (9B's fix, automated), lets the forecast lean on its own recent values (*p*, 9B's memory, harnessed) and on its recent errors (*q*, self-correction); **SARIMA** adds the same three dials at the seasonal lag. The full theory is a course; the *use* is four lines; and its report card, like everyone's, is the leaderboard.
+
+**The leaderboard** delivers the lab's thesis: on this series, the smart models **beat the seasonal-naive floor**, because sales have learnable structure that nobody arbitrages away. The contrast with Module 6's market bake-off (where naive reigned) is the point of the whole lab, and Exercise 3 nails it shut by pointing the identical SARIMA pipeline at NIFTY and watching it fail to beat "tomorrow = today":
+
+> **Forecastability is a property of the series, not of the model.**
+
+**The cone of honesty.** SARIMA's prediction intervals *widen with horizon*, roughly threefold from one month out to twelve, because errors compound. The chart is the course app's forecast-slider widget in static form, and it carries the module's closing doctrine: near forecasts are claims; far forecasts are scenarios; **any 12-month forecast quoted with 1-month confidence is lying.** Next budget season, the fight over "the number for March" should be a fight over a cone.
+
+> **📓 Do notebook 9C now.** Exercise 2 hides the lab's subtlest insight: after a structural break, Holt-Winters recovers within months (its alpha is literally a *forgetting rate*) while seasonal naive stays wrong for a full year (it keeps quoting the pre-break same-month). Adaptivity is smoothing's quiet superpower.
+
+---
+
+## Lesson 9.5 — The AI Sidebar
+
+**Green, the structure interviewer.** Before modelling any new series, have AI interrogate you:
+
+> *"I'm about to forecast [monthly deposit balances for a bank]. Ask me ten questions about this series' structure, seasonality, breaks, memory, regime, that I should answer with plots before choosing any model."*
+
+The questions will map almost one-to-one onto this lab's notebooks, which is the sign you've learned the right lab.
+
+**Red, the auto-ARIMA seduction.** Libraries (and AI) will happily auto-select ARIMA orders that minimise in-sample fit, and in-sample fit is exactly the thing overfitting maximises. An auto-selected SARIMA(3,1,4)×(2,1,2,12) that beats your simple model in-sample and loses to seasonal naive in walk-forward is not a model; it's memorisation with a licence plate. The defence never changes: **the floor, the honest split, the walk-forward.** No model order is exempt from the harness.
+
+---
+
+## Lesson 9.6 — The Stream Connector
+
+- **Corporate finance:** monthly revenue and cash-flow forecasting *is* 9C, seasonal naive as the budget's floor, Holt-Winters as the workhorse, the cone as the honest budget range.
+- **Asset management:** AUM and flow forecasting (SIP inflows are gloriously seasonal around bonus and festival months) runs this exact pipeline; NAV forecasting, per Exercise 3, honestly doesn't.
+- **Banking:** the RBI-facing uses are everywhere, deposit-balance forecasting for ALM, delinquency vintages as seasonal series, ATM cash demand (festival spikes are an operational planning problem solved by literally 9A's seasonal index).
+- **Markets:** direction is memoryless but **volatility has memory** — 9B's |returns| ACF is the empirical licence for every volatility forecast that sizes positions, and the honest boundary of what desks even attempt to predict.
+
+---
+
+## Module 9 Checklist
+
+- [ ] The Bias Check ritual is now automatic at the top of every lab notebook
+- [ ] You can decompose a series, defend multiplicative-vs-additive with the eyeball test, and audit the residual for boringness
+- [ ] You know the centred MA's edge-blindness and check for structural breaks *before* decomposing
+- [ ] You can deseasonalise before judging, and run the December defence in a meeting
+- [ ] You can build an ACF by hand, respect the ±2/√N band, and recite: direction is memoryless, volatility remembers
+- [ ] You can test stationarity by eye and explain why returns exist (differencing as necessity)
+- [ ] You pick floors that fit the series (seasonal naive for seasonal data) and judge everything by walk-forward
+- [ ] You can run Holt-Winters and a gentle SARIMA, and present the widening cone, never the naked line
+- [ ] You can state the lab's thesis cold: *forecastability is a property of the series, not of the model*
+- [ ] Notebooks 9A–9C complete · exercises attempted before solutions · quiz passed
+
+**Badge earned: Time Bender ⏳**
+
+Next: **Module 10, Lab 2: Monte Carlo Simulation.** You've forecast with cones; now you'll build the cones themselves, ten thousand simulated futures at a time, retirement corpora, project NPVs, and the fat tails of Module 3 finally getting the treatment they deserve.

@@ -1,0 +1,32 @@
+---
+title: The First-Look Ritual
+slug: first-look
+---
+
+Four commands, always in this order, on every new dataset:
+
+<CodePeek code={`df.head()       # what does it look like?
+df.shape        # how big is it?
+df.info()       # types + non-null counts  <- missing data revealed
+df.describe()   # summary stats            <- impossible values revealed`} />
+
+In notebook 3A this ritual caught two of the registry's planted defects **before any analysis**: `info()` exposed the missing 2021 volume, and `describe()` exposed the fat-finger high (a max 10× the close).
+
+<Callout type="info">
+This is Module 1's "look before computing" page, now with teeth. The ritual takes 20 seconds and catches the defects that would otherwise surface as wrong answers three hours later.
+</Callout>
+
+## The moves that follow
+
+| Task | Code |
+|---|---|
+| Filter rows | `df[df["close"] > 17000]` — combine with `&` `\|`, parentheses required |
+| Rows + columns by label | `df.loc[mask, ["date","close"]]` |
+| New column | `df["range"] = df["high"] - df["low"]` |
+| Day-on-day change | `df["close"].pct_change()` |
+| Calendar features | `df["date"].dt.year`, `.dt.day_name()` |
+| Sort | `df.sort_values("return_pct")` |
+
+<Callout type="warn">
+`pct_change()` returns NaN for the first row, there's no previous day. That NaN is **correct**, not broken. Learn to distinguish expected NaN from problem NaN; it's the same lesson as expected vs problem gaps in Module 1.
+</Callout>

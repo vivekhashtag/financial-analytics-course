@@ -1,0 +1,106 @@
+# Module 11 · Lab 3: Algorithmic Trading: The Machine Inside the Price
+
+*Reading time: about 80 minutes, interleaved with two notebooks: **11A** (the order book) and **11B** (the honest backtest). This lab is deliberately concept-heavy, as the syllabus promised, because the biggest misconceptions in finance cluster here. By the end you'll know what algorithmic trading actually is (mostly not what movies suggest), what "the price" physically is, why speed became an arms race, what SEBI requires, what the Flash Crash taught, and you'll have run the one backtest this whole course has been preparing you to run honestly.*
+
+---
+
+## Lesson 11.1 — What Algo Trading Actually Is
+
+Start by demolishing the movie version. "Algorithmic trading" conjures a genius model predicting prices. The reality of the industry, by volume of code, people and money, is closer to this breakdown:
+
+- **Execution algorithms**, the unglamorous 90%. A mutual fund must buy ₹200 crore of a stock *without moving the price against itself* (you'll measure exactly why in 11A). Slicing that order across hours and venues, VWAP, TWAP, implementation-shortfall algos, is what most "algo trading" jobs are.
+- **Market making**, being paid the spread to stand in the middle, managing inventory risk at speed (you'll *build* one).
+- **Arbitrage**, the same thing priced differently in two places, converging; a data-plumbing race more than a prediction contest.
+- **Directional strategies**, the movie part: rules that bet on where prices go. The smallest slice, and the slice Module 6 taught you to presume guilty until proven innocent, because *prices eat their own forecasts*.
+
+The honest employment insight inside that list: **algorithmic trading is mostly a data-engineering discipline with a finance costume.** Clean feeds, corporate actions handled, latency measured, risk limits enforced: Module 1 and Module 3's skills at nanosecond timescales. The prediction layer, where it exists at all, is thin and fragile. This lab honours that reality: one notebook on the machinery, one on the honest test of a directional rule.
+
+---
+
+## Lesson 11.2 — Inside the Candlestick: The Order Book (11A)
+
+Every price you have ever seen is the output of one machine: the **limit order book**, two sorted queues facing each other. **Bids** (buyers waiting, best/highest first) and **asks** (sellers waiting, best/lowest first), with a gap in the middle: the **spread**. 11A builds a toy book in ~40 lines and extracts four professional truths from it:
+
+**Truth 1, "the price" is a fiction of convenience.** There are always *two* prices, one to buy at, one to sell at, and the quoted "last price" is merely the most recent crossing. The spread is the toll every round trip pays. Small for a liquid large-cap (a few basis points), brutal for an illiquid small-cap, and it never appears on a price chart.
+
+**Truth 2, your own size moves your price.** A **market order** ("fill me NOW") eats through the book's levels: 11A's experiment shows a 200-share order paying the quote while a 4,000-share order pays materially more, not fees, not spread, but **market impact**: the order consumed the cheap levels and had to pay up for the rest. This is why institutions slice orders over hours, and why any backtest assuming fills at the printed close is flattering itself. *(File that: 11B charges for it.)*
+
+**Truth 3, the market maker's trade is spread income versus inventory risk.** 11A simulates a naive maker quoting both sides for 500 ticks: the P&L drips upward (the spread being collected) while the inventory line *wanders*, unhedged exposure that a sharp move can turn into weeks of income lost in minutes. Real market-making engineering is mostly inventory control, and Exercise 3 has you build the first risk limiter every real system contains: stop quoting the side that grows a heavy position. Its shape, *give up a little expected profit to cap the catastrophic state*, is the shape of every risk control in finance.
+
+**Truth 4, the speed race is self-defence, not glamour.** 11A's final experiment: fair value jumps; a fast maker updates quotes in one tick, a slow one in five. During the stale window, fast traders pick off the laggard's old quotes, free money lying on the floor. Being slow doesn't mean earning less; it means **being everyone else's free option**. That asymmetry is the entire economic logic of the HFT arms race, co-located servers, microwave towers, nanosecond timestamps, and why exchanges sell proximity like real estate.
+
+> **📓 Do notebook 11A now.**
+
+### The regulatory floor: SEBI, in four honest bullets
+
+India's market regulator has built one of the more explicit algo-trading frameworks anywhere; the awareness-level version every analyst should hold: **approval & audit**, exchange approval for algo strategies, audit trails, and unique identifiers tagging every algo order; **risk controls at the gate**, mandatory pre-trade checks (price bands, quantity limits, kill switches) *at the broker*, because Knight Capital (Module 1) is what their absence looks like; **the retail-algo perimeter**, after retail "algo platforms" boomed, SEBI moved to bring API-driven retail execution inside the regulated tent; and **surveillance**, the exchange watches order-to-trade ratios and spoofing-shaped patterns at machine speed, because only machines can watch machines. The theme across all four: **the regulator's concerns are exactly this course's concerns**, auditability, risk limits, and the gap between tested and deployed.
+
+### Case: the Flash Crash (May 6, 2010) — what happened → why it matters → one lesson
+
+*What happened:* in roughly twenty minutes, the US market fell about 9% and mostly bounced back. A huge automated sell order fed into a market where liquidity was already thin; market makers' machines, hitting inventory and uncertainty limits, **widened quotes or withdrew entirely**, the resting bids everyone assumed permanent simply vanished, and some stocks traded at absurd "stub quotes" of a cent before snapping back. *Why it matters here:* nothing "predicted" wrong; the *machinery itself*, order books, inventory limits, feedback between algos, produced the event. Liquidity is not a property of the market; it is the *revocable choice of other algorithms*, and it evaporates precisely when needed most (11A's Exercise 1 asked why sell-side impact is worse in a panic; this is why). *One lesson:* **the book you plan to trade against is not the book you will trade against in stress.** Circuit breakers, India's included, exist because of this day.
+
+---
+
+## Lesson 11.3 — The Honest Backtest (11B)
+
+The moment 9B made you wait for: the 50/200 crossover, hold when the fast average is above the slow, step aside otherwise, finally traded, under full discipline. The engine is ~20 readable lines, and one of them is the whole exam:
+
+**`position = signal.shift(1)`**, the position held *today* was decided with *yesterday's* data. A crossover computed from today's close cannot be traded at today's close; remove that shift and the backtest quietly trades on information from the future. One line between honest and fantasy, the two-line SES bug from 6B, in trading costume.
+
+The discipline stack, item by item: **costs charged on every switch** (15 bps ≈ brokerage + STT + slippage for a liquid large-cap, the 11A toll, now billed); the **honest floor is buy-and-hold** (a strategy must beat *doing nothing*, after costs); and the test runs across **the entire 20-stock universe**, never one cherry-picked chart, with the Bias Check acknowledging openly that today's large-cap list is itself a survivor set, so even our honest results are optimistic by construction.
+
+### The landmine, as promised
+
+The first universe leaderboard contains a row so absurd the notebook halts you: TATAMOTORS with a buy-and-hold CAGR implying near-extinction. Pull the thread and there it is, an overnight "−80%" on 2024-09-02 with no news: **the registry's unadjusted 1:5 stock split**, planted back in Phase 1, detonating inside a backtest exactly as Module 1 promised. One share worth ~₹406 became five worth ~₹81; the shareholder lost nothing; the naive return calculation invented a catastrophe, and every leaderboard row touching that stock was garbage. The fix is two lines (back-adjust pre-split prices by the ratio); the lesson is permanent: **professional shops run entire corporate-actions teams because one unhandled event silently corrupts everything downstream.** Finding this landmine yourself, with your own `idxmin()`, is worth more than ten lectures about data quality.
+
+### The verdict — nuance, not a victory lap
+
+With the split fixed, the honest universe result reads like Module 6 said it would: on **returns**, the crossover is roughly a coin toss across 20 stocks, and costs tilt the coin against you. But the drawdown column tells a second story: the rule reliably **sat out the deepest falls** (it is mechanically in cash after long declines). So the deliverable is neither "it works" nor "it's garbage":
+
+> *The crossover is not a return machine; it is a crude risk-reduction rule that pays for its insurance with whipsaw costs and missed rebounds. Whether that trade-off suits you is a risk-preference question, not a forecasting one.*
+
+That sentence, not a P&L screenshot, is what an honest backtest produces, and producing it is the lab.
+
+The exercises sharpen three professional edges: the **parameter graveyard** (grid-search the MA windows, find the "best", then recognise, via 6B's Exercise 1, that the number is contaminated by the search itself, and write the clean protocol); the **cost dial of death** (the edge dies entirely by ~40 bps, which answers *who can run marginal strategies*: those whose costs approach zero, i.e., the makers who *earn* the spread retail pays); and the **regime cut** (the edge, such as it is, lives in trending regimes and bleeds in choppy ones, the Bias Check's fourth line, never decoration: *every strategy result is a regime claim*).
+
+> **📓 Do notebook 11B now.**
+
+---
+
+## Lesson 11.4 — The AI Sidebar
+
+**Green, the adversarial auditor.** After any backtest, make AI the hostile reviewer:
+
+> *"Here is my backtest logic: [paste the function]. You are a skeptical risk manager. List every way this could be overstating performance, ordered by likely severity."*
+
+A good model will find the shift, the costs, survivorship, the parameter search, and occasionally something you missed. Adversarial review is the one place AI's fluency is pure upside: it's generating *doubts*, and doubts are cheap to verify.
+
+**Red, the strategy generator.** Ask AI for "a profitable trading strategy in Python" and you will receive one, confident, plausible, usually with look-ahead baked into an innocent-looking line (an unshifted signal, a same-day fill, a full-sample normalisation). The code runs; the equity curve soars; the greatness is the bug. You now possess the complete checklist to audit it, the shift, the costs, the universe, the regime, the floor, and the standing presumption from Module 6: **an easy win is a broken test until proven otherwise.**
+
+---
+
+## Lesson 11.5 — The Stream Connector
+
+- **Corporate finance:** treasury desks executing large FX or buyback orders face 11A's impact problem directly, execution quality is a measurable, auditable cost centre.
+- **Asset management:** TCA (transaction-cost analysis), *did our own trading move prices against us?*, is a standing buy-side function, and it is 11A's arithmetic run on real fills.
+- **Banking:** the pre-trade risk gates SEBI mandates are the same limit-check architecture banks run on payments and treasury: Module 2's `if` rules standing between software and catastrophe.
+- **Markets:** this lab *is* the stream, junior roles in execution research, market-making analytics and surveillance interview directly on the order book, impact, and the honest-backtest checklist you now carry.
+
+---
+
+## Module 11 Checklist
+
+- [ ] You can explain what algo trading mostly is (execution, making, plumbing) and why the directional slice is thinnest
+- [ ] You can draw an order book, define spread/depth/impact, and explain why "the price" is two prices
+- [ ] You measured market impact by walking a book, and know why big orders get sliced
+- [ ] You built a market maker, watched inventory risk, and added the first risk limiter
+- [ ] You can explain the speed race as self-defence (stale quotes = free options) in two sentences
+- [ ] You know SEBI's four algo pillars and can tell the Flash Crash with its one lesson (liquidity is a revocable choice)
+- [ ] Your backtests are honest by construction: shifted signals, real costs, whole universes, regime cuts, buy-and-hold floors
+- [ ] You caught the split landmine yourself and can explain why corporate actions teams exist
+- [ ] You can deliver the crossover's nuanced verdict, and the contaminated-grid-search confession, from memory
+- [ ] Notebooks 11A–11B complete · exercises attempted before solutions · quiz passed
+
+**Badge earned: Honest Trader ⚖️**
+
+Next: **Module 12: Lab 4: Portfolio Optimisation.** The correlation heatmap from Module 4, the drama-queen optimiser warning from Module 7, and Module 10's simulation engine converge on the course's final technical summit: the efficient frontier, built, visualised in 3D, and stress-tested against its own fragility.

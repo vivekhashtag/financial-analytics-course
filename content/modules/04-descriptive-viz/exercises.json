@@ -1,0 +1,40 @@
+{
+ "exercises": [
+  {
+   "id": "ex1",
+   "title": "Stores trend, message title",
+   "notebookRef": "4A Ex1",
+   "requiresAttempt": true
+  },
+  {
+   "id": "ex2",
+   "title": "AUM box by segment, log scale",
+   "notebookRef": "4A Ex2",
+   "requiresAttempt": true
+  },
+  {
+   "id": "ex3",
+   "title": "Commit the chart crime",
+   "notebookRef": "4A Ex3",
+   "requiresAttempt": true
+  },
+  {
+   "id": "ex4",
+   "title": "COVID-year waterfall \u2192 operating leverage",
+   "notebookRef": "4B Ex1",
+   "requiresAttempt": true
+  },
+  {
+   "id": "ex5",
+   "title": "Crown the best diversifier",
+   "notebookRef": "4B Ex2",
+   "requiresAttempt": true
+  },
+  {
+   "id": "ex6",
+   "title": "Streamlit trio: KPI, log toggle, tabs",
+   "notebookRef": "app",
+   "requiresAttempt": true
+  }
+ ]
+}

@@ -1,0 +1,31 @@
+---
+title: Connecting to the Course Database
+slug: setup-db
+---
+
+The course provides a **hosted, read-only PostgreSQL database** with the same data you know from Module 3, `clients` and `transactions` as tables.
+
+## Option A — course database (default)
+
+Set the connection string once per notebook session:
+
+<CodePeek code={`import os
+os.environ["COURSE_DB_URL"] = "postgresql://<user>:<pass>@<host>/<db>"
+# credentials are on this page, below (read-only account)`} />
+
+Every SQL notebook picks it up automatically.
+
+## Option B — no setup at all
+
+If `COURSE_DB_URL` isn't set, the notebooks **build an identical local practice database from the course CSVs** and every query works unchanged. You can start 3.5-A right now, offline, and switch to the hosted database later.
+
+## Option C — your own PostgreSQL (optional, for the curious)
+
+Install PostgreSQL + pgAdmin locally, then run the course's `sql/01_schema.sql` and `sql/02_seed_core.sql`. This gives you the full experience, creating tables, loading data, browsing with pgAdmin, and is genuinely worth doing once before your first job.
+
+<Callout type="warn">
+The `transactions` table is loaded **dirty on purpose**, same defects as Module 3's horror file, including txn_date stored as text in three formats. Some cleaning belongs in SQL, some in pandas; feeling that boundary is part of this module.
+</Callout>
+
+<NotebookCard id="035a_sql_first_queries" />
+<NotebookCard id="035b_sql_joins_windows" />

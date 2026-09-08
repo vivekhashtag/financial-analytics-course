@@ -1,0 +1,49 @@
+{
+ "id": "06-predictive",
+ "number": "6",
+ "part": "B",
+ "title": "Predictive Analytics (No ML)",
+ "subtitle": "What is likely \u2014 and the harness",
+ "estimatedMinutes": 300,
+ "status": "published",
+ "prerequisites": [
+  "05-diagnostic"
+ ],
+ "learningOutcomes": [
+  "State forecast = estimate + range + assumptions",
+  "Read regressions honestly (residuals, extrapolation, PIT)",
+  "Evaluate with honest splits, floors and walk-forward",
+  "Explain why prices eat their own forecasts",
+  "Carry the harness across the ML border"
+ ],
+ "pages": [
+  {
+   "slug": "content",
+   "title": "Predictive Analytics (No ML)",
+   "file": "pages/01-content.mdx"
+  }
+ ],
+ "notebooks": [
+  {
+   "id": "06a_trend_regression",
+   "title": "6A \u00b7 Trend & Regression",
+   "file": "notebooks/06a_trend_regression.ipynb",
+   "colabEnabled": true,
+   "solutionFile": "notebooks/solutions/06_solutions.ipynb"
+  },
+  {
+   "id": "06b_forecast_bakeoff",
+   "title": "6B \u00b7 The Forecast Bake-Off",
+   "file": "notebooks/06b_forecast_bakeoff.ipynb",
+   "colabEnabled": true,
+   "solutionFile": "notebooks/solutions/06_solutions.ipynb"
+  }
+ ],
+ "quiz": {
+  "file": "quiz.json",
+  "passingScore": 70
+ },
+ "exercises": {
+  "file": "exercises.json"
+ }
+}

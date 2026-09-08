@@ -1,0 +1,56 @@
+{
+ "id": "10-lab-monte-carlo",
+ "number": "10",
+ "part": "D",
+ "title": "Lab 2 \u00b7 Monte Carlo",
+ "subtitle": "Ten thousand futures",
+ "estimatedMinutes": 360,
+ "status": "published",
+ "prerequisites": [
+  "09-lab-time-series"
+ ],
+ "learningOutcomes": [
+  "Build the engine and derive \u221at by counting",
+  "Stress retirement plans; demonstrate sequence risk",
+  "Turn NPVs into distributions with P(loss)",
+  "Compute VaR/ES by bootstrap with real tails",
+  "State the creed: counting beats assumptions"
+ ],
+ "pages": [
+  {
+   "slug": "content",
+   "title": "Lab 2 \u00b7 Monte Carlo",
+   "file": "pages/01-content.mdx"
+  }
+ ],
+ "notebooks": [
+  {
+   "id": "10a_simulation_engine",
+   "title": "10A \u00b7 The Simulation Engine",
+   "file": "notebooks/10a_simulation_engine.ipynb",
+   "colabEnabled": true,
+   "solutionFile": "notebooks/solutions/10_solutions.ipynb"
+  },
+  {
+   "id": "10b_retirement_npv",
+   "title": "10B \u00b7 Retirement & NPV",
+   "file": "notebooks/10b_retirement_npv.ipynb",
+   "colabEnabled": true,
+   "solutionFile": "notebooks/solutions/10_solutions.ipynb"
+  },
+  {
+   "id": "10c_var_fat_tails",
+   "title": "10C \u00b7 VaR & Fat Tails",
+   "file": "notebooks/10c_var_fat_tails.ipynb",
+   "colabEnabled": true,
+   "solutionFile": "notebooks/solutions/10_solutions.ipynb"
+  }
+ ],
+ "quiz": {
+  "file": "quiz.json",
+  "passingScore": 70
+ },
+ "exercises": {
+  "file": "exercises.json"
+ }
+}

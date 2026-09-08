@@ -1,0 +1,114 @@
+{
+  "questions": [
+    {
+      "id": "q1",
+      "type": "single",
+      "prompt": "Roughly what fraction of US equity trading volume is executed by algorithms?",
+      "options": [
+        "~25%",
+        "~50%",
+        "~75%",
+        "~95%"
+      ],
+      "answer": 2,
+      "explanation": "About three-quarters \u2014 up from roughly 25% in 2005.",
+      "difficulty": "easy"
+    },
+    {
+      "id": "q2",
+      "type": "single",
+      "prompt": "In Colab, what must you do first so your edits to a course notebook are saved?",
+      "options": [
+        "Press Ctrl+S",
+        "File \u2192 Save a copy in Drive",
+        "Runtime \u2192 Run all",
+        "Nothing, it autosaves"
+      ],
+      "answer": 1,
+      "explanation": "Course notebooks are read-only templates. 'Save a copy in Drive' makes it yours.",
+      "difficulty": "easy"
+    },
+    {
+      "id": "q3",
+      "type": "truefalse",
+      "prompt": "This course teaches machine learning.",
+      "options": [
+        "True",
+        "False"
+      ],
+      "answer": 1,
+      "explanation": "Deliberately not \u2014 ML is the sequel course. We signpost the border at Module 6.",
+      "difficulty": "easy"
+    },
+    {
+      "id": "q4",
+      "type": "single",
+      "prompt": "Which of these belongs on the AI Red List?",
+      "options": [
+        "Explaining an error message",
+        "Generating a fake practice dataset",
+        "Providing a statistic without a source",
+        "Quizzing you on pandas"
+      ],
+      "answer": 2,
+      "explanation": "LLMs invent numbers confidently. Every figure needs a source you can click.",
+      "difficulty": "medium"
+    },
+    {
+      "id": "q5",
+      "type": "single",
+      "prompt": "What is a 'tracer bullet' in this course's vocabulary?",
+      "options": [
+        "A fast way to write loops",
+        "Testing code on a case whose answer you already know",
+        "A type of chart",
+        "An AI prompt template"
+      ],
+      "answer": 1,
+      "explanation": "Verify on a hand-checkable input before trusting code on real data.",
+      "difficulty": "medium"
+    },
+    {
+      "id": "q6",
+      "type": "single",
+      "prompt": "What is the local install command for Jupyter in this course?",
+      "options": [
+        "conda install anaconda",
+        "pip install notebook",
+        "pip install jupyterlab-full",
+        "brew install python"
+      ],
+      "answer": 1,
+      "explanation": "We deliberately avoid Anaconda \u2014 two pip commands do the job.",
+      "difficulty": "easy"
+    },
+    {
+      "id": "q7",
+      "type": "single",
+      "prompt": "Why do solution notebooks unlock only after you submit an attempt?",
+      "options": [
+        "To reduce server load",
+        "Because attempt-first learning is what makes skills stick",
+        "To prevent cheating on the certificate",
+        "Random design choice"
+      ],
+      "answer": 1,
+      "explanation": "Reading a solution feels like learning; producing one is learning.",
+      "difficulty": "easy"
+    },
+    {
+      "id": "q8",
+      "type": "single",
+      "prompt": "Why does every exercise ask for an AI-usage disclosure?",
+      "options": [
+        "To penalise AI use",
+        "To build the professional habit \u2014 undisclosed AI in a financial model is a compliance incident",
+        "To collect data for Anthropic",
+        "It's optional decoration"
+      ],
+      "answer": 1,
+      "explanation": "Disclosure is normal professional practice in regulated finance.",
+      "difficulty": "medium"
+    }
+  ]
+}

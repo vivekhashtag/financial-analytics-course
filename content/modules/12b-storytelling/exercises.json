@@ -1,0 +1,34 @@
+{
+ "exercises": [
+  {
+   "id": "ex1",
+   "title": "The pyramid flip",
+   "notebookRef": "memo",
+   "requiresAttempt": true
+  },
+  {
+   "id": "ex2",
+   "title": "The title pass",
+   "notebookRef": "exhibits",
+   "requiresAttempt": true
+  },
+  {
+   "id": "ex3",
+   "title": "The three-rooms triathlon",
+   "notebookRef": "rooms",
+   "requiresAttempt": true
+  },
+  {
+   "id": "ex4",
+   "title": "The uncertainty edit",
+   "notebookRef": "edit",
+   "requiresAttempt": true
+  },
+  {
+   "id": "ex5",
+   "title": "The full memo",
+   "notebookRef": "memo",
+   "requiresAttempt": true
+  }
+ ]
+}

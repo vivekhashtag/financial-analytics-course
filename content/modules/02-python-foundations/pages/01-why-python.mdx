@@ -1,0 +1,38 @@
+---
+title: Why Python, and How to Read Code
+slug: why-python
+---
+
+Excel is where finance *presents*. Python is where finance *computes* at scale.
+
+Three things Python gives you that a spreadsheet can't:
+
+1. **Repeatability.** Run the same analysis on 5,000 rows or 5 million with identical code.
+2. **Lineage.** Your logic is written down and versioned, not buried in cell F47.
+3. **Reach.** Every technique in the rest of this course, simulation, optimisation, forecasting, exists as a Python library.
+
+## How to read a line of code
+
+<CodePeek code={`shares_held = 150`} annotations={[
+  { text: "shares_held", note: "the variable name, you choose it" },
+  { text: "=", note: "assignment: put the right side into the left side" },
+  { text: "150", note: "the value" }
+]} />
+
+Read it right-to-left: *take 150, and call it `shares_held`.*
+
+<Callout type="info">
+`=` means **assign**, not "is equal to". To test equality, Python uses `==`. Mixing these up is the single most common beginner error.
+</Callout>
+
+## Indentation is syntax
+
+In most languages, indentation is decoration. In Python, it's structure, it's how Python knows which lines belong inside an `if` or a loop. Four spaces, consistently. Colab does it for you.
+
+## The three notebooks in this module
+
+<NotebookCard id="02a_types_structures" />
+<NotebookCard id="02b_control_flow_functions" />
+<NotebookCard id="02c_position_tracker" />
+
+Read this page, then work through 2A. Come back for the next page when you've finished it.

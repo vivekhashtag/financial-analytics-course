@@ -1,0 +1,70 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Course Module",
+  "type": "object",
+  "required": ["id", "number", "part", "title", "estimatedMinutes", "status", "pages"],
+  "properties": {
+    "id": { "type": "string", "pattern": "^[0-9]{2}[a-c]?-[a-z0-9-]+$" },
+    "number": { "type": "string" },
+    "part": { "enum": ["A", "B", "C", "D", "capstone", "appendix"] },
+    "title": { "type": "string", "minLength": 3 },
+    "subtitle": { "type": ["string", "null"] },
+    "estimatedMinutes": { "type": "integer", "minimum": 5 },
+    "status": { "enum": ["draft", "review", "published"] },
+    "prerequisites": { "type": "array", "items": { "type": "string" } },
+    "learningOutcomes": { "type": "array", "items": { "type": "string" }, "minItems": 1 },
+    "pages": {
+      "type": "array", "minItems": 1,
+      "items": {
+        "type": "object", "required": ["slug", "title", "file"],
+        "properties": { "slug": {"type":"string"}, "title": {"type":"string"}, "file": {"type":"string"} }
+      }
+    },
+    "notebooks": {
+      "type": "array",
+      "items": {
+        "type": "object", "required": ["id", "title", "file"],
+        "properties": {
+          "id": {"type":"string"}, "title": {"type":"string"}, "file": {"type":"string"},
+          "colabEnabled": {"type":"boolean"},
+          "datasets": {"type":"array","items":{"type":"string"}},
+          "packages": {"type":"array","items":{"type":"string"}},
+          "solutionFile": {"type":["string","null"]}
+        }
+      }
+    },
+    "streamlitApps": {
+      "type": "array",
+      "items": {
+        "type": "object", "required": ["id","title","file","runInstructions"],
+        "properties": {
+          "id":{"type":"string"},"title":{"type":"string"},"file":{"type":"string"},
+          "runInstructions":{"type":"string"},
+          "datasets":{"type":"array","items":{"type":"string"}}
+        }
+      }
+    },
+    "quiz": { "type": ["object","null"], "properties": { "file": {"type":"string"}, "passingScore": {"type":"integer"} } },
+    "exercises": { "type": ["object","null"], "properties": { "file": {"type":"string"} } },
+    "biasCheck": {
+      "type": ["object","null"],
+      "properties": { "enabled": {"type":"boolean"}, "prompt": {"type":["string","null"]} }
+    },
+    "aiSidebar": {
+      "type": ["object","null"],
+      "properties": {
+        "green": { "type":"array", "items": { "type":"object", "required":["situation","prompt"],
+          "properties": {"situation":{"type":"string"},"prompt":{"type":"string"}} } },
+        "red": { "type":"array", "items": { "type":"object", "required":["danger","why","rule"],
+          "properties": {"danger":{"type":"string"},"why":{"type":"string"},"rule":{"type":"string"}} } }
+      }
+    },
+    "streamConnector": { "type": ["object","null"] },
+    "badge": {
+      "type": ["object","null"], "required": ["id","label"],
+      "properties": {"id":{"type":"string"},"label":{"type":"string"},"icon":{"type":"string"}}
+    },
+    "caseStudy": { "type": ["object","null"] },
+    "widgets": { "type": "array", "items": { "type": "string" } }
+  }
+}

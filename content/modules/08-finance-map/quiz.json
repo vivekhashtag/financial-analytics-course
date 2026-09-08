@@ -1,0 +1,88 @@
+{
+ "questions": [
+  {
+   "id": "q1",
+   "type": "single",
+   "prompt": "The four streams:",
+   "options": [
+    "Equity/debt/FX/commodities",
+    "Corporate finance, asset mgmt, banking, markets",
+    "Front/middle/back/IT",
+    "Retail/SME/corporate/institutional"
+   ],
+   "answer": 1,
+   "explanation": "Four businesses sharing a vocabulary.",
+   "difficulty": "core"
+  },
+  {
+   "id": "q2",
+   "type": "single",
+   "prompt": "'Same regression, different streams' means:",
+   "options": [
+    "Regression is unreliable",
+    "Context defines the model",
+    "Different maths per stream",
+    "No shared tools"
+   ],
+   "answer": 1,
+   "explanation": "Pricing tool, credit decision, cost-of-debt input \u2014 one scipy call.",
+   "difficulty": "core"
+  },
+  {
+   "id": "q3",
+   "type": "single",
+   "prompt": "Most DCF value sits in:",
+   "options": [
+    "Year 1",
+    "The terminal \u2014 the assumptions you know least",
+    "Tax shield",
+    "Working capital"
+   ],
+   "answer": 1,
+   "explanation": "60\u201375% typically; an argument wearing arithmetic.",
+   "difficulty": "core"
+  },
+  {
+   "id": "q4",
+   "type": "single",
+   "prompt": "The football field's convergence zone is:",
+   "options": [
+    "Highest DCF",
+    "Where independent methods overlap \u2014 earned conviction",
+    "Comps=book",
+    "The banker's wish"
+   ],
+   "answer": 1,
+   "explanation": "Different blind spots; agreement is the signal.",
+   "difficulty": "core"
+  },
+  {
+   "id": "q5",
+   "type": "single",
+   "prompt": "Gordon TV explodes when:",
+   "options": [
+    "Growth negative",
+    "g approaches WACC",
+    "Tax rises",
+    "FCF small"
+   ],
+   "answer": 1,
+   "explanation": "Denominator \u2192 0; close spreads mean cliff-standing DCFs.",
+   "difficulty": "core"
+  },
+  {
+   "id": "q6",
+   "type": "single",
+   "prompt": "IL&FS in one line:",
+   "options": [
+    "Avoid infra",
+    "A rating is data too \u2014 lineage, staleness, incentives",
+    "Use two raters",
+    "AAA = safe"
+   ],
+   "answer": 1,
+   "explanation": "Module 1 applies most to inputs wearing authority.",
+   "difficulty": "core"
+  }
+ ]
+}

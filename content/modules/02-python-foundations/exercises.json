@@ -1,0 +1,149 @@
+{
+  "exercises": [
+    {
+      "id": "m2-e01",
+      "type": "code",
+      "title": "Total trade cost",
+      "points": 2,
+      "brief": "75 shares of INFY at \u20b91,480.50 plus \u20b9118.44 brokerage \u2014 compute total_cost.",
+      "starterCode": "shares = 75\nprice = 1480.50\nbrokerage = 118.44\n\ntotal_cost = ...   # your code here\nprint(total_cost)",
+      "checkCode": "assert abs(total_cost - 111156.94) < 0.01",
+      "hints": [
+        "Multiply first, then add brokerage"
+      ],
+      "solution": "total_cost = shares * price + brokerage",
+      "notebook": "02a_types_structures"
+    },
+    {
+      "id": "m2-e02",
+      "type": "code",
+      "title": "Ticker text handling",
+      "points": 2,
+      "brief": "From t = 'HDFCBANK.NS' print exactly 'HDFCBANK trades on NSE' using the variable.",
+      "starterCode": "t = \"HDFCBANK.NS\"\n# your code here",
+      "checkCode": "assert t.replace('.NS','') == 'HDFCBANK'",
+      "hints": [
+        "Use .replace() to strip the suffix",
+        "f-strings interpolate: f\"{value} text\""
+      ],
+      "solution": "print(f\"{t.replace('.NS', '')} trades on NSE\")",
+      "notebook": "02a_types_structures"
+    },
+    {
+      "id": "m2-e03",
+      "type": "code",
+      "title": "Price range",
+      "points": 2,
+      "brief": "Compute the high-minus-low range of a closes list, rounded to 2dp.",
+      "starterCode": "closes = [3450.75, 3462.10, 3438.90, 3475.25, 3491.00]\nprice_range = ...",
+      "checkCode": "assert abs(price_range - 52.10) < 0.01",
+      "hints": [
+        "max() and min() are built in"
+      ],
+      "solution": "price_range = round(max(closes) - min(closes), 2)",
+      "notebook": "02a_types_structures"
+    },
+    {
+      "id": "m2-e04",
+      "type": "code",
+      "title": "Add a holding and value it",
+      "points": 3,
+      "brief": "Add ITC.NS (500 shares @ \u20b9415.20) to holdings and prices, then print its position value.",
+      "starterCode": "holdings = {\"TCS.NS\": 95, \"HDFCBANK.NS\": 200, \"INFY.NS\": 120}\nprices   = {\"TCS.NS\": 3450.75, \"HDFCBANK.NS\": 1520.40, \"INFY.NS\": 1480.50}\n# your code here",
+      "checkCode": "assert holdings['ITC.NS'] * prices['ITC.NS'] == 207600.0",
+      "hints": [
+        "Assign with dict[key] = value"
+      ],
+      "solution": "holdings['ITC.NS'] = 500\nprices['ITC.NS'] = 415.20\nprint(f\"Rs {holdings['ITC.NS'] * prices['ITC.NS']:,.2f}\")",
+      "notebook": "02a_types_structures"
+    },
+    {
+      "id": "m2-e05",
+      "type": "code",
+      "title": "Client segmentation rule",
+      "points": 3,
+      "brief": "Classify AUM into Mass (<\u20b910L), Affluent (\u20b910L\u20131cr), HNI (>\u20b91cr).",
+      "starterCode": "aum = 4_500_000\n# your code here",
+      "checkCode": "assert segment == 'Affluent'",
+      "hints": [
+        "if / elif / else",
+        "\u20b910 lakh = 1_000_000"
+      ],
+      "solution": "if aum < 1_000_000:\n    segment = 'Mass'\nelif aum <= 10_000_000:\n    segment = 'Affluent'\nelse:\n    segment = 'HNI'",
+      "notebook": "02b_control_flow_functions"
+    },
+    {
+      "id": "m2-e06",
+      "type": "code",
+      "title": "Count up days",
+      "points": 3,
+      "brief": "Count how many days closed higher than the previous day.",
+      "starterCode": "closes = [3450.75, 3462.10, 3438.90, 3475.25, 3491.00, 3468.30, 3502.15]\nup_days = 0\n# your code here",
+      "checkCode": "assert up_days == 4",
+      "hints": [
+        "Start the range at 1",
+        "Compare closes[i] with closes[i-1]"
+      ],
+      "solution": "for i in range(1, len(closes)):\n    if closes[i] > closes[i-1]:\n        up_days += 1",
+      "notebook": "02b_control_flow_functions"
+    },
+    {
+      "id": "m2-e07",
+      "type": "code",
+      "title": "Brokerage with a minimum",
+      "points": 4,
+      "brief": "brokerage_cost(trade_value, rate_pct=0.03, minimum=20) \u2014 percentage of value, but never below the minimum.",
+      "starterCode": "def brokerage_cost(trade_value, rate_pct=0.03, minimum=20):\n    pass",
+      "checkCode": "assert brokerage_cost(500) == 20\nassert abs(brokerage_cost(200_000) - 60.0) < 0.01",
+      "hints": [
+        "max() picks the larger of two values"
+      ],
+      "solution": "def brokerage_cost(trade_value, rate_pct=0.03, minimum=20):\n    return max(trade_value * rate_pct / 100, minimum)",
+      "notebook": "02b_control_flow_functions"
+    },
+    {
+      "id": "m2-e08",
+      "type": "code",
+      "title": "Add a holding (tracker)",
+      "points": 3,
+      "brief": "add_holding(portfolio, ticker, qty, buy_price, current) inserts a nested dict entry.",
+      "starterCode": "def add_holding(portfolio, ticker, qty, buy_price, current):\n    pass",
+      "checkCode": "p = {}\nadd_holding(p, 'SBIN.NS', 300, 610.0, 590.25)\nassert p['SBIN.NS']['qty'] == 300",
+      "hints": [
+        "The value is itself a dict with three keys"
+      ],
+      "solution": "def add_holding(portfolio, ticker, qty, buy_price, current):\n    portfolio[ticker] = {'qty': qty, 'buy_price': buy_price, 'current': current}",
+      "notebook": "02c_position_tracker"
+    },
+    {
+      "id": "m2-e09",
+      "type": "code",
+      "title": "Best and worst performer",
+      "points": 4,
+      "brief": "Return (best_ticker, worst_ticker) by percentage P&L.",
+      "starterCode": "def best_and_worst(portfolio):\n    pass",
+      "checkCode": "p = {'A': {'qty':1,'buy_price':100,'current':120}, 'B': {'qty':1,'buy_price':100,'current':90}}\nassert best_and_worst(p) == ('A','B')",
+      "hints": [
+        "sorted() with key=lambda",
+        "Sort descending, take first and last"
+      ],
+      "solution": "def best_and_worst(portfolio):\n    r = sorted(portfolio.items(), key=lambda kv: pnl_pct(kv[1]), reverse=True)\n    return (r[0][0], r[-1][0])",
+      "notebook": "02c_position_tracker"
+    },
+    {
+      "id": "m2-e10",
+      "type": "code",
+      "title": "Sell a position",
+      "points": 4,
+      "brief": "sell(portfolio, ticker, qty) reduces quantity and deletes the holding at zero.",
+      "starterCode": "def sell(portfolio, ticker, qty):\n    pass",
+      "checkCode": "p = {'A': {'qty':100,'buy_price':10,'current':11}}\nsell(p,'A',40)\nassert p['A']['qty'] == 60\nsell(p,'A',60)\nassert 'A' not in p",
+      "hints": [
+        "Subtract, then check if <= 0",
+        "del portfolio[ticker]"
+      ],
+      "solution": "def sell(portfolio, ticker, qty):\n    if ticker not in portfolio:\n        return\n    portfolio[ticker]['qty'] -= qty\n    if portfolio[ticker]['qty'] <= 0:\n        del portfolio[ticker]",
+      "notebook": "02c_position_tracker"
+    }
+  ]
+}

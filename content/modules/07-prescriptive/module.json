@@ -1,0 +1,49 @@
+{
+ "id": "07-prescriptive",
+ "number": "7",
+ "part": "B",
+ "title": "Prescriptive Analytics",
+ "subtitle": "What should we do",
+ "estimatedMinutes": 300,
+ "status": "published",
+ "prerequisites": [
+  "06-predictive"
+ ],
+ "learningOutcomes": [
+  "Name the anatomy before the solver",
+  "Solve an LP and read binding constraints",
+  "Price the rules with shadow prices",
+  "Use EMV, EVPI and break-even beliefs",
+  "Optimise weighted, stress per-world"
+ ],
+ "pages": [
+  {
+   "slug": "content",
+   "title": "Prescriptive Analytics",
+   "file": "pages/01-content.mdx"
+  }
+ ],
+ "notebooks": [
+  {
+   "id": "07a_first_optimiser",
+   "title": "7A \u00b7 Your First Optimiser",
+   "file": "notebooks/07a_first_optimiser.ipynb",
+   "colabEnabled": true,
+   "solutionFile": "notebooks/solutions/07_solutions.ipynb"
+  },
+  {
+   "id": "07b_decisions_uncertainty",
+   "title": "7B \u00b7 Deciding Under Uncertainty",
+   "file": "notebooks/07b_decisions_uncertainty.ipynb",
+   "colabEnabled": true,
+   "solutionFile": "notebooks/solutions/07_solutions.ipynb"
+  }
+ ],
+ "quiz": {
+  "file": "quiz.json",
+  "passingScore": 70
+ },
+ "exercises": {
+  "file": "exercises.json"
+ }
+}

@@ -1,0 +1,40 @@
+{
+ "exercises": [
+  {
+   "id": "ex1",
+   "title": "The free-lunch counter",
+   "notebookRef": "12A Ex1",
+   "requiresAttempt": true
+  },
+  {
+   "id": "ex2",
+   "title": "Constraint humility",
+   "notebookRef": "12A Ex2",
+   "requiresAttempt": true
+  },
+  {
+   "id": "ex3",
+   "title": "The 3D twin",
+   "notebookRef": "12A Ex3",
+   "requiresAttempt": true
+  },
+  {
+   "id": "ex4",
+   "title": "The turnover tax",
+   "notebookRef": "12B Ex1",
+   "requiresAttempt": true
+  },
+  {
+   "id": "ex5",
+   "title": "Homemade shrinkage",
+   "notebookRef": "12B Ex2",
+   "requiresAttempt": true
+  },
+  {
+   "id": "ex6",
+   "title": "The client letter",
+   "notebookRef": "12B Ex3",
+   "requiresAttempt": true
+  }
+ ]
+}

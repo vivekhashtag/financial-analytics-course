@@ -1,0 +1,173 @@
+{
+  "exercises": [
+    {
+      "id": "m1-e01",
+      "type": "sort",
+      "title": "Sort the data into buckets",
+      "points": 3,
+      "brief": "Classify 15 financial data examples into Quantitative, Qualitative or Alternative.",
+      "items": [
+        {
+          "label": "NIFTY 50 closing levels",
+          "bucket": "Quantitative"
+        },
+        {
+          "label": "MD&A section of an annual report",
+          "bucket": "Qualitative"
+        },
+        {
+          "label": "Satellite images of a retailer's car parks",
+          "bucket": "Alternative"
+        },
+        {
+          "label": "Repo rate history from RBI",
+          "bucket": "Quantitative"
+        },
+        {
+          "label": "Earnings-call Q&A transcript",
+          "bucket": "Qualitative"
+        },
+        {
+          "label": "UPI transaction volumes per merchant",
+          "bucket": "Alternative"
+        },
+        {
+          "label": "Balance sheet line items",
+          "bucket": "Quantitative"
+        },
+        {
+          "label": "Credit rating agency rationale document",
+          "bucket": "Qualitative"
+        },
+        {
+          "label": "App download counts for a fintech",
+          "bucket": "Alternative"
+        },
+        {
+          "label": "Order book depth snapshots",
+          "bucket": "Quantitative"
+        },
+        {
+          "label": "Company risk-factor disclosures",
+          "bucket": "Qualitative"
+        },
+        {
+          "label": "Job postings scraped from a careers page",
+          "bucket": "Alternative"
+        },
+        {
+          "label": "CPI inflation series from MOSPI",
+          "bucket": "Quantitative"
+        },
+        {
+          "label": "Analyst research note text",
+          "bucket": "Qualitative"
+        },
+        {
+          "label": "Shipping container movements",
+          "bucket": "Alternative"
+        }
+      ]
+    },
+    {
+      "id": "m1-e02",
+      "type": "scenario",
+      "title": "Bias detective",
+      "points": 6,
+      "brief": "Name the bias in each scenario.",
+      "scenarios": [
+        {
+          "text": "A study of the 50 best-performing companies of the decade finds they all had charismatic CEOs.",
+          "answer": "Survivorship",
+          "why": "The 50 worst performers may also have had charismatic CEOs \u2014 they're not in the sample."
+        },
+        {
+          "text": "A credit model is trained using borrowers' final repayment outcomes as an input feature.",
+          "answer": "Look-ahead",
+          "why": "The outcome wasn't knowable at approval time."
+        },
+        {
+          "text": "A GDP nowcasting model uses the current, thrice-revised GDP series to 'predict' 2015.",
+          "answer": "Point-in-time",
+          "why": "The 2015 analyst saw the first print, not today's revision."
+        },
+        {
+          "text": "A single trend line is fitted through MoneyMart's revenue from FY16 to FY26, straight through the COVID dip.",
+          "answer": "Regime change",
+          "why": "FY20-22 was a structural break, not noise around a trend."
+        },
+        {
+          "text": "Average returns of currently-listed NSE stocks over 20 years are used to estimate expected equity returns.",
+          "answer": "Survivorship",
+          "why": "Delisted and failed companies are missing from the universe."
+        },
+        {
+          "text": "A fund's marketing deck shows performance of its three surviving strategies; two closed strategies aren't mentioned.",
+          "answer": "Survivorship",
+          "why": "Classic selection of winners after the fact."
+        }
+      ]
+    },
+    {
+      "id": "m1-e03",
+      "type": "form",
+      "title": "Trust Report \u2014 messy_transactions.csv",
+      "points": 8,
+      "brief": "Audit the dataset preview and produce a Trust Report. No code.",
+      "dataset": "messy_transactions",
+      "fields": [
+        {
+          "id": "pillars",
+          "label": "Which quality pillars look violated?",
+          "type": "multiselect",
+          "options": [
+            "Accuracy",
+            "Completeness",
+            "Consistency",
+            "Timeliness",
+            "Lineage",
+            "Auditability"
+          ],
+          "modelAnswer": [
+            "Accuracy",
+            "Completeness",
+            "Consistency"
+          ]
+        },
+        {
+          "id": "biases",
+          "label": "Which of the four biases could apply if you analysed this as-is?",
+          "type": "multiselect",
+          "options": [
+            "Look-ahead",
+            "Survivorship",
+            "Point-in-time",
+            "Regime change",
+            "None clearly"
+          ],
+          "modelAnswer": [
+            "None clearly"
+          ]
+        },
+        {
+          "id": "firstcheck",
+          "label": "What ONE check would you run first, and why?",
+          "type": "text",
+          "modelAnswer": "Parse the dates. Three formats are mixed and 04/02/2025 is ambiguous (4 Feb vs 2 Apr) \u2014 every time-based analysis downstream depends on getting this right, and 9 rows are 1970-01-01 epoch defaults."
+        },
+        {
+          "id": "trust",
+          "label": "Would you trust a spending-by-category report built on this file today?",
+          "type": "single",
+          "options": [
+            "Yes",
+            "Yes with caveats",
+            "No"
+          ],
+          "modelAnswer": "No"
+        }
+      ],
+      "modelReport": "pages/model-trust-report.mdx"
+    }
+  ]
+}

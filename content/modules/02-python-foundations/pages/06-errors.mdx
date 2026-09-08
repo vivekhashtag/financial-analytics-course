@@ -1,0 +1,41 @@
+---
+title: Reading Errors Without Panic
+slug: errors
+---
+
+Errors are not failure. They're Python telling you precisely what it couldn't do, usually with the exact line number.
+
+## Read tracebacks from the bottom up
+
+The last line names the error. That's the one that matters.
+
+| Error | What it means | Typical fix |
+|---|---|---|
+| `NameError: name 'x' is not defined` | You used a variable that doesn't exist | Typo, or you didn't run the cell above |
+| `KeyError: 'ITC.NS'` | That key isn't in the dict | Check spelling and the `.NS` suffix |
+| `IndexError: list index out of range` | You asked for item 5 of a 4-item list | Remember: 4 items are indexed 0–3 |
+| `TypeError: can only concatenate str` | Mixing text and numbers | Convert with `str(qty)` or use an f-string |
+| `IndentationError` | Your spacing is inconsistent | Four spaces, consistently |
+| `ZeroDivisionError` | Dividing by zero | Guard it: `if cost != 0:` |
+
+## The Colab-specific one
+
+`NameError` on a variable you're *sure* you defined usually means **you ran cells out of order**. Colab remembers whatever you ran, in whatever order you ran it.
+
+Fix: **Runtime → Restart and run all.** Do this before you conclude your code is broken.
+
+## The AI debugging pattern
+
+<AISidebarInline module="02-python-foundations" />
+
+The prompt that works better than "fix my code":
+
+> *"Here's my code and the error. Don't fix it yet, ask me questions until I spot the problem myself."*
+
+You'll solve it in about the same time and actually be able to solve the next one alone.
+
+## Your exercises
+
+<ExerciseList moduleId="02-python-foundations" />
+
+<Quiz moduleId="02-python-foundations" />

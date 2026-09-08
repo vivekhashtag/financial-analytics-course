@@ -1,0 +1,26 @@
+---
+title: From Loops to Vectors
+slug: why-pandas
+---
+
+In Module 2 you valued a portfolio with a loop. It worked. It would also work on five million rows, eventually. pandas does the same job in a fraction of the code and a fraction of the time, because the loops are pre-written in fast, compiled form. This is called **vectorisation**: you describe *what* to compute per row, pandas handles the *how*.
+
+<CodePeek code={`# Module 2, by hand:
+total = 0
+for ticker, qty in holdings.items():
+    total += qty * prices[ticker]
+
+# Module 3, vectorised:
+df["value"] = df["qty"] * df["current"]
+total = df["value"].sum()`} />
+
+Same logic. And because you wrote the loop version first, the pandas version isn't magic, it's shorthand for something you understand.
+
+## The two objects
+
+- **Series**, one labelled column
+- **DataFrame**, a table of Series sharing an index. A smart spreadsheet where every operation is code: repeatable, auditable, versionable.
+
+<NotebookCard id="03a_dataframe_fundamentals" />
+
+Work through 3A now, then return for the next page.

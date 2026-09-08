@@ -1,0 +1,183 @@
+# Module 4 · Descriptive Analytics: What Happened: and How to Show It
+
+*Reading time: about 80 minutes, interleaved with two notebooks (**4A** chart grammar, **4B** the finance exhibits), one downloadable **Streamlit app** you'll run on your own machine, and one guided **Looker Studio** build in the browser. This module opens Part B: the four questions all analytics answers. Question one, the deceptively humble "what happened?", is where every analysis begins and where most analysts are actually judged.*
+
+---
+
+## Lesson 4.1 — The First Question, and Why It's Harder Than It Looks
+
+Descriptive analytics answers *what happened*. Revenue last quarter. The portfolio's return. Churn by segment. It sounds like the easy rung of the ladder, no forecasting, no optimisation, just facts.
+
+Here is the professional secret: **descriptive analytics is where credibility is won or lost.** Nobody will trust your forecast (Module 6) or your recommendation (Module 7) if your description of the past is muddled, unsourced, or shown in a chart that takes three minutes to decode. And in real organisations, perhaps 70% of all analytics *is* descriptive, the dashboards, the monthly packs, the board slides. Master this rung and you are already employable; the later rungs stand on it.
+
+Descriptive work has three components, and this module covers all three:
+
+1. **The numbers**: KPIs and how to choose them honestly (this lesson)
+2. **The pictures**, the grammar of charts, plus finance's own special exhibits (Lessons 4.2–4.3)
+3. **The delivery**, dashboards that update themselves: Streamlit in code, Looker Studio without code (Lessons 4.5–4.6)
+
+### KPIs: numbers with a job
+
+A **KPI** (key performance indicator) is a number chosen to track something that matters. The choosing is the skill. Three tests for any KPI, all of them Module 1 in disguise:
+
+**Is it defined?** "Revenue", before or after sales returns? "Churn", measured over what window? A KPI without a written definition splits into as many versions as there are departments (the consistency pillar). Real firms keep a *KPI dictionary*; your capstone will too.
+
+**Is it honest about the typical case?** You met this in notebook 4A: MoneyMart's client AUM has a **mean** dragged sky-high by a few Ultra-HNI giants and a **median** describing the actual typical client, and they differ enormously. Neither is wrong; they answer different questions. *"Average client AUM"* reported as the mean, to an audience picturing the typical client, is technically true and functionally misleading. Say which one you used, always.
+
+**Does it come with its base?** A rate without its count is noise wearing a percentage (Module 3's rule). "Churn hit 67% in the Kolkata-Aggressive pocket!", a pocket of three people. Every rate travels with its denominator.
+
+And one framing habit that instantly marks out good descriptive work: **numbers gain meaning only by comparison.** Revenue of ₹9,000 crore means nothing alone; against last year (+15%), against plan (−3%), against the market (+2pp share) it becomes information. The comparison is the content; the number is just its address.
+
+---
+
+## Lesson 4.2 — The Grammar of Charts
+
+A chart is a sentence. The most common visualisation mistake is choosing the chart before knowing the sentence, opening the tool and asking "bar or line?" instead of "what am I saying?" So this course teaches charts as a **grammar**: seven intents, each with its natural form.
+
+| Your sentence | Intent | Natural chart |
+|---|---|---|
+| "It moved like this over time" | **Trend** | Line |
+| "It's made of these parts" | **Composition** | Stacked bar |
+| "The values spread like this" | **Distribution** | Histogram / box plot |
+| "These two move together (or don't)" | **Relationship** | Scatter |
+| "These are the biggest" | **Ranking** | Sorted horizontal bar |
+| "The honest answer is a range" | **Uncertainty** | Band / error bars |
+| "It got from A to B via these steps" | **Flow** | Waterfall |
+
+Above the grammar sits one law: **one message per exhibit.** If explaining your chart takes three sentences, you have three charts compressed into one, and your audience will absorb none of them. The test worth internalising: *could this chart be screenshotted into a WhatsApp message and still land its point, with zero explanation?* If yes, the title states the finding, the units are labelled, and the story is annotated on the chart itself, three habits notebook 4A drills on every exhibit.
+
+Notebook 4A builds one chart per intent, each on your course data, each carrying a real finding:
+
+- **Trend:** MoneyMart's revenue with the COVID dip *annotated on the chart*, because making readers hunt for the story is a choice, and the wrong one.
+- **Composition:** every ₹100 of revenue, split into where it goes, and a side-lesson in noticing what a composition chart *leaves out* (the bars don't reach 100; the gap is depreciation, interest and tax).
+- **Distribution:** client AUM raw (unreadable, a few giants crush the axis) versus on a log scale (the true shape appears). This is where mean-vs-median stops being theory.
+- **Relationship:** products held vs AUM, and the honest reading that the apparent relationship is mostly *segment* doing the work. A scatter's job includes showing when the relationship is weak; Module 5 turns that instinct into method.
+- **Ranking:** sectors by traded value, horizontal (labels stay readable), **sorted** (an unsorted ranking is a chart crime), values written on the bars.
+- **Uncertainty:** NIFTY with a ±2 standard-deviation band around its moving average. Bands are how charts tell the truth about ranges, and in Module 6 this becomes doctrine: *a forecast without an interval is a guess wearing a suit.*
+
+### The chart crimes gallery
+
+Knowing the crimes is half of never committing them:
+
+- **The truncated bar axis.** Bars encode value by *length*; start the axis at 150 instead of 0 and the lengths lie, a 10% difference looks like 3×. (Line charts encode by *position*, so truncating a line axis is often legitimate. The crime is medium-specific; 4A's Exercise 3 makes you commit it deliberately, side by side with the honest version, so you feel the difference.)
+- **The dual-axis special.** Two series, two y-axes, scaled until they "correlate." You can make any two lines dance together by choosing axes; it proves nothing.
+- **The 3D pie chart.** Perspective distorts every slice; the nearest slice always looks biggest. Pies are questionable past three slices; 3D pies are misinformation with a render engine.
+- **Rainbow decoration.** Colour should *mean* something (a segment, a sector, up vs down). Colour as garnish adds cognitive load and subtracts trust.
+
+> **📓 Do notebook 4A now**, the seven intents, three exercises, and one deliberate crime.
+
+---
+
+## Lesson 4.3 — The Finance Exhibits
+
+Beyond the universal grammar, finance evolved four charts of its own. Notebook 4B builds each **from scratch in matplotlib**, no specialist charting library, because building a waterfall once means you can customise waterfalls forever, and because these four appear in interviews, factsheets and board packs for the rest of your career.
+
+**1. The Waterfall (bridge)**, the CFO's favourite chart. Start at revenue; hang each cost block downward from the running total; land on profit. The P&L as a journey, every step visible. Two things 4B insists on: the mechanics (a waterfall is just bars with moving baselines, four lines of logic) and the **reconciliation check**: the bridge must land *exactly* on the reported PAT, and the notebook verifies it in code. A waterfall that doesn't reconcile is a bug in your chart or a hole in your data; either way, you find out before presenting, not during. (Module 1's auditability pillar, wearing a chart.)
+
+**2. The Candlestick**, a full trading day in one glyph. The body spans open→close (green up, red down); the wicks stretch to the day's high and low. Four numbers, one shape, and traders read hundreds at a glance: long upper wicks mean the day reached high and got sold back down; clusters of tiny bodies mean indecision. 4B draws sixty sessions of NIFTY manually with lines and bars, full understanding, no black box, and Module 11's order book will show you what happens *inside* each candle.
+
+**3. The Correlation Heatmap**, the diversification map, and the single exhibit on which all of Module 12 stands. Two disciplines baked into 4B's version: correlate **returns, never prices** (trending prices fake correlation, two series that both drift upward look related even when their daily moves are strangers), and **order the axes by sector**, because then the story leaps out as visible blocks along the diagonal: banks move with banks, IT with IT. One picture, and the case for diversifying *across* sectors rather than across five banks makes itself.
+
+**4. The Tornado**, ranked sensitivity, and your preview of prescriptive analytics. Take a toy valuation with three assumptions; wiggle each ±20% while holding the others; draw the impacts as horizontal bars, widest on top. Every assumption got the same wiggle, yet the value impacts differ hugely, and that asymmetry answers the most practical question in modelling: *where should we spend our worrying?* Precision is expensive; the tornado tells you where it's worth buying. In Module 10, the wiggles become full probability distributions and the tornado matures into Monte Carlo.
+
+> **📓 Do notebook 4B now.** Its exercises have teeth: the COVID-year waterfall exposes *operating leverage* (costs shrink slower than revenue: Module 5 will quantify it), the heatmap exercise crowns this universe's best diversifier, and the tornado exercise shows a 1-percentage-point margin assumption out-punching a 20% swing in the earnings multiple.
+
+---
+
+## Lesson 4.4 — From Charts to Dashboards: The Two Delivery Paths
+
+A chart answers a question once. A **dashboard** answers it continuously, same exhibits, live data, self-serve. Descriptive analytics in most organisations ultimately ships as a dashboard, and this course teaches both industry paths:
+
+- **The code path: Streamlit:** a Python library that turns a script into a web app. For when *you* build the tool. (Lesson 4.5)
+- **The no-code path: Looker Studio:** Google's free dashboard builder. For when the audience, or the analyst, doesn't write code. (Lesson 4.6)
+
+These aren't competitors; they're different tools for different rooms, and knowing *which room you're in* is part of the skill. Streamlit when the logic is custom and Python-shaped; Looker when the data is tabular, the audience is business, and speed-to-share wins.
+
+---
+
+## Lesson 4.5 — Streamlit: Your First App (Runs on Your Machine)
+
+Here is the moment this course's setup pays off. You'll download a single file, **`m4_price_dashboard.py`**, and run it locally in VS Code. Not embedded in the course site, deliberately: running a real app on your own machine, from a terminal, is itself a professional skill, and it's how Streamlit is actually used at work.
+
+### The three-step ritual
+
+```bash
+# 1. Install (once):
+pip install streamlit pandas numpy matplotlib
+
+# 2. Put nifty50_prices.csv in a folder called data/ next to the file
+
+# 3. Run:
+streamlit run m4_price_dashboard.py
+```
+
+A browser tab opens at `localhost:8501`, and there it is: a **live NIFTY dashboard**: KPI cards (latest close, period return, annualised volatility, max drawdown), a price chart with an adjustable moving average and an optional ±2σ band, the return distribution, the drawdown curve, and an expandable data peek. Drag the year slider. Change the MA window. Everything updates.
+
+### The whole mental model, in one paragraph
+
+Open the file. It's about ninety lines, and you already understand nearly all of them, the KPIs are Module 3's calculations; the charts are notebook 4A's. What's new is a handful of `st.something()` calls, each painting one element top-to-bottom: `st.metric` a KPI card, `st.slider` a control, `st.pyplot` a chart. And the single idea that explains everything: **when the user touches any control, Streamlit re-runs your entire script from the top.** That's it. No callbacks, no web development, a script that re-runs. (The `@st.cache_data` decorator on the loader is the one refinement: it tells Streamlit "this function's result doesn't change; don't re-read the CSV on every interaction.")
+
+Read the file top to bottom against the running app, element by element, line by line. This is the rare case where 90 lines of reading genuinely teaches a framework.
+
+### Your three modifications
+
+The module exercises ask you to change the app, because modifying a working app is the fastest way to own a framework: **(1)** add a fifth KPI, the percentage of up-days; **(2)** add a sidebar checkbox for log-scale on the price chart; **(3)** reorganise the two detail charts into tabs with `st.tabs`. Each is 2–4 lines; each teaches a different Streamlit muscle; solutions are in the module's solutions notebook.
+
+*(A taste of what's ahead: your capstone in Module 13 ships as a Streamlit app. Today's ninety lines are its skeleton.)*
+
+---
+
+## Lesson 4.6 — Looker Studio: The Same Dashboard, No Code
+
+Now the other room. **Looker Studio** (free, at lookerstudio.google.com, any Google account) builds dashboards by pointing and clicking, and the exercise is deliberately a re-build of the *same* NIFTY dashboard, so the comparison is honest.
+
+**The walkthrough** (guided step-by-step with screenshots on the course site; the shape of it here):
+
+1. **Get the data in.** Open `nifty50_prices.csv` in Google Sheets (File → Import). Looker's most-used connector is Sheets, in the no-code world, Sheets plays the role pandas played.
+2. **Connect.** In Looker Studio: Create → Data source → Google Sheets → your sheet. Looker sniffs each column's type, and here Module 1 reappears in new clothes: **check that `date` was detected as a Date, not text.** The no-code world has the same silent-type-bug as `parse_dates`; it just hides it in a settings panel.
+3. **Build, chart by chart.** A *time series chart* for close (with an optional moving-average trendline from the styling panel); *scorecards* for the KPIs, and note which ones you *can't* easily build (annualised volatility needs a calculated field with a formula; max drawdown is genuinely awkward without code, feel that boundary, it's the honest edge of no-code tools); a *histogram* of daily change using a calculated field; date-range and year *controls* that filter every chart at once.
+4. **Share.** One button, one link, viewable by anyone you permit, no terminal, no install. *This* is why Looker wins the business-audience room: distribution is frictionless.
+
+**The comparison you'll write** (one paragraph, part of the exercises): what took 3 minutes in Looker vs Streamlit? What was *impossible*? Where would each fail as the team's needs grow? There's no universally right answer, there is a right answer *per situation*, and being able to articulate it is precisely the judgment interviews probe.
+
+### The tiering idea worth stealing
+
+Real organisations don't build one dashboard; they build **tiers**: an *executive* view (five KPIs, one trend, zero clutter), an *analyst* view (the full grammar, distributions, relationships, drill-downs), an *operational* view (today's numbers, refreshed constantly, alarms). Same data, three audiences, three densities. When you build your capstone dashboard, you'll declare its tier first, because "who is this for?" is the first design decision, not the last.
+
+---
+
+## Lesson 4.7 — The AI Sidebar
+
+**Green, the styling accelerator.** Matplotlib's styling API is nobody's favourite memory game, and AI is genuinely excellent at it:
+
+> *"Here's my matplotlib chart code: [paste]. Rotate the x-labels 45°, move the legend below the chart, add thousand-separators to the y-axis, and add a light grid."*
+
+Cosmetics are safe territory: the result is verifiable by *looking at it*. Iterate freely.
+
+**Red, the message is not delegable.** Ask AI "what chart should I make for this data?" and you'll get a competent, generic answer, because AI can see your columns but not your *audience, your question, or your finding*. The chart-type decision is downstream of the sentence you're trying to say, and the sentence is your job. Choose the message; let AI polish the pixels. (And the standing rule holds: AI-generated plotting code that *runs* can still plot the wrong column, mislabel an axis, or silently drop NaNs, verify against numbers you know, tracer-bullet style, before any chart leaves your desk.)
+
+---
+
+## Lesson 4.8 — The Stream Connector
+
+- **Corporate finance:** the monthly management pack *is* this module: KPI cards, a revenue bridge (waterfall), variance vs plan, tiered by audience.
+- **Asset management:** the fund factsheet is a fixed descriptive suite, performance line, drawdown curve, allocation composition, produced identically every month; factsheet automation is a classic first Python win.
+- **Banking:** portfolio-quality dashboards (delinquency by vintage and segment, always rates-with-counts) are descriptive analytics under regulatory scrutiny, the definitions dictionary isn't optional there, it's examined.
+- **Markets:** the trading desk's morning pack, overnight moves, volatility, correlation shifts, is exhibits 1–4 of this module on a timer.
+
+---
+
+## Module 4 Checklist
+
+- [ ] You can name the seven chart intents and pick the natural form for a given sentence
+- [ ] Your charts pass the screenshot test: finding in the title, units labelled, story annotated
+- [ ] You can explain mean vs median on skewed money data, and you state which you used
+- [ ] You can build a waterfall from scratch *and it reconciles*, plus a candlestick, a sector-ordered heatmap, and a tornado
+- [ ] You know the chart crimes, and *why* truncation lies on bars but can be legitimate on lines
+- [ ] You ran the Streamlit app locally, read all ninety lines, and shipped your three modifications
+- [ ] You rebuilt the dashboard in Looker Studio and can argue, per situation, which tool wins which room
+- [ ] Notebooks 4A–4B complete · Streamlit exercises done · quiz passed
+
+**Badge earned: Chart Fluent 📊**
+
+Next: Module 5: Diagnostic Analytics. You can now show *what* happened, beautifully. The follow-up question arrives in every meeting within thirty seconds: **"okay, but why?"** Variance decomposition, cohorts, and driver trees: the toolkit for answering it without hand-waving.

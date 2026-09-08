@@ -1,0 +1,233 @@
+{
+  "baseUrl": "/data/",
+  "datasets": [
+    {
+      "id": "nifty50_prices",
+      "file": "data/nifty50_prices.csv",
+      "rawUrl": "/data/nifty50_prices.csv",
+      "title": "NIFTY 50 Daily Prices",
+      "rows": 1277,
+      "cols": 6,
+      "synthetic": true,
+      "grain": "One NSE trading day, 2021-01-01 to 2025-12-31",
+      "units": "Index points; volume in contracts",
+      "columns": [
+        "date",
+        "open",
+        "high",
+        "low",
+        "close",
+        "volume"
+      ],
+      "usedIn": [
+        "00-orientation",
+        "03-pandas",
+        "04-descriptive",
+        "06-predictive",
+        "09-lab-timeseries",
+        "10-lab-simulation"
+      ],
+      "quirks": [
+        {
+          "code": "a",
+          "quirk": "volume blank for all of 2021 (257 rows)",
+          "teaches": "Field-level completeness"
+        },
+        {
+          "code": "b",
+          "quirk": "2023-06-14 and 2024-02-21 silently absent",
+          "teaches": "Row-level completeness"
+        },
+        {
+          "code": "c",
+          "quirk": "2024-08-13 high is 10x the close (fat-finger)",
+          "teaches": "Accuracy / impossible values"
+        },
+        {
+          "code": "d",
+          "quirk": "Diwali Muhurat sessions present on holiday dates",
+          "teaches": "False positives \u2014 domain knowledge beats the outlier rule"
+        }
+      ]
+    },
+    {
+      "id": "messy_transactions",
+      "file": "data/messy_transactions.csv",
+      "rawUrl": "/data/messy_transactions.csv",
+      "title": "Retail Bank / UPI Transactions (deliberately dirty)",
+      "rows": 5060,
+      "cols": 8,
+      "synthetic": true,
+      "grain": "One transaction, Jan 2024 - Jun 2025",
+      "units": "INR",
+      "columns": [
+        "txn_id",
+        "txn_date",
+        "customer_id",
+        "merchant",
+        "category",
+        "mode",
+        "amount_inr",
+        "city"
+      ],
+      "joinsTo": [
+        {
+          "dataset": "client_book",
+          "on": "customer_id = client_id"
+        }
+      ],
+      "usedIn": [
+        "01-data-foundations",
+        "03-pandas",
+        "03b-sql",
+        "05-diagnostic"
+      ],
+      "quirks": [
+        {
+          "code": "a",
+          "quirk": "Three mixed date formats; 04/02/2025 is ambiguous",
+          "teaches": "Date parsing and ambiguity"
+        },
+        {
+          "code": "b",
+          "quirk": "54 exact duplicate rows",
+          "teaches": "Deduplication"
+        },
+        {
+          "code": "c",
+          "quirk": "190 missing categories",
+          "teaches": "Missing-field handling"
+        },
+        {
+          "code": "d",
+          "quirk": "Merchant name variants (Amazon India / amazon india)",
+          "teaches": "Entity resolution"
+        },
+        {
+          "code": "e",
+          "quirk": "12 rows are unmarked USD amounts",
+          "teaches": "Currency contamination"
+        },
+        {
+          "code": "f",
+          "quirk": "15 zero-amount and 8 negative-amount rows",
+          "teaches": "Impossible values"
+        },
+        {
+          "code": "g",
+          "quirk": "9 rows dated 1970-01-01",
+          "teaches": "Unix-epoch default = missing"
+        },
+        {
+          "code": "h",
+          "quirk": "120 city values with padding/caps",
+          "teaches": "Whitespace and case normalisation"
+        }
+      ]
+    },
+    {
+      "id": "client_book",
+      "file": "data/client_book.csv",
+      "rawUrl": "/data/client_book.csv",
+      "title": "Wealth Management Client Book",
+      "rows": 1000,
+      "cols": 11,
+      "synthetic": true,
+      "grain": "One client",
+      "units": "INR (AUM), months (tenure)",
+      "columns": [
+        "client_id",
+        "onboard_date",
+        "city",
+        "segment",
+        "risk_profile",
+        "aum_inr",
+        "products_held",
+        "tenure_months",
+        "sip_active",
+        "relationship_manager",
+        "churned"
+      ],
+      "usedIn": [
+        "03-pandas",
+        "03b-sql",
+        "05-diagnostic",
+        "08a-four-streams"
+      ],
+      "structure": "Churn 20.4% with real gradients: tenure (28% newest quartile to 12% oldest), products held, and segment (Mass 25% vs Affluent 13%). AUM log-normal by segment.",
+      "quirks": [
+        {
+          "code": "a",
+          "quirk": "28 missing risk_profile, 6 missing aum_inr",
+          "teaches": "Missing-field handling"
+        },
+        {
+          "code": "b",
+          "quirk": "Churned clients remain with AUM frozen at exit",
+          "teaches": "Survivorship trap \u2014 filtering churned==0 then reporting average AUM"
+        }
+      ]
+    },
+    {
+      "id": "company_financials",
+      "file": "data/company_financials.csv",
+      "rawUrl": "/data/company_financials.csv",
+      "title": "MoneyMart India \u2014 10-Year P&L",
+      "rows": 10,
+      "cols": 17,
+      "synthetic": true,
+      "grain": "One fiscal year, FY16-17 to FY25-26",
+      "units": "INR crore; ticket size in INR",
+      "usedIn": [
+        "04-descriptive",
+        "05-diagnostic",
+        "06-predictive",
+        "08b-investment-banking"
+      ],
+      "structure": "P&L identities hold to +/-0.15 cr: revenue - cogs = gross_profit; gross - opex = ebitda. Learners should verify this.",
+      "quirks": [
+        {
+          "code": "a",
+          "quirk": "Revenue dips FY20-21 and FY21-22 (COVID) then re-accelerates",
+          "teaches": "Regime change"
+        },
+        {
+          "code": "b",
+          "quirk": "FY20-21 first reported 3511.1 cr vs restated 3366.3 cr",
+          "teaches": "Point-in-time bias"
+        }
+      ]
+    },
+    {
+      "id": "nse_stock_universe",
+      "file": "data/nse_stock_universe.csv",
+      "rawUrl": "/data/nse_stock_universe.csv",
+      "title": "20 NSE Large-Cap Stocks",
+      "rows": 20360,
+      "cols": 5,
+      "synthetic": true,
+      "grain": "One ticker x one trading day, 2022-01-03 to 2025-12-31",
+      "units": "INR",
+      "columns": [
+        "date",
+        "ticker",
+        "sector",
+        "close",
+        "volume"
+      ],
+      "usedIn": [
+        "09-lab-timeseries",
+        "11-lab-hft",
+        "12-lab-portfolio"
+      ],
+      "structure": "Mean pairwise return correlation 0.26; annualised vol 16%-51%. Diversification is visibly real: avg single-stock vol 23.7% vs equal-weight portfolio vol 12.5%.",
+      "quirks": [
+        {
+          "code": "a",
+          "quirk": "TATAMOTORS.NS has an UNADJUSTED 1:5 split on 2024-09-02 (Rs 406 to Rs 83)",
+          "teaches": "Adjusted vs unadjusted prices \u2014 will silently wreck any backtest or optimisation"
+        }
+      ]
+    }
+  ]
+}

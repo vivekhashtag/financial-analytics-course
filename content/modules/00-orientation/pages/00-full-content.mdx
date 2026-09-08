@@ -1,0 +1,250 @@
+# Module 0 · Welcome: How This Course Works, and How to Learn With AI
+
+*Reading time: about 45 minutes. Then 30 minutes of setup and your first notebook. No prior knowledge of anything is assumed, not finance, not coding. If you can use a web browser, you can start.*
+
+---
+
+## Lesson 0.1 — Why You're Here
+
+Let's begin with three facts about modern financial markets.
+
+**Fact one.** Roughly **75% of all stock trading in the United States** is done by computer programs, not humans. Not "assisted by computers", *decided and executed* by algorithms, often in less time than it takes light to travel from your screen to your eye. In India, algorithmic trading already accounts for more than half of NSE volumes and is growing every year.
+
+**Fact two.** The regulator that watches the US stock market collects **over one billion trade and quote records every single day**. India's SEBI runs comparable surveillance across NSE and BSE. No human being, no team of ten thousand human beings, could read that. Only software can.
+
+**Fact three.** When you check a stock price on your phone, you are seeing the last skirmish in a war fought in **microseconds**. A blink of your eye takes about 300,000 microseconds. In that blink, a modern exchange can match thousands of trades.
+
+Put these together and you get the central truth of this course:
+
+> **Modern finance is not a numbers business that uses computers. It is a data business that happens to be about money.**
+
+Every price is data. Every loan application is data. Every UPI payment, every insurance claim, every line in a company's annual report, data. The people who can *read* this data, clean it, question it, chart it, and turn it into decisions, are the people who understand what is actually happening. Everyone else is guessing.
+
+This course makes you one of the people who can read it.
+
+### What you will be able to do at the end
+
+By the final module, you will be able to:
+
+1. Take any messy financial dataset, a bank's transaction file, a stock's price history, a company's ten-year P&L, and clean it, explore it, and summarise it in Python.
+2. Build charts and dashboards that tell one clear story, using Python (seaborn, Streamlit) and no-code tools (Looker Studio).
+3. Answer the four questions all analytics exists to answer: *What happened? Why did it happen? What is likely to happen? What should we do about it?*
+4. Place any finance problem on the map, corporate finance, asset management, banking, or markets, and know which techniques belong where.
+5. Complete four real hands-on labs: forecast a time series, simulate ten thousand possible futures with Monte Carlo, build and honestly test a trading strategy, and construct an optimised portfolio.
+6. Use AI tools (ChatGPT, Claude, Gemini) as a genuine learning accelerator, while never being fooled by them.
+
+### What this course is not
+
+Three honest boundaries, stated upfront:
+
+- **This is not a machine learning course.** Machine learning, the family of techniques where computers learn patterns from data automatically, is a separate course that follows this one. We will walk right up to the border of ML, point at it clearly, and stop. Everything here uses statistics, simulation, and optimisation you can fully understand and explain. That's not a limitation; it's a foundation. People who jump straight to ML without this material build models they can't explain and can't debug.
+- **This is not investment advice.** Every trading strategy and portfolio we build is an educational simulation. Real investing involves real risks, real regulations, and real taxes that this course does not cover.
+- **This is not a mathematics course.** Where a formula genuinely earns its place, we use it, and we build the intuition first, always. If you passed Class 10 mathematics, you have every prerequisite you need.
+
+---
+
+## Lesson 0.2 — The Shape of the Journey
+
+The course has four parts and a capstone. Here's the whole map, so you always know where you are.
+
+**Part A: Foundations (Modules 0 to 3.5).** Before analysing data, you must be able to *handle* it. Module 1 teaches you to think about data like a professional, including the four famous biases that quietly ruin financial models. Module 2 teaches you Python from absolute zero. Module 3 teaches pandas, the tool that makes Python speak fluent data. Module 3.5 adds SQL, the language of databases, the single most-listed skill in analyst job postings.
+
+**Part B: The Four Questions (Modules 4 to 7).** All analytics, in every industry, answers one of four questions, in rising order of difficulty:
+
+| Question | Name | Example |
+|---|---|---|
+| What happened? | **Descriptive** | "Revenue fell 8% last quarter." |
+| Why did it happen? | **Diagnostic** | "Because volumes held but average price dropped in the South region." |
+| What is likely to happen? | **Predictive** | "At this trend, next quarter lands between ₹930 and ₹1,010 crore." |
+| What should we do? | **Prescriptive** | "Shift ₹40 crore of marketing to the North; hold prices in the South." |
+
+One module per question, each with tools, examples, and honest discussion of what can go wrong.
+
+**Part C: The Finance Map (Module 8).** Finance is not one thing. It's four big streams, corporate finance, asset management, banking, and markets, plus investment banking cutting across them, and two horizontals (AI and sustainability) running through everything. This module gives you the map, so that when someone says "credit risk analyst" or "FP&A" in an interview, you know exactly where that sits and which of your skills apply.
+
+**Part D: The Four Labs (Modules 9 to 12).** The heart of the course. Four flagship problems, each done properly, hands-on, with code you write yourself: **time series analysis** (kept deliberately simple), **Monte Carlo simulation** (the technique behind every "will my money last?" question), **algorithmic trading** (how it really works, why it's mostly a data-engineering problem, and a strategy you'll backtest honestly), and **portfolio optimisation** (the mathematics of not putting all your eggs in one basket, made visual).
+
+**Capstone (Module 13).** You pick one stream, one dataset, and take it through all four questions, ending with a small interactive app you built yourself. It becomes the first item in your portfolio when you apply for jobs or internships.
+
+### How every module works
+
+Each module follows the same rhythm, so you never wonder what comes next:
+
+1. **The Hook**, a true story or striking fact that shows why this module exists.
+2. **Theory**, visual-first explanations. We prefer a picture to a paragraph and a paragraph to a formula.
+3. **Notebooks**, downloadable Jupyter notebooks where you *do* the thing. This is where learning actually happens: reading is 30% of this course, typing is 70%.
+4. **The AI Sidebar**, one specific way AI helps with this module's material, and one specific way it will mislead you.
+5. **Exercises**, small, checkable tasks. Solutions unlock only after you attempt them. (Why? Because reading a solution *feels* like learning. Producing one *is* learning. The feeling is not the thing.)
+6. **The Bias Check**, from Module 1 onward, a recurring ritual: which of the four biases could poison this analysis? By Module 12, this should be reflex.
+7. **Quiz**, eight to ten questions with instant feedback and explanations.
+8. **The Stream Connector**, where this module's skill shows up in each of the four finance streams, so nothing ever feels abstract.
+
+---
+
+## Lesson 0.3 — Setting Up (Ten Minutes, Nothing to Install)
+
+You need a way to run Python. There are two paths, and the first requires installing absolutely nothing.
+
+### Path A: Google Colab (the default — use this)
+
+Google Colab is a free service that runs Python **in your browser, on Google's computers**. Your laptop could be ten years old; it doesn't matter, because the computing happens elsewhere.
+
+Here's everything you need to know:
+
+1. **You need a Google account.** The same one you use for Gmail works.
+2. **Opening a notebook.** Every notebook in this course has an "Open in Colab" button. Click it, and the notebook opens in a new browser tab, ready to run.
+3. **The single most important habit:** the moment a course notebook opens, go to **File → Save a copy in Drive**. The original is a read-only template; the copy is *yours*, and your edits are saved automatically to your Google Drive. Skip this step, and an hour of work can vanish when you close the tab. Do it first, every time, until it's automatic.
+4. **Running a cell.** A notebook is a sequence of cells, some contain text (like this), some contain code. Click a code cell and press **Shift + Enter**. The code runs, the output appears directly below, and the cursor moves to the next cell. That keystroke, Shift + Enter, is 90% of operating a notebook.
+5. **When things go wrong.** If the notebook freezes, or variables seem to have amnesia, use **Runtime → Restart runtime**, then **Runtime → Run all**. This gives you a clean slate. It fixes the majority of mysterious problems, because the most common mysterious problem is having run cells out of order.
+
+One more Colab fact that will matter later: files you upload into a Colab session are **temporary**, they disappear when the session ends. That sounds like a problem, but the course sidesteps it entirely: our notebooks load data from the internet by URL, so the data is fetched fresh every time, in one line, with nothing to upload.
+
+### Path B: Local Jupyter (optional — for when you want it on your own machine)
+
+Some learners prefer working locally, and by the middle of the course (when we build Streamlit apps) you'll need a local setup anyway. Here is the complete installation, and notice what's absent, no Anaconda, no 4-gigabyte downloads:
+
+```bash
+# Step 1: Install Python (version 3.10 or newer) from python.org
+#         During installation, tick the box that says "Add Python to PATH".
+
+# Step 2: Open a terminal (Command Prompt on Windows) and run:
+pip install notebook pandas numpy matplotlib seaborn
+
+# Step 3: Launch Jupyter:
+jupyter notebook
+```
+
+A browser tab opens showing your files. That's it, that's the whole setup. `pip` is Python's package installer; each later module tells you exactly which extra packages it needs (for example, `pip install yfinance` when we start pulling live NSE data), and every notebook lists its own requirements in its first cell.
+
+> **Why not Anaconda?** You may see other courses insisting on Anaconda. It's a bundle of hundreds of packages, most of which you'll never touch, weighing several gigabytes. The two commands above give you everything this course needs. Simpler is better.
+
+### Your first notebook: the Setup Check
+
+Now open **`00_setup_check.ipynb`** (download it from this page, or hit Open in Colab). It does five small things:
+
+1. Prints a greeting, your first `print()` statement.
+2. Checks that the three core libraries (pandas, numpy, matplotlib) are installed, with a ✅ or ❌ for each.
+3. Builds a tiny table of ten days of NIFTY 50 index levels.
+4. Draws your first financial chart, a line of those ten closing levels.
+5. Tells you you're ready.
+
+Don't worry about *understanding* the code yet: Modules 2 and 3 will teach you every line of it. Today's only goal: run all the cells and see a chart. **If you can see a chart, your environment works, and nothing technical stands between you and the rest of this course.**
+
+(Notice one small thing in the chart: there's no data for January 10th and 11th. Those were a Saturday and Sunday, the NSE was closed. Remember this observation; it becomes surprisingly important in Module 1.)
+
+---
+
+## Lesson 0.4 — The AI Learning Charter
+
+This lesson may be the most valuable twenty minutes in the course. Read it twice.
+
+You are learning to code and analyse data in the first era where an AI assistant, ChatGPT, Claude, Gemini, Copilot, can answer nearly any question you ask, instantly, for free. No generation of students before you had this. It is a genuine superpower, and like most superpowers, it can also quietly ruin you.
+
+Here's the failure mode, stated plainly: **AI can make you feel like you're learning while you learn nothing.** You paste the exercise, copy the answer, it works, you move on. Six weeks later you sit in an interview, or face a real dataset at an internship, and discover the skill was never yours. It lived in the chat window, and the chat window isn't coming to the interview.
+
+So this course has a charter, a Green List of things you should *always* use AI for, and a Red List of things you must *never* trust it with. Use both lists and AI will genuinely cut your learning time in half.
+
+### The Green List — use AI freely and often for these
+
+**1. Explaining code you're reading.**
+> *"Explain this Python code line by line as if I'm a complete beginner: [paste code]"*
+
+This is AI at its absolute best, an infinitely patient tutor who never sighs at the same question twice.
+
+**2. Decoding error messages.**
+> *"I got this error: [paste the full error]. Here's my code: [paste it]. Explain what went wrong in simple terms, then show me the fix."*
+
+Always paste the *complete* error message, not a summary of it. The last line of the error usually contains the answer.
+
+**3. Getting an analogy when a concept won't click.**
+> *"Explain standard deviation using a real-life analogy, no maths."*
+
+If the first analogy doesn't land, ask for another. And another. This is free.
+
+**4. Generating practice data.**
+> *"Give me Python code that creates a fake dataset of 100 bank transactions with columns: date, amount, category, and include some missing values and one obvious outlier."*
+
+Unlimited, safe practice material on demand.
+
+**5. Quizzing yourself.**
+> *"Ask me 5 questions about Python dictionaries, one at a time. Tell me if my answer is right before asking the next one."*
+
+Testing yourself is one of the most effective learning techniques known, and AI makes it effortless.
+
+**6. Attacking your own conclusions.**
+> *"Here is my analysis conclusion: [paste it]. Play devil's advocate, what could make this conclusion wrong?"*
+
+Professional analysts pay colleagues to do this. You have it free.
+
+### The Red List — never trust AI for these
+
+**1. Financial figures and statistics.** Ask an AI what the NIFTY returned in 2019 and it will give you a confident, precise, plausible number, that may be completely invented. Language models generate *plausible text*, and a made-up statistic is perfectly plausible text. **The rule: every number needs a source you can click.** No source, no number.
+
+**2. Citations and references.** AI fabricates convincing-looking research papers, complete with real-sounding authors and journals that don't exist. **The rule: if you can't open it, it doesn't exist.**
+
+**3. Exercise answers before you've attempted the exercise.** This is the trap described above. **The rule: attempt first, AI second.** This course enforces it structurally, solution notebooks unlock only after you submit an attempt, but the enforcement that matters is yours.
+
+**4. Code you don't understand.** AI-generated code frequently *works*, for the wrong reason, on your test case, and then fails silently on real data. In finance, code that fails silently costs money. **The rule of this entire course: you may only run AI-generated code that you can explain line by line.** You are fully allowed to use AI to *reach* that explanation. You are not allowed to skip it.
+
+**5. Financial advice.** The AI doesn't know your situation, this course is simulation, and in most jurisdictions giving unlicensed investment advice is illegal for good reason. Never.
+
+### The Verify Habit — three steps, forever
+
+Whenever AI gives you code or an explanation, run this loop:
+
+1. **Ask** for the code or the explanation.
+2. **Interrogate:** "What assumptions does this make? In what situation would this be wrong?"
+3. **Verify** on a case where you already know the answer.
+
+Step 3 has a name in this course: the **tracer bullet**. Before trusting a function that computes averages on five thousand transactions, test it on `[1, 2, 3]`, where you know the answer is 2. If it says anything else, you just saved yourself from five thousand wrong numbers. You'll fire tracer bullets in every module from here to the capstone.
+
+### The disclosure habit
+
+Every exercise you submit, and the capstone, includes one line: *"AI assisted with: ___"* or *"AI was not used."*
+
+This is not surveillance and there is no penalty for using AI, the Green List actively encourages it. The line exists to build a professional habit: in real finance jobs, models go through validation and audit, and **undisclosed AI assistance inside a financial model is a compliance incident** at most institutions. Analysts who disclose naturally, because they always have, will be trusted with more. Start now, while the stakes are zero.
+
+---
+
+## Lesson 0.5 — Meet the Cast: Your Five Datasets
+
+Most courses give you a different dataset every chapter, and you spend half your energy just figuring out what the columns mean. This course does the opposite. **Five datasets recur through everything**, growing with you, by Module 12, they'll feel like old colleagues.
+
+Here they are. You don't need to open them yet; just meet them.
+
+**1. `nifty50_prices.csv`, the workhorse.** Five years of daily NIFTY 50 index data: date, open, high, low, close, volume. You saw ten rows of it in the setup notebook. You'll explore it in Module 3, chart it in Module 4, forecast it in Modules 6 and 9, and simulate its possible futures in Module 10.
+
+**2. `messy_transactions.csv`, the horror file.** Five thousand bank and UPI transactions in rupees, and it is *deliberately, realistically dirty*: duplicate rows, dates written three different ways, amounts that can't be real, merchant names spelled five ways, and a handful of quiet traps you'll learn to spot. In Module 1 you'll diagnose it by eye. In Module 3 you'll fix every defect with code, one of the most satisfying moments in the course, and the most employable skill in it.
+
+**3. `client_book.csv`, the wealth clients.** One thousand wealth-management clients across Indian metros: portfolio value, products held, tenure, risk profile, and whether they left the firm. This file powers your first genuinely business-flavoured analyses, segmentation, churn, cohorts, in Modules 3, 3.5, and 5.
+
+**4. `company_financials.csv`: MoneyMart India.** Ten years of profit-and-loss statements for a fictional Indian retail chain, in ₹ crore. Waterfall charts in Module 4, variance analysis in Module 5, trend regression in Module 6, and a full valuation in Module 8.
+
+**5. `nse_stock_universe.csv`, the twenty stocks.** Four years of daily prices for twenty large NSE names, Reliance, TCS, HDFC Bank, Infosys, ITC, Tata Motors and more, across eleven sectors. This is the raw material for the three market labs: time series, trading strategies, and portfolio optimisation.
+
+### An honest note: these datasets are synthetic
+
+All five are generated by a documented script, designed to look and behave exactly like real Indian market and banking data, but they are not real records. This is deliberate, for three reasons:
+
+1. **Licensing.** Real market data usually can't be redistributed freely.
+2. **Teaching.** With synthetic data, we can plant *exactly* the defects you need to learn to find, and we tell you about every single one, in a document called the **Dataset Registry**. (Knowing the answer key doesn't spoil the exercise; *finding the defects with code and deciding what to do about each one* is the exercise.)
+3. **Auditability.** Anyone can regenerate the data, byte-for-byte identical. In Module 1 you'll learn why reproducibility is one of the six pillars of data quality, and this course practices it on itself.
+
+And you will not live in a synthetic bubble: in Modules 3, 6, and 9, you'll pull **real, live NSE data** over the internet with the `yfinance` library and re-run your analyses on it. Synthetic data teaches the skill; real data proves you have it.
+
+---
+
+## Module 0 Checklist
+
+Before moving to Module 1, confirm:
+
+- [ ] You can open a Colab notebook and know the Save-a-copy-in-Drive habit
+- [ ] You ran `00_setup_check.ipynb` end to end and saw a chart
+- [ ] You've read the AI Charter and can state the code rule from memory (*"only run AI code I can explain line by line"*)
+- [ ] You know what a tracer bullet is
+- [ ] You've met the five datasets and know that their defects are documented, on purpose
+- [ ] You've taken the Module 0 quiz (8 questions)
+
+**Badge earned: Environment Ready 🚀**
+
+Next: Module 1, where you learn the professional's first skill, which is not analysing data. It's *distrusting* it.

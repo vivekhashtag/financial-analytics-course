@@ -1,0 +1,88 @@
+{
+ "questions": [
+  {
+   "id": "q1",
+   "type": "single",
+   "prompt": "Every optimisation's three parts:",
+   "options": [
+    "Data/model/output",
+    "Decision variables, objective, constraints",
+    "Inputs/solver/answer",
+    "Mean/variance/weights"
+   ],
+   "answer": 1,
+   "explanation": "Name them before any solver.",
+   "difficulty": "core"
+  },
+  {
+   "id": "q2",
+   "type": "single",
+   "prompt": "Constraints are:",
+   "options": [
+    "Obstacles",
+    "The decision problem itself",
+    "Noise",
+    "Optional"
+   ],
+   "answer": 1,
+   "explanation": "Remove them and the 'answer' is trivial and useless.",
+   "difficulty": "core"
+  },
+  {
+   "id": "q3",
+   "type": "single",
+   "prompt": "A shadow price tells you:",
+   "options": [
+    "Legal cost",
+    "What relaxing a rule by one unit is worth",
+    "Binding status",
+    "Dual sign"
+   ],
+   "answer": 1,
+   "explanation": "'Our liquidity rule costs \u20b9X lakh/year' \u2014 pricing the rules.",
+   "difficulty": "core"
+  },
+  {
+   "id": "q4",
+   "type": "single",
+   "prompt": "EVPI is:",
+   "options": [
+    "A pilot's value",
+    "A ceiling on what ANY information can cost",
+    "Expected profit",
+    "A risk measure"
+   ],
+   "answer": 1,
+   "explanation": "Nothing beats perfect information; compute the ceiling first.",
+   "difficulty": "core"
+  },
+  {
+   "id": "q5",
+   "type": "single",
+   "prompt": "The break-even move converts:",
+   "options": [
+    "Risk to return",
+    "'What is p?' into 'is p above the flip point?'",
+    "EMV to utility",
+    "Trees to tables"
+   ],
+   "answer": 1,
+   "explanation": "Often the argued number is irrelevant to the decision.",
+   "difficulty": "core"
+  },
+  {
+   "id": "q6",
+   "type": "single",
+   "prompt": "Given a slightly wrong input, an optimiser will:",
+   "options": [
+    "Average it",
+    "Exploit it \u2014 errors and opportunities look identical",
+    "Flag it",
+    "Ignore it"
+   ],
+   "answer": 1,
+   "explanation": "Hence sensitivity, constraints-as-humility, distributions.",
+   "difficulty": "core"
+  }
+ ]
+}

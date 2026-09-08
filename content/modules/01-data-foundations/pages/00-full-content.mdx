@@ -1,0 +1,298 @@
+# Module 1 · Data Before Models: Learning to Distrust
+
+*Reading time: about 90 minutes, plus three guided exercises. This module contains **no code, on purpose**. You will learn to interrogate data using only your eyes and your judgment, because if you can't spot a broken dataset by looking, no amount of Python will save you. The code starts in Module 2; by then, you'll know what it's for.*
+
+---
+
+## Lesson 1.1 — The Hook: Forty-Five Minutes
+
+On the morning of August 1st, 2012, Knight Capital was one of the largest trading firms in the United States, executing a significant share of all American stock trades. By lunchtime, it was effectively finished.
+
+Here is what happened, told simply. Knight's engineers deployed new trading software to their eight servers. On seven servers, the deployment went correctly. On the eighth, one old setting, a single configuration flag left over from years earlier, was not updated. When the market opened, that flag caused a piece of retired code to wake up and start firing real buy and sell orders into the market, rapidly, relentlessly, and wrongly.
+
+Knight's systems bought high and sold low, millions of times, at machine speed. By the time humans understood what was happening and pulled the plug, **forty-five minutes** had passed and the firm had lost approximately **$440 million**, more than its entire cash reserves. Within days it had to be rescued; within months it no longer existed as an independent company.
+
+Now, the detail that makes this story belong at the start of a *data* course rather than a software course:
+
+**Nothing was wrong with Knight's trading models.** The mathematics was fine. The strategy logic was fine. What was wrong was one piece of *data*, a configuration value, on one machine, that didn't match reality.
+
+This is the pattern you will see again and again across finance, and it is the founding idea of this module:
+
+> **Most analytics failures are data failures wearing a model's clothes.**
+
+When a forecast is embarrassingly wrong, when a "profitable" trading strategy loses money the moment it goes live, when a credit model approves loans that promptly default, the autopsy usually finds the same thing. Not bad math. Bad data: incomplete, stale, mislabeled, biased, or simply not what everyone assumed it was.
+
+So before this course teaches you a single line of Python, it teaches you the professional's first reflex. When handed data, an amateur asks *"what can I calculate?"* A professional asks four different questions first:
+
+**What is this, exactly? Where did it come from? Can it be trusted? And what is it hiding?**
+
+By the end of this module, you will be able to take any dataset you've never seen and produce what we'll call a **Trust Report**, a structured judgment of whether it's fit for analysis, without writing any code at all. That skill, more than any technique in this course, is what separates analysts whose numbers get believed from analysts whose numbers get double-checked by somebody else.
+
+---
+
+## Lesson 1.2 — The Three Buckets of Financial Data
+
+Every piece of data in finance falls into one of three buckets. The bucket tells you how to handle it, what it's good for, and what can go wrong with it.
+
+### Bucket 1: Quantitative data — structured, numeric, ready for calculation
+
+This is what most people picture when they hear "financial data": numbers in neat rows and columns.
+
+| Type | What it is | Plain-language translation |
+|---|---|---|
+| **Market data** | Prices, traded volumes, order books, index levels | What things cost, minute by minute |
+| **Financial statements** | Profit & loss, balance sheet, cash flow, ratios | A company's report card |
+| **Transactions & ledgers** | Every payment, every trade, every position | The receipts — all of them |
+| **Macroeconomic series** | GDP, CPI inflation, the RBI's repo rate, exchange rates | The economy's vital signs |
+| **Reference data** | Security identifiers, credit ratings, corporate actions | The phonebook that says which stock is which |
+
+Don't underestimate that last, boring-sounding row. Reference data, the master list of what exists and what it's called, is where a shocking share of real-world data problems live. If two systems disagree about whether "HDFC Bank" and "HDFC BANK LTD" are the same entity, every report built on top of them quietly disagrees too.
+
+### Bucket 2: Qualitative data — unstructured, textual, full of judgment
+
+Numbers tell you *what* happened. The *why* usually lives in text:
+
+- The narrative sections of annual reports, where management explains (and spins) the numbers
+- **Earnings calls**, recorded conversations where executives answer analysts' questions, and where the *tone* of an answer sometimes says more than its content
+- Analyst research notes, credit memos, news articles, regulatory notices, contracts, customer complaints
+
+For most of financial history, this bucket was read by humans or not at all. That has changed: modern language-processing techniques can now turn text into numbers, scoring the tone of an earnings call, measuring whether a company's "risk factors" section grew suspiciously longer this year, flagging unusual language in loan documents. We won't build those techniques in this course (that's ML-course territory), but you must know this bucket exists, because analysts who ignore it are reading only half the story.
+
+### Bucket 3: Alternative data — the unconventional frontier
+
+The newest bucket, and the strangest. Alternative data is information that wasn't created for finance at all, but turns out to predict financial outcomes:
+
+- **Satellite photos of retailer car parks**, count the cars weekly, and you can estimate a chain's sales *before* it announces them
+- **Credit-card and UPI spending panels**, anonymised, aggregated spending that reveals consumer trends in near-real-time
+- **Web traffic and app downloads**, a fintech's download curve often moves before its reported user numbers do
+- **Job postings**, a company quietly posting two hundred engineering roles is telling you something its press releases haven't
+- **Shipping and logistics records**, containers don't lie about trade volumes
+
+This bucket has grown from a curiosity into a multi-billion-dollar industry in under a decade, and it's where a lot of hedge funds now look for an edge, precisely *because* everyone already has the quantitative bucket.
+
+### Try it: the burger-chain problem
+
+A fund wants to estimate a listed burger chain's quarterly sales *before* the official announcement. Sort these eight sources into their buckets, and rate each one's likely usefulness:
+
+1. The chain's previous quarterly statements
+2. Satellite images of parking lots at 400 outlets
+3. The CEO's tone on the last earnings call
+4. Aggregated card-spend data at fast-food merchants
+5. The stock's daily price and volume
+6. Zomato/Swiggy order-volume estimates for the chain's listings
+7. The "Risk Factors" section of the annual report
+8. Job postings for new outlet staff, by city
+
+*(Answers, roughly: 1 and 5 quantitative; 3 and 7 qualitative; 2, 4, 6, 8 alternative. The deeper lesson: no single source wins. The strongest estimate comes from **combining** buckets, past statements set the baseline, card-spend and delivery data track the quarter live, satellite images confirm footfall, and hiring activity hints at expansion. Professionals triangulate.)*
+
+---
+
+## Lesson 1.3 — Where Data Comes From (and What It Costs)
+
+A practical map, written for a student in India. Bookmark this.
+
+### The free tier — genuinely excellent, and what this course uses
+
+| Source | What you get |
+|---|---|
+| **yfinance** (a Python library) | Prices for NSE/BSE stocks (Reliance is `RELIANCE.NS`, the suffix marks the exchange), indices like NIFTY 50 (`^NSEI`), plus basic fundamentals. Our workhorse from Module 3 onward. |
+| **NSE and BSE websites** | Official prices, index data, corporate announcements, and daily "bhavcopy" files listing every trade summary. |
+| **RBI's DBIE** (Database on Indian Economy) | The repo rate, money supply, credit growth, foreign-exchange reserves — decades of official history, free. |
+| **MOSPI / data.gov.in** | CPI inflation, industrial production, GDP — India's official statistics. |
+| **Company annual reports** | Every listed company publishes them free. The statements *and* the narrative. |
+| **FRED** (US Federal Reserve, St. Louis) | Global macro series, for when you need international comparisons. |
+
+### The paid tier — know the names
+
+**Bloomberg, LSEG (formerly Refinitiv), FactSet, S&P Capital IQ.** These are the professional data terminals: everything, curated, real-time, reconciled, at roughly **₹20 lakh+ per seat per year**. You won't use them in this course, but you must know they exist, because nearly every finance employer runs on one, and "have you worked with Bloomberg?" is a normal interview question. (An honest answer that lands well: "No, but I've built the same analyses on free data in Python, so I know exactly what I'd ask a terminal for.")
+
+Above even these sit the **alternative-data vendors** selling satellite feeds and spending panels to hedge funds, at prices with more digits still.
+
+### The concept that separates professionals: the golden source
+
+Here is a question that sounds trivial and isn't: *what was Infosys's closing price yesterday?*
+
+An amateur looks it up and writes it down. A professional asks: **according to which source, and as of when?** Because the "same" price genuinely differs across sources: NSE close versus BSE close, prices adjusted for dividends versus raw prices, data captured at 3:30 pm versus revised overnight.
+
+Every serious financial institution therefore designates a **golden source** for each kind of data, the one system that is, by decree, the truth, and *reconciles* everything else against it. When two numbers disagree, the golden source wins, and the disagreement gets investigated rather than ignored.
+
+### A worked example you'll meet again
+
+Three free websites report yesterday's close for the same stock:
+
+> Source A: **₹102.50** Source B: **₹102.50** Source C: **₹101.87**
+
+Is Source C wrong? Look at the fine print: the company paid a **dividend** recently. Sources A and B show the *adjusted* price, recalculated so that the dividend doesn't look like a price drop. Source C shows the *raw, unadjusted* price. **Neither is wrong. They answer different questions.**
+
+For "what would my investment be worth?" you want adjusted prices. For "what number was printed on the screen that day?" you want unadjusted. Mixing them up produces phantom crashes and phantom gains, and one of your own course datasets contains exactly this trap, waiting for Module 3. When a stock splits or pays a dividend and the data isn't adjusted, a naive return calculation will report a massive one-day loss that never happened.
+
+**The habit:** whenever two sources disagree, don't average them and don't pick your favourite. Find out *why* they disagree. The why is always informative.
+
+---
+
+## Lesson 1.4 — The Six Pillars of Data Quality
+
+"Is this data any good?" is too vague to answer. Professionals break it into six specific questions, the six pillars. Learn them as questions, and attach each to its cautionary tale.
+
+**1. Accuracy, do the values match reality?**
+In 2005, a trader at Mizuho Securities in Tokyo meant to sell **1 share at ¥610,000**. He typed **610,000 shares at ¥1**. The exchange accepted it. The error cost roughly **$225 million**, one transposed field, no "does this make sense?" check between keyboard and market. Accuracy failures are rarely subtle in hindsight and almost always catchable in advance with one sanity test: *is this value even possible?*
+
+**2. Completeness, what's missing, and is it missing at random?**
+Two different diseases hide under "missing data." A missing *row* (an entire trading day absent from a price file) and a missing *field* (every row present, but the volume column blank for a year) corrupt analysis in different ways and need different cures. The dangerous versions are the ones that *don't look like gaps*, you have to know what *should* be there to notice what isn't. (Remember the setup-notebook chart with no weekend prices? An **expected** gap. A missing random Tuesday in the same file would be a **problem** gap, and you'd only catch it by checking against the exchange calendar.)
+
+**3. Consistency, same entity, same definition, everywhere?**
+Is "revenue" recorded before or after sales returns? Is the date "04/02/2025" the 4th of February or the 2nd of April? Is the customer "HDFC Bank", "HDFC BANK LTD", or "hdfc bank"? Every inconsistency splits one truth into several apparent truths, and every report built on top inherits the split. Entity mess becomes analytics mess.
+
+**4. Timeliness, is the data there when the decision is made?**
+A perfect risk report delivered an hour after the market closes is not risk management; it's history. Data has a shelf life set by the decision it serves, microseconds for a trading algorithm, a day for a portfolio report, a quarter for strategic planning. "Accurate but late" fails just as surely as "wrong."
+
+**5. Lineage, can you trace this number back to its source?**
+Walk into any finance meeting in the world and within ten minutes someone will point at a number and ask: *"Where did this 4.7% come from?"* If the answer traces cleanly, this system, that extract, these transformations, this formula, the number survives. If the answer is a shrug, the number is dead, and so is a little of your credibility. Lineage is the paper trail from source to slide.
+
+**6. Auditability, can you reproduce it?**
+If you cannot regenerate last month's reported figure and get the same answer, you don't have analytics, you have anecdotes. Regulators treat reproducibility as non-negotiable, and so should you. (This is why our course datasets are generated by a fixed script: run it again, get byte-identical files. The course practices the pillar it preaches.)
+
+### The student translation
+
+All six pillars, on your own marksheet: the marks are right (**accuracy**); no subject is missing (**completeness**); your name is spelled identically on every certificate (**consistency**); results arrive before the admission deadline (**timeliness**); the question paper and your answer sheet still exist (**lineage**); re-totalling gives the same result (**auditability**).
+
+Same six questions. Bigger numbers later.
+
+---
+
+## Lesson 1.5 — The Four Biases That Ruin Financial Models ⭐
+
+This is the most important lesson in Part A. The six pillars catch *broken* data. The four biases are worse: they poison analyses built on data that looks perfectly clean. Each one has destroyed real strategies, real models, and real careers. Each one will try to sneak into your labs in Part D, and from Module 9 onward, every lab begins with a ritual check against all four.
+
+Learn each bias three ways: the nickname, the story, and the question you must always ask.
+
+### Bias 1: Look-ahead bias — *"using tomorrow's newspaper"*
+
+**The mistake:** using information in an analysis that was **not actually available at the moment of decision**.
+
+**The story.** An analyst backtests a simple strategy: *each January 1st, buy the companies with the strongest earnings that year.* The backtest shows spectacular profits. It is also worthless, because a company's full-year earnings are announced **months after** the year ends. On January 1st, nobody knew them. The simulated strategy is trading on information from the future: it's reading tomorrow's newspaper. Vast numbers of "profitable" published strategies die on exactly this autopsy, subtle versions include using a day's *closing* price to make that same *morning's* decision.
+
+**The question to always ask:** *"On the morning of the decision, was this number actually knowable?"*
+
+### Bias 2: Survivorship bias — *"interviewing only the winners"*
+
+**The mistake:** analysing only the entities that survived, because the failures were quietly removed from the dataset.
+
+**The story.** During World War II, the US military studied bombers returning from missions, mapped where they'd been hit, and proposed adding armour where the bullet holes clustered. The statistician **Abraham Wald** said: armour the places with **no** holes. The planes hit *there* never made it home to be counted. The holes on returning planes marked the survivable spots.
+
+Finance runs this error on an industrial scale. "The average mutual fund returned 9%!", computed across funds that *currently exist*. The losers were merged or shut down and deleted from the database; the average is an average of winners. Stock studies do it too: analyse "NSE-listed companies over 20 years" using today's listing, and every bankruptcy and delisting has already been erased from your sample.
+
+**The question to always ask:** *"Who is missing from this dataset, and did they leave at random, or because of the very thing I'm measuring?"*
+
+### Bias 3: Point-in-time bias — *"history, quietly rewritten"*
+
+**The mistake:** using today's *revised* version of historical numbers, as if that's what people knew at the time.
+
+**The story.** Official statistics get revised: GDP is published, then corrected, then corrected again. Company financials get *restated* when errors or new rules emerge. Now suppose you build a model that "predicts" 2015 outcomes using the GDP figures in today's database. Your model sees the **final, cleaned-up** numbers. An analyst actually sitting in 2015 saw the messy first print. Your model has an unfair advantage that will evaporate the moment you use it in the present, where only messy first prints exist.
+
+The professional fix has a name: **point-in-time databases**, which store what was *believed as of each date*, not just what turned out to be true. And here's the course's own planted example: **MoneyMart India's FY20-21 revenue was first reported as ₹3,511 crore and later restated to ₹3,366 crore.** Both numbers sit in your dataset, side by side. Which one belongs in a model of decisions made in 2021? The first one, because that's the one the world could see.
+
+**The question to always ask:** *"Is this the number as originally reported, or as later corrected?"*
+
+### Bias 4: Regime change — *"fitting one line through an earthquake"*
+
+**The mistake:** fitting a single model across a period during which the world structurally changed.
+
+**The story.** A bank builds a careful model of depositor behaviour on data from 2010–2019, a decade of unusually low interest rates. In 2022–23, rates rise faster than they have in forty years, and depositors start behaving in ways the model calls impossible. The model isn't broken; its *world* is gone. It learned the physics of one regime and was deployed in another.
+
+India offers vivid regime boundaries: **demonetisation in November 2016** transformed cash and digital-payment patterns overnight; **COVID in 2020** broke almost every consumer and market series on the planet. Fit one smooth trend through MoneyMart's revenue from FY16 to FY26, straight through the COVID dip, and your trend describes neither the before nor the after.
+
+**The question to always ask:** *"Did the world change somewhere inside my data's timespan?"*
+
+### The ritual
+
+From Module 9 onward, every lab notebook opens with four lines you must fill in *before running anything*:
+
+> **Look-ahead:** was everything I'm using knowable at decision time?
+> **Survivorship:** who's missing, and why?
+> **Point-in-time:** original prints or restated history?
+> **Regime:** any earthquakes inside my window?
+
+Thirty seconds. It will feel mechanical in Module 9 and be reflex by Module 12. That reflex is worth more than any single technique this course teaches.
+
+### Test yourself: the bias detective
+
+Name the bias in each scenario (answers below, genuinely try first):
+
+1. A bestseller studies the 50 best-performing companies of the decade and finds they all had visionary CEOs.
+2. A credit model's training data includes each borrower's *final repayment outcome* as an input.
+3. A GDP forecasting model is trained on today's (thrice-revised) historical GDP series and "predicts" 2015 brilliantly.
+4. One straight trend line is fitted through an airline's passenger numbers from 2015 to 2024.
+5. "Average returns of currently NSE-listed companies over 20 years" is used to estimate long-run equity returns.
+6. A fund's brochure shows its three surviving strategies; the two it closed aren't mentioned.
+
+*Answers: 1 survivorship (the 50 worst may also have had visionary CEOs, they're not in the book); 2 look-ahead (the outcome wasn't knowable at approval); 3 point-in-time; 4 regime change (COVID sits in the middle); 5 survivorship (the delisted are erased); 6 survivorship (selection after the fact).*
+
+---
+
+## Lesson 1.6 — Looking Before Computing
+
+In Module 3, "exploratory data analysis" becomes a set of techniques. This lesson previews it as something simpler: four habits of the eye. No formulas, just what to look *for*.
+
+**Habit 1: Look at the shape.** Take all of NIFTY's daily returns and pile them into a histogram. It looks roughly like a bell, but the tails are **fatter** than a true bell curve allows: extreme days happen far, far more often than "normal" mathematics predicts. An event the bell curve calls once-in-ten-thousand-years shows up in real markets every few years. Every risk model that assumes the tidy bell curve understates danger *precisely when it matters most*. Hold onto this picture; it returns as the punchline of Module 3 and the engine of Module 10.
+
+**Habit 2: Look for holes, and know which holes belong.** Your NIFTY file has no weekend rows: expected. It's also missing two random weekday sessions: a problem, and invisible unless you compare against the exchange calendar. And it contains the reverse trap: **Diwali Muhurat trading**, the NSE's ceremonial one-hour evening session held on a *holiday*. Rows on a holiday look like errors; they're real. A cleaning rule that deletes "impossible holiday rows" would destroy genuine data. **Domain knowledge beats any automatic rule.**
+
+**Habit 3: Look for the impossible.** Negative volumes. Prices of exactly zero. Percentages above 100. And the classic: a transaction dated **January 1st, 1970**. Almost never time travel, computers count time in seconds since 1970-01-01 (the "Unix epoch"), so when a timestamp is missing, systems often quietly record zero seconds, which displays as that date. **1-1-1970 means "missing," not "old."** Your horror file contains nine of these.
+
+**Habit 4: A crisis is not an outlier.** Plot fifteen years of market returns and the crashes of 2008 and March 2020 leap out as extreme points. A statistics textbook whispers: *trim the outliers*. Resist it. In finance, **the extreme observations are frequently the entire point**, they're when risk models earn their keep or fail, when portfolios survive or don't. Delete the crises from your data and you've built a model of a world that only exists between disasters.
+
+---
+
+## Lesson 1.7 — The Trust Report (Your Module 1 Capstone)
+
+Time to do the job. You'll audit three datasets, by eye, no code, and produce a structured Trust Report for each. This exercise runs in the course app with guided forms and model answers; here is the template and what you're walking into.
+
+**The Trust Report template (five questions per dataset):**
+
+1. **What is this data?** (Grain: what does one row represent? Units? Time span?)
+2. **Where might it have come from?** (And what does that imply about reliability?)
+3. **Which of the six pillars look violated?** (Point to specific evidence.)
+4. **Which of the four biases could apply** if this were analysed as-is?
+5. **Verdict:** would you trust a decision built on this today, and what *one* check would you run first?
+
+**Dataset A: `nifty50_prices.csv`**, looks immaculate. Five years, six tidy columns. Somewhere inside: a whole year where one field is silently blank, two trading days that simply aren't there, one number ten times too large, and several rows that look wrong but are real (you know why now). Clean-*looking* is not clean.
+
+**Dataset B: `messy_transactions.csv`**, wears its dirt openly. Dates in three formats (including the ambiguous `04/02/2025`: February 4th or April 2nd? you cannot tell from the value alone; only *provenance*, documentation of the source system's convention, can answer it). Duplicated rows. Missing categories. One merchant spelled five ways. A few amounts absurdly small for what they claim to be. A ₹0 transaction. Nine visitors from 1970.
+
+**Dataset C: "The Star Funds Study"**, not raw data at all, but a one-page marketing report: *"Our analysis of 47 five-star funds shows an average 10-year return of 14.2%."* No file to inspect, just claims. This is the hardest audit and the most realistic: most data you'll be asked to trust in your career arrives pre-cooked, as somebody's summary. (Start with: 47 funds *that exist today*. What happened to the ones that don't?)
+
+**Completing all three earns the module badge: Data Skeptic 🔍**
+
+### The AI sidebar for this module
+
+**Green:** AI is excellent at expanding your audit checklist. Try: *"I'm looking at a dataset with columns [list them]. Generate ten skeptical questions a data-quality auditor would ask about it."* You'll get two or three angles you hadn't considered.
+
+**Red, and this one is subtle:** pasting twenty rows into an AI and asking *"is this dataset reliable?"* The AI can spot formatting defects in what you pasted. It **cannot** know the lineage, the source system, what's missing, or who was deleted, and reliability lives in exactly those things. *Inspection can reveal defects; only provenance establishes trust.* An AI's confident "this data looks fine" is a statement about twenty rows, wearing the costume of a statement about the dataset.
+
+---
+
+## Lesson 1.8 — The Stream Connector
+
+Where does this module bite hardest in the real world? One line per stream, a pattern you'll see at the end of every module:
+
+- **Corporate finance:** inconsistent revenue definitions (pillar 3) quietly wreck variance analysis, two departments "reconcile" numbers that were never measuring the same thing.
+- **Asset management:** survivorship bias inflates *every* naive fund comparison; regulators and sophisticated clients check for it explicitly.
+- **Banking:** credit models built on non-point-in-time data are invalid, and the RBI's model-validation teams know exactly where to look.
+- **Markets:** look-ahead bias is the number-one killer of "profitable" backtests, the graveyard of trading strategies is full of tomorrow's newspapers.
+
+---
+
+## Module 1 Checklist
+
+- [ ] You can sort any financial data example into quantitative / qualitative / alternative
+- [ ] You can name India's main free data sources and what the paid terminals are
+- [ ] You can explain "golden source" and the adjusted-vs-unadjusted price trap
+- [ ] You can recite the six pillars as questions
+- [ ] You can tell all four bias stories and their always-ask questions, from memory
+- [ ] You know why 1-1-1970 means "missing," why Muhurat rows are real, and why crises aren't outliers
+- [ ] You completed three Trust Reports and passed the quiz (10 questions)
+
+**Badge earned: Data Skeptic 🔍**
+
+Next: Module 2: Python from zero. Now that you know how to distrust data, it's time to get your hands on the tools that let you *do* something about it. Everything you just learned to spot by eye, you're about to learn to find, count, and fix with code.

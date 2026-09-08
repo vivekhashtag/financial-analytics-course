@@ -1,0 +1,153 @@
+# Module 7 · Prescriptive Analytics: What Should We Do?
+
+*Reading time: about 65 minutes, interleaved with two notebooks: **7A** (your first optimiser) and **7B** (deciding under uncertainty). This is the top rung of the analytics ladder, the question businesses actually pay for, and the module where every previous rung gets consumed as an input. It closes Part B; after this, the finance map and the four labs.*
+
+---
+
+## Lesson 7.1 — The Question Businesses Actually Pay For
+
+Walk the ladder one last time. *What happened* earns you a seat at the table. *Why* earns you attention. *What's likely* earns you influence. But the question every meeting is secretly building toward, the one attached to budgets, careers and consequences, is the fourth:
+
+> **"So what should we do?"**
+
+Prescriptive analytics is the discipline of answering it with something better than confidence: with an **objective**, **constraints**, **decision variables**, and **trusted inputs**, the four-part anatomy that turns "I think we should…" into "given what we want and what we're allowed, the best available action is X, it's worth ₹Y more than the alternative, and here's the assumption that would flip it."
+
+Two families of tools carry the weight, and each gets a notebook:
+
+- **Optimisation** (7A), when the inputs are known and the difficulty is the *combinatorics of the rules*: where should the money go, how should we allocate, what mix, what schedule.
+- **Decision analysis** (7B), when the difficulty is *uncertainty about the world*: launch or pilot, invest or wait, and what information is worth buying first.
+
+And one framing that reorganises how you'll see this subject forever: **prescriptive is not a technique bolted onto the ladder, it *is* the ladder, load-bearing.** Its objective comes from strategy, its constraints from policy and regulation, its probabilities from Module 6's forecasts, its drivers from Module 5's diagnostics, its inputs from Modules 1–3's data discipline. Weakness anywhere below arrives here amplified, a theme this module returns to with a warning label.
+
+---
+
+## Lesson 7.2 — Your First Optimiser (and the Anatomy of Every One)
+
+Notebook 7A hands you a genuinely realistic seat: **MoneyMart's treasurer**, with ₹100 crore of surplus cash to park across four instruments, overnight funds, T-bills, a bank FD, corporate deposits, each with a yield, a liquidity profile, and a risk note. Maximise yield. Subject to the board's rules: ₹30 crore minimum in liquid instruments, corporate deposits capped at ₹20 crore, single-bank FD capped at ₹35 crore.
+
+Before any solver, the module insists you name the **anatomy**, because every optimisation you will ever meet, from this treasury toy to an airline's pricing engine, has exactly three parts:
+
+1. **Decision variables**, the numbers you get to choose (crores per instrument)
+2. **Objective**, the thing to maximise or minimise (total yield)
+3. **Constraints**, the rules that make it a decision rather than arithmetic
+
+That third point deserves its own sentence, because beginners get it backwards: **constraints are not obstacles to the decision, they *are* the decision problem.** Remove them and the "answer" is trivial and useless (100% into the highest yield). Every interesting prescriptive question is interesting *because* of its rules.
+
+7A then solves it with `scipy.optimize.linprog`, about ten lines, including the two mechanical quirks worth knowing once (the solver *minimises*, so you feed it negative yield; and ≥ constraints get flipped into ≤ form). The output allocates every crore, and then the module teaches the reading that separates analysts from solver-operators:
+
+**When an allocation is optimal, the interesting question flips from "what's the answer?" to "which constraints are doing the work?"** Every rupee sits where it does because of a specific rule. The **binding** constraints (satisfied with equality, corp deposits jammed against their cap, the FD against its ceiling) are the ones shaping the answer; the slack ones are decoration. 7A checks each constraint against the solution explicitly, because that check *is* the interpretation.
+
+---
+
+## Lesson 7.3 — Shadow Prices: Pricing the Rules
+
+Here is the idea that elevates this from a coding exercise to a boardroom skill. The most valuable output of an optimisation is not the allocation, it is **the price of each rule**.
+
+If the board relaxed the corporate-deposit cap by ₹1 crore, how much extra yield appears? That number is the constraint's **shadow price**, and 7A measures it the honest, brute-force way: perturb the limit by one unit, re-solve, difference the objectives. (Solvers report shadow prices analytically too; the perturb-and-resolve method is worth doing once because it *is* the definition, and it generalises to any model you'll ever build.)
+
+With shadow prices in hand, the treasurer's sentence changes register entirely:
+
+> *"Our liquidity rule costs us ₹X lakh a year; the corp cap costs ₹Y. If we're revisiting one policy, here's the order, and here's what a crore of headroom is worth."*
+
+**Pricing the rules, not just obeying them**, that is prescriptive analytics as a senior skill. Policies stop being fixed scenery and become priced choices; the analyst becomes the person who can tell a risk committee what its own caution costs, in rupees, per year.
+
+7A's exercises turn the crank twice more: pricing a new operational-buffer rule (and identifying *which instrument paid for it*), and then the destabilising one, drop the corp yield by 1.4 points and watch the solver **abandon the instrument entirely**. Optimal *values* move smoothly; optimal *allocations* jump discontinuously. **Optimisers are drama queens about inputs**, an observation that gets its full payoff in Module 12, where the inputs are estimated stock returns and the drama gets expensive.
+
+> **📓 Do notebook 7A now.**
+
+---
+
+## Lesson 7.4 — Deciding Under Uncertainty: The Tree
+
+7A's inputs were known. Notebook 7B removes that luxury with the board-level scenario every finance student should be able to structure cold:
+
+MoneyMart weighs a new store format. **Launch big now** — ₹120 crore, ₹300 crore NPV if it works (management says 55%), ₹40 crore salvage if it flops. **Pilot first** — ₹15 crore, learn whether it works, then decide. **Don't launch**, zero.
+
+The spine of the analysis is **EMV**, expected monetary value: for each branch, weight every outcome by its probability, sum, and compare. Three lines of arithmetic, and a ranking appears, with the pilot on top. But the *reason* matters more than the ranking: the pilot doesn't win by being cautious. It wins because of what it buys, **the right to walk away from the flop branch.** Launch-now carries the full downside weighted at 45%; the pilot converts that branch into a clean zero (minus its own price). Optionality is not a mood; it is a computable quantity.
+
+### The value of information — curiosity, priced
+
+Which leads to one of decision analysis's most elegant results. Ask: what would a *perfect* crystal ball be worth, the ability to know, before spending, whether the concept works? Compute the EMV with free perfect information, subtract the best you could do without it, and you have **EVPI: the Expected Value of Perfect Information.**
+
+EVPI is a **ceiling**: no consultant's study, no pilot, no market research can rationally cost more than it, because none of them can be better than perfect. Computing EVPI *before commissioning any research* is one of the quietly powerful habits this course can give you: it prices curiosity, and it kills overpriced studies in one line. (7B is honest about the fine print: real pilots are imperfect, small samples, unrepresentative sites, so a real pilot is worth *less* than EVPI. The machinery for imperfect information exists, via Bayes' rule; the instinct, *information has a computable ceiling*, is the takeaway at this course's level.)
+
+---
+
+## Lesson 7.5 — The Break-Even Move: Attack Your Own Assumption
+
+Everything above leaned on one soft number: management's 55%. Amateurs defend the number. Professionals make it irrelevant.
+
+7B's centrepiece chart plots each branch's EMV **as a function of the belief**, success probability from 0 to 1 on the x-axis, three lines for three choices, and reads off where they cross. The result, in this scenario: the pilot dominates across essentially every plausible belief; launch-now only overtakes it near-certainty (~81%+); below ~8%, do nothing.
+
+Now watch what that chart does to the meeting. The argument that consumes most boardrooms, *"is it really 55%? I'd say 45!"*, is revealed as **irrelevant to the decision**: 45 and 55 land on the same branch. The move has a name worth carrying into interviews: convert *"what is the probability?"* (unanswerable, endlessly arguable) into *"is the probability above the break-even?"* (usually answerable with immediate confidence). This chart, not any single recommendation, is the professional deliverable.
+
+The exercises stress-test it beautifully: raise the salvage value and watch the *pilot's* advantage specifically erode (better downside protection devalues the right to walk away, optionality is worth exactly what the bad branch costs); then impose a loss-averse board weighing losses 2× and discover the pilot wins by *more*, and that a recommendation ranking first under EMV *and* under loss-aversion is **robust to the room's risk appetite**, which means you can present it without first winning a philosophical argument about utility.
+
+---
+
+## Lesson 7.6 — Scenario Weighting: Prescriptive With a Forecast Attached
+
+Trees fork on *events*; **scenarios** fork on *worlds*. 7B closes by reconnecting to 7A: the treasury allocation assumed one rate world, but the desk economist offers three, rates fall (30%), base (50%), rates rise (20%), each with its own yield table.
+
+The protocol taught is a two-step that generalises everywhere:
+
+1. **Optimise once against the probability-weighted world**, expected yields in, allocation out.
+2. **Then stress the answer inside each scenario separately**, because a decision optimal *on average* but catastrophic in one plausible world is often the wrong decision, and only the per-world stress reveals it.
+
+Exercise 3 adds the diagnostic on top: solve the allocation *separately* in each world and compare. When the per-scenario optima agree (as they do here, the caps bind regardless), the weighted answer can be presented with confidence. When they diverge, **that divergence is exactly the uncertainty your presentation must carry**, and hiding it behind the single weighted answer is the prescriptive version of shipping a forecast without an interval. (When the one-bad-world concern dominates, the framework changes name, robust optimisation, maximin, and the instinct you just practised is its doorway.)
+
+> **📓 Do notebook 7B now.**
+
+---
+
+## Lesson 7.7 — The Warning Label, and the Fifth Rung
+
+Two closing frames, one cautionary and one forward-looking.
+
+**The warning label on every optimiser:** an optimiser doesn't merely *use* your inputs, it **exploits** them. If one yield estimate is 0.3% too high by error, the solver piles money onto the error, because to a solver an error and an opportunity are indistinguishable. Garbage in → *confident, maximised* garbage out. This is precisely why prescriptive sits at the top of a load-bearing stack: bad data (M1/3), a misdiagnosed driver (M5), an overconfident forecast (M6), each arrives here amplified into decisive, wrong action. The defences, in escalating order: **sensitivity analysis** (always ask how the answer moves when inputs wiggle, you did, twice), **constraints as humility** (caps and floors limit how hard the solver can lean on any single estimate, suddenly the board's "arbitrary" rules look wiser), and **distributions instead of points**, which is Module 10's entire subject.
+
+**The fifth rung, for awareness only:** the industry increasingly speaks of **agentic analytics**, systems that decide *and act*, loops closed, humans supervising rather than approving. Everything in this module is the safety case for that world: an agent is an optimiser with hands, and every warning label above applies at machine speed. This course owes you the awareness and the instincts; the engineering belongs elsewhere.
+
+### The tools panorama (where the working stack fits)
+
+One paragraph of orientation before Part C. In real teams: **SQL** gets and pre-shapes the inputs where they live (M3.5); **Python**, pandas, scipy, the stack you now own, does the modelling and optimisation; **Excel** remains the delivery layer where decisions get socialised (and the appendix teaches the bridge); **BI tools** (Looker, Power BI) publish the descriptive layer that keeps everyone honest between decisions. Prescriptive work sits at the confluence, which is why the generalist who can move across all four, which is what this course is building, is the profile job postings call "analytics" without further qualification.
+
+---
+
+## Lesson 7.8 — The AI Sidebar
+
+**Green, the formulation translator.** The genuinely hard part of optimisation for beginners is translating a messy business paragraph into objective-variables-constraints. AI is excellent at the first draft:
+
+> *"Turn this into a linear program, decision variables, objective, constraints, in scipy linprog form: [paste the business description]."*
+
+Then verify the translation the tracer-bullet way: check that an obviously-feasible allocation satisfies every coded constraint, and an obviously-illegal one fails.
+
+**Red, the confident wrong formulation.** The classic AI failure here is subtle: a *sign flip* or a *≥/≤ inversion* in one constraint. The code runs, the solver converges, the allocation looks plausible, and it's optimising a different problem than yours. The defence is mandatory in this module and forever: **check which constraints bind, and ask whether the binding pattern makes business sense.** A solution where the liquidity floor is slack while cash floods overnight funds is telling you the formulation is wrong, in the only language a solver speaks.
+
+---
+
+## Lesson 7.9 — The Stream Connector
+
+- **Corporate finance:** capital budgeting *is* constrained optimisation (projects, budgets, exclusivity constraints), and the pilot-vs-launch tree is every capex committee's actual agenda.
+- **Asset management:** Module 12's portfolio optimiser is 7A with a quadratic objective, same anatomy, same binding-constraint reading, same drama-queen sensitivity to inputs.
+- **Banking:** loan pricing and limit-setting are optimisations under regulatory constraints whose shadow prices banks genuinely compute, "what does this capital rule cost us?" is a priced question at every ALCO meeting.
+- **Markets:** optimal trade execution (how fast to work an order) is a cost-vs-impact optimisation running continuously on every desk: Module 11 will show you the tension it manages.
+
+---
+
+## Module 7 Checklist
+
+- [ ] You can name the three-part anatomy of any optimisation before touching a solver, and explain why constraints *are* the problem
+- [ ] You solved a real LP with scipy, and you read solutions by asking which constraints bind
+- [ ] You can measure a shadow price by perturb-and-resolve, and deliver the "pricing the rules" sentence
+- [ ] You know optimal allocations jump while optimal values glide, and why that matters for Module 12
+- [ ] You can build a decision tree, compute EMVs, and articulate what optionality buys
+- [ ] You can compute EVPI and use it to price (or kill) a proposed study
+- [ ] The break-even move is in your hands: convert "what's the probability?" into "is it above the flip point?"
+- [ ] You optimise against the weighted world, then stress per-scenario, and you present divergence instead of hiding it
+- [ ] You can state the optimiser's warning label and its three defences
+- [ ] Notebooks 7A–7B complete · exercises attempted before solutions · quiz passed
+
+**Badge earned: Decision Architect 🎯**
+
+**Part B is complete.** You now hold all four questions, describe, diagnose, predict, prescribe, each with working code. Next: Part C, **Module 8: The Finance Map**, four streams, investment banking at the crossroads, and two horizontals, where everything you've built gets an address in the industry. Then the labs.

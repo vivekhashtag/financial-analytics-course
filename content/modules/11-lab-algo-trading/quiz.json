@@ -1,0 +1,88 @@
+{
+ "questions": [
+  {
+   "id": "q1",
+   "type": "single",
+   "prompt": "Most real algo trading is:",
+   "options": [
+    "Prediction",
+    "Execution \u2014 slicing orders to manage impact",
+    "News trading",
+    "Crypto arb"
+   ],
+   "answer": 1,
+   "explanation": "Data engineering in a finance costume.",
+   "difficulty": "core"
+  },
+  {
+   "id": "q2",
+   "type": "single",
+   "prompt": "'The price' is really:",
+   "options": [
+    "Last trade",
+    "Two prices with a toll between",
+    "VWAP",
+    "The close"
+   ],
+   "answer": 1,
+   "explanation": "The spread is what every round trip pays.",
+   "difficulty": "core"
+  },
+  {
+   "id": "q3",
+   "type": "single",
+   "prompt": "Big orders pay more because:",
+   "options": [
+    "Fees",
+    "They eat through book levels \u2014 size moves price",
+    "Broker penalties",
+    "Taxes"
+   ],
+   "answer": 1,
+   "explanation": "Market impact: why institutions slice.",
+   "difficulty": "core"
+  },
+  {
+   "id": "q4",
+   "type": "single",
+   "prompt": "signal.shift(1) exists because:",
+   "options": [
+    "Pandas needs it",
+    "Today's position was decided yesterday \u2014 the look-ahead vaccine",
+    "Smoothing",
+    "Fewer trades"
+   ],
+   "answer": 1,
+   "explanation": "One line between honest and fantasy.",
+   "difficulty": "core"
+  },
+  {
+   "id": "q5",
+   "type": "single",
+   "prompt": "TATAMOTORS' \u221280% was:",
+   "options": [
+    "A crash",
+    "An unadjusted 1:5 split",
+    "Feed error",
+    "Circuit breaker"
+   ],
+   "answer": 1,
+   "explanation": "Corporate actions unhandled corrupt everything downstream.",
+   "difficulty": "core"
+  },
+  {
+   "id": "q6",
+   "type": "single",
+   "prompt": "The crossover's honest verdict:",
+   "options": [
+    "Beats the market",
+    "A crude risk-reduction rule \u2014 a preference question, not a forecast",
+    "Garbage",
+    "NIFTY-only"
+   ],
+   "answer": 1,
+   "explanation": "Coin-toss returns; reliably shallower drawdowns.",
+   "difficulty": "core"
+  }
+ ]
+}

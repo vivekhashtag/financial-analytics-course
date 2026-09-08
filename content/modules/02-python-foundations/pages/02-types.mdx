@@ -1,0 +1,40 @@
+---
+title: "Data Types: Numbers, Text, Truth"
+slug: types
+---
+
+Everything in Python is an object with a *type*. Four types cover almost all financial work.
+
+| Type | Example | Use in finance |
+|---|---|---|
+| `int` | `150` | Share quantities, day counts, number of stores |
+| `float` | `3450.75` | Prices, returns, ratios, rates |
+| `str` | `"TCS.NS"` | Tickers, names, categories, cities |
+| `bool` | `True` | Rules, limits, filters, flags |
+
+**Rule of thumb:** quantities are `int`, money and rates are `float`.
+
+## The float trap every analyst meets
+
+<CodePeek code={`print(0.1 + 0.2)          // 0.30000000000000004
+print(0.1 + 0.2 == 0.3)   // False`} />
+
+Computers store decimals in binary, so tiny errors creep in. This isn't a Python quirk, it happens in Excel, Java and C too.
+
+<Callout type="danger">
+If you reconcile two ledgers using `==` on floats, you will get false mismatches. Real finance systems round first, or compare within a tolerance.
+</Callout>
+
+## Working with tickers
+
+Indian stocks carry an exchange suffix on data platforms: `.NS` for NSE, `.BO` for BSE. So Reliance is `RELIANCE.NS`, and stripping that suffix is a `str` operation you'll do constantly.
+
+<CodePeek code={`ticker = "RELIANCE.NS"
+print(ticker.replace(".NS", ""))
+
+qty, px = 150, 3450.75
+print(f"Bought {qty} shares at Rs {px:,.2f}")`} />
+
+The `f"..."` form is an **f-string**, it drops values straight into text. `:,.2f` means: comma thousands separator, two decimal places. You'll use that formatting in every report you ever write.
+
+→ **Now do notebook 2A, sections 1–3.**

@@ -1,0 +1,37 @@
+---
+title: The pandas ↔ SQL Rosetta Stone
+slug: rosetta
+---
+
+Print this. It's the whole module on one page.
+
+| Question | pandas | SQL |
+|---|---|---|
+| Pick columns | `df[["a","b"]]` | `SELECT a, b FROM t` |
+| First rows | `df.head()` | `LIMIT 5` |
+| Filter rows | `df[df.x > 5]` | `WHERE x > 5` |
+| Combine filters | `(m1) & (m2)` | `AND` / `OR` |
+| Sort | `.sort_values("x", ascending=False)` | `ORDER BY x DESC` |
+| Aggregate per group | `.groupby("s").agg(...)` | `GROUP BY s` |
+| Rate from a flag | `("churned","mean")` | `AVG(churned)` |
+| Filter groups | filter after agg | `HAVING COUNT(*) >= 100` |
+| Missing values | `.isna()` | `IS NULL` |
+| Join | `merge(..., how="left")` | `LEFT JOIN ... ON` |
+| Named step | `tmp = df.groupby(...)` | `WITH tmp AS (...)` |
+| Rank in group | `.groupby().rank()` | `RANK() OVER (PARTITION BY ...)` |
+| Running total | `.cumsum()` | `SUM(x) OVER (ORDER BY ...)` |
+| Share of total | `x / x.sum()` | `x / SUM(x) OVER ()` |
+
+## The two rules that catch everyone
+
+1. **Every selected column** is either in the `GROUP BY` or inside an aggregate. PostgreSQL enforces it; it's protecting you from ambiguous answers.
+2. **`= NULL` matches nothing, silently.** Always `IS NULL` / `IS NOT NULL`.
+
+## And the bias check
+
+An `INNER JOIN` from clients to transactions drops every non-transacting client without a warning, **survivorship bias in one keyword**. The join type is an analytical decision. Choose it out loud.
+
+<ExerciseList moduleId="03b-sql" />
+<Quiz moduleId="03b-sql" />
+
+**Module 3.5 complete → Query Fluent badge.** Part A is done: you can now load, clean, join, aggregate and query financial data in both of the languages the industry runs on.

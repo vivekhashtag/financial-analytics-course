@@ -1,0 +1,88 @@
+{
+ "questions": [
+  {
+   "id": "q1",
+   "type": "single",
+   "prompt": "Every series decomposes into:",
+   "options": [
+    "Signal+noise",
+    "Trend + seasonality + noise (\u00b1 breaks)",
+    "Mean+variance",
+    "Level+slope"
+   ],
+   "answer": 1,
+   "explanation": "Decomposition is reading the sentence.",
+   "difficulty": "core"
+  },
+  {
+   "id": "q2",
+   "type": "single",
+   "prompt": "The centred MA's known defect:",
+   "options": [
+    "Overshoots peaks",
+    "Blind at both edges \u2014 the recent trend",
+    "Needs stationarity",
+    "Odd windows only"
+   ],
+   "answer": 1,
+   "explanation": "Six months blank each side.",
+   "difficulty": "core"
+  },
+  {
+   "id": "q3",
+   "type": "single",
+   "prompt": "NIFTY's seasonal index whispers because:",
+   "options": [
+    "Holidays",
+    "Loud calendar patterns in prices get traded away",
+    "Daily data",
+    "Volatility"
+   ],
+   "answer": 1,
+   "explanation": "Structure survives where nobody can arbitrage it.",
+   "difficulty": "core"
+  },
+  {
+   "id": "q4",
+   "type": "single",
+   "prompt": "The \u00b12/\u221aN band exists to:",
+   "options": [
+    "Mark what pure noise produces",
+    "Show mean confidence",
+    "Normalise lags",
+    "Bound vol"
+   ],
+   "answer": 0,
+   "explanation": "~95% of noise bars fall inside; one escapee proves nothing.",
+   "difficulty": "core"
+  },
+  {
+   "id": "q5",
+   "type": "single",
+   "prompt": "'Volatility remembers' is shown by:",
+   "options": [
+    "Price ACF",
+    "The ACF of |returns| staying significant",
+    "Rolling means",
+    "Price lag scatter"
+   ],
+   "answer": 1,
+   "explanation": "Big days cluster \u2014 the basis of vol forecasting.",
+   "difficulty": "core"
+  },
+  {
+   "id": "q6",
+   "type": "single",
+   "prompt": "The lab's thesis:",
+   "options": [
+    "SARIMA beats HW",
+    "Forecastability is a property of the series, not the model",
+    "Seasonality everywhere",
+    "Difference twice"
+   ],
+   "answer": 1,
+   "explanation": "Beat the floor on sales; lost to naive on NIFTY.",
+   "difficulty": "core"
+  }
+ ]
+}

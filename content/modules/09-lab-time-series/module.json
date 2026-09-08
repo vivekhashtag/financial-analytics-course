@@ -1,0 +1,56 @@
+{
+ "id": "09-lab-time-series",
+ "number": "9",
+ "part": "D",
+ "title": "Lab 1 \u00b7 Time Series",
+ "subtitle": "Decomposition, memory, seasonal forecasting",
+ "estimatedMinutes": 360,
+ "status": "published",
+ "prerequisites": [
+  "08-finance-map"
+ ],
+ "learningOutcomes": [
+  "Decompose and audit the residual",
+  "Measure memory against the noise band",
+  "Fix non-stationarity by differencing",
+  "Forecast with seasonal floors, HW and gentle SARIMA",
+  "Present the widening cone"
+ ],
+ "pages": [
+  {
+   "slug": "content",
+   "title": "Lab 1 \u00b7 Time Series",
+   "file": "pages/01-content.mdx"
+  }
+ ],
+ "notebooks": [
+  {
+   "id": "09a_decomposition",
+   "title": "9A \u00b7 Decomposition",
+   "file": "notebooks/09a_decomposition.ipynb",
+   "colabEnabled": true,
+   "solutionFile": "notebooks/solutions/09_solutions.ipynb"
+  },
+  {
+   "id": "09b_memory_stationarity",
+   "title": "9B \u00b7 Memory & Stationarity",
+   "file": "notebooks/09b_memory_stationarity.ipynb",
+   "colabEnabled": true,
+   "solutionFile": "notebooks/solutions/09_solutions.ipynb"
+  },
+  {
+   "id": "09c_forecasting_seasonal",
+   "title": "9C \u00b7 Forecasting a Seasonal Series",
+   "file": "notebooks/09c_forecasting_seasonal.ipynb",
+   "colabEnabled": true,
+   "solutionFile": "notebooks/solutions/09_solutions.ipynb"
+  }
+ ],
+ "quiz": {
+  "file": "quiz.json",
+  "passingScore": 70
+ },
+ "exercises": {
+  "file": "exercises.json"
+ }
+}

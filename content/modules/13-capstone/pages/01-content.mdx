@@ -1,0 +1,103 @@
+# Module 13 · The Capstone: One Dataset, The Whole Ladder
+
+*This is not a reading module, it's a build. Budget 15–25 hours across two to four weeks. Everything the course taught converges on one artifact: a complete analysis, from Trust Report to recommendation, shipped as a Streamlit app, defended in a one-page memo, and disclosed honestly. It becomes the first item in your portfolio, the thing you put in front of a recruiter and say "I made this."*
+
+---
+
+## Lesson 13.1 — What You're Building, Exactly
+
+**The premise:** pick one track. Take its dataset through the **entire four-question ladder**, what happened, why, what's likely, what should we do, under every discipline this course made law. Ship four deliverables:
+
+| # | Deliverable | Built with | The bar it must clear |
+|---|---|---|---|
+| 1 | **Analysis notebook** | The starter template (`13_capstone_starter.ipynb`) | Every station filled; bias check answered; runs top-to-bottom on Restart & Run All |
+| 2 | **Streamlit app** | The skeleton (`capstone_app.py`) | Runs locally; four ladder tabs; champion exhibit; one control that matters; honest About tab |
+| 3 | **One-page memo** | Module 12.5's template, verbatim | Survives the delete-all-but-the-first-sentence test |
+| 4 | **Trust Report + AI disclosure** | Modules 1 & 0 | The Trust Report on *your* data; the disclosure table complete |
+
+All four live in one **GitHub repository** with a README that tells a stranger how to run everything in under five minutes. The repo *is* the submission, and, not coincidentally, exactly what a hiring manager clicks on.
+
+**Why this shape:** each deliverable is one course thread, ending. The notebook proves the analysis; the app proves you can ship (Module 4's promise kept); the memo proves you can be heard (Module 12.5's exam); the disclosure proves you can be trusted (Module 0's charter, now with consequences). A capstone missing any one of the four is a different, lesser project.
+
+---
+
+## Lesson 13.2 — The Four Tracks (Pick One)
+
+Each track is one stream from Module 8's map, runs on a course dataset (no data-hunting stall), and names its ladder explicitly. The **fifth option**, bring your own dataset, is for the ambitious, with one extra requirement: your Trust Report must be *twice* as thorough, because nobody planted the defects for you this time.
+
+### Track A · Wealth Analytics (Asset Management) — `client_book.csv` + `messy_transactions.csv`
+*The question:* **which clients should we fight to keep, and how?**
+Describe: the book, segments, AUM, churn with counts. Diagnose: the churn drivers, mix-adjusted; the SIP heterogeneity; the survivorship trap avoided *on the record*. Predict: churn-risk scoring by segment/tenure profile with honest base rates (no ML, rate tables and gradients are enough and defensible). Prescribe: a targeted retention pilot, who, what offer, what it costs, the expected save in ₹, and the experiment that would prove causality (Module 5's test plan, funded).
+*Difficulty: the friendliest track, the course did much of the diagnosis with you; your edge is the prescriptive close and the memo.*
+
+### Track B · FP&A (Corporate Finance) — `company_financials.csv` (+ 9A's monthly series regenerated)
+*The question:* **what should MoneyMart's board expect and do for FY26-27?**
+Describe: the ten-year story, waterfall, composition, the restatement handled point-in-time. Diagnose: the growth engine (stores vs same-store, price vs volume), operating leverage quantified. Predict: FY26-27 revenue as a cone, trend + seasonality on the monthly series, regime assumption named. Prescribe: the expansion decision, how many stores, under what constraints, with the NPV *distribution* (Module 10) and the tornado telling the board where to spend its worrying.
+*Difficulty: moderate, small data, so the craft is in the decomposition rigour and the cone's honesty.*
+
+### Track C · Markets Research (Financial Markets) — `nse_stock_universe.csv`
+*The question:* **design and honestly evaluate a rules-based equity sleeve.**
+Describe: the universe, correlations, sector blocks, the split *found and fixed on the record*. Diagnose: what drives co-movement; where diversification actually lives. Predict: the honest confession, which of your inputs are forecastable (vol) and which aren't (returns), measured 12B-style. Prescribe: a constrained portfolio (caps as humility) vs 1/N, judged out-of-sample with turnover costs, plus a strategy overlay *if and only if* it beats its floor after costs, and the nuanced verdict either way.
+*Difficulty: the hardest track, because honesty here means your headline may be "the fancy thing didn't win", which, argued well, is the most impressive capstone of all.*
+
+### Track D · Credit & Payments (Banking) — `messy_transactions.csv` + `client_book.csv`
+*The question:* **build the bank's monthly transaction-health report, and catch what's wrong.**
+Describe: cleaned volumes, categories, cities, with the full cleaning log as an appendix exhibit (the horror file, conquered publicly). Diagnose: anomalies, the epoch dates, the currency contamination, duplicates, each quantified, root-caused, and turned into an upstream fix request. Predict: monthly volume forecast with seasonal floor and cone. Prescribe: the data-quality investment case, what each defect class *costs* in wrong decisions, prioritised, with monitoring rules (Module 2's `if` family, productionised in spirit).
+*Difficulty: moderate, and the most directly employable, this IS a bank operations-analytics job, in miniature.*
+
+---
+
+## Lesson 13.3 — The Rules (Non-Negotiable)
+
+These are the course's laws, now with grades attached:
+
+1. **The Bias Check opens the notebook**, real answers for your data, before any cell runs.
+2. **Reproducibility is absolute:** fixed seed declared; `Restart & Run All` must succeed; the README's five-minute test must pass. A capstone that runs only on your machine, in your session, doesn't exist.
+3. **Every forecast is a range with a named assumption.** A naked point estimate anywhere in the memo or app is an automatic rubric deduction.
+4. **Every rate travels with its count.** (You knew this was coming.)
+5. **Floors before flourishes:** any predictive claim names its naive floor and reports honestly whether it was beaten.
+6. **The prescriptive close includes the flip:** what input change reverses your recommendation, and what future result would change your mind.
+7. **AI disclosure is complete.** The table has three columns, *where, what it did, how you verified*, and the honesty bar is: a reader could re-trace your use. Full disclosure and zero use grade identically; concealment fails the professional-standards gate regardless of the analysis quality.
+8. **One artifact per room:** the memo is for the board, the notebook for the validator, the app for everyone, and no sentence does double duty badly.
+
+---
+
+## Lesson 13.4 — The Rubric (Self-Assessment, 100 Points)
+
+Score yourself honestly, the rubric is the same one the course site's checklist walks through, and the same shape a real reviewer would use:
+
+| Area | Points | What full marks looks like |
+|---|---|---|
+| **Trust Report & data handling** | 15 | Grain/provenance/pillars/biases answered for YOUR data; defects found, decisions documented (quarantine vs delete vs flag) |
+| **Describe** | 10 | Two-plus exhibits passing the screenshot test; a declared champion; mean-vs-median and rate-with-count discipline visible |
+| **Diagnose** | 15 | A real decomposition or adjustment that reconciles; a hidden-populations cut; ALL candidate mechanisms + the separating test |
+| **Predict** | 15 | Time-respecting evaluation; floor named and faced; a cone or interval with its load-bearing assumption in one sentence |
+| **Prescribe** | 15 | Objective + constraints explicit; a sensitivity that finds the flip; the change-my-mind pre-commitment |
+| **The app** | 10 | Runs first try; four tabs mirror the ladder; one interactive control that genuinely matters; honest About tab |
+| **The memo** | 10 | 12.5's template; headline survives the deletion test; uncertainty with a spine |
+| **Professional standards** | 10 | Reproducible end-to-end; AI disclosure complete; repo README passes the stranger test |
+
+**70+ = portfolio-ready. 85+ = interview centrepiece.** Below 70, the rubric itself tells you exactly which module to revisit, that's what it's for.
+
+---
+
+## Lesson 13.5 — Working Method & Timeline
+
+A schedule that works alongside studies (adjust freely; the *order* is the point):
+
+- **Days 1–2 · Frame:** pick the track, write the one-sentence question, complete the Bias Check and Trust Report. *Do not skip ahead, capstones die of vague questions, not weak code.*
+- **Days 3–6 · Describe + Diagnose:** the notebook's stations 2–3, ending with the mechanisms-and-test paragraph.
+- **Days 7–10 · Predict + Prescribe:** stations 4–5; the cone and the flip.
+- **Days 11–12 · Ship:** the app from the skeleton; the memo from the template; the repo and README.
+- **Day 13 · The cold read:** give the memo and app to someone who knows nothing about the project. Watch them (silently). Where they squint, rewrite. This single hour improves capstones more than any other.
+- **Day 14 · Self-score, fix the two cheapest deductions, submit.**
+
+**The AI sidebar for the capstone, in one line each:** Green, the merciless editor on your memo, the adversarial risk-manager on your notebook, the dialect translator on your SQL. Red, anything that would leave a row of the disclosure table you'd hesitate to write. The hesitation *is* the answer.
+
+---
+
+## Lesson 13.6 — After the Capstone
+
+Three honest sentences about what you now hold. You have a **portfolio artifact**, pin the repo, put the app screenshot and the memo's headline on your CV's project line, and rehearse the three-rooms rendering of it for interviews (the board version in 30 seconds, the validator version in 5 minutes). You have a **map with your position marked**: Module 8's streams, with one track now genuinely yours; the natural next courses are the ML course this one kept signposting, and SQL/engineering depth if Track D felt like home. And you have the thing no certificate conveys: **the disciplines**, the bias check, the floor, the cone, the count, the disclosure, which transfer to every dataset you will ever touch, in any tool, for the rest of a career this course was only ever the first module of.
+
+**Final badge: Analyst, End-to-End 🎓**

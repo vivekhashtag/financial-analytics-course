@@ -1,0 +1,152 @@
+{
+  "exercises": [
+    {
+      "id": "m3-e01",
+      "type": "code",
+      "title": "Filter: 2025 closes above 17,000",
+      "points": 2,
+      "notebook": "03a_dataframe_fundamentals",
+      "brief": "Count rows where close > 17000 and the year is 2025.",
+      "starterCode": "mask = ...\nprint(mask.sum())",
+      "checkCode": "# compare with solutions notebook",
+      "hints": [
+        "Two conditions joined with &, each in parentheses",
+        "prices['date'].dt.year"
+      ],
+      "solution": "mask = (prices['close'] > 17000) & (prices['date'].dt.year == 2025)\nprint(mask.sum())"
+    },
+    {
+      "id": "m3-e02",
+      "type": "code",
+      "title": "Best 5 days",
+      "points": 2,
+      "notebook": "03a_dataframe_fundamentals",
+      "brief": "Five best days by return_pct.",
+      "starterCode": "# your code",
+      "checkCode": "",
+      "hints": [
+        "sort_values(..., ascending=False)"
+      ],
+      "solution": "prices.sort_values('return_pct', ascending=False).head(5)"
+    },
+    {
+      "id": "m3-e03",
+      "type": "code",
+      "title": "Choppiest year",
+      "points": 3,
+      "notebook": "03a_dataframe_fundamentals",
+      "brief": "Average intraday range per year \u2014 which year is highest and why is 2024 suspect?",
+      "starterCode": "# your code",
+      "checkCode": "",
+      "hints": [
+        "groupby(prices['date'].dt.year)",
+        "One 2024 row contains the fat-finger high"
+      ],
+      "solution": "prices.groupby(prices['date'].dt.year)['range'].mean()  # 2024 inflated by the 2024-08-13 defect"
+    },
+    {
+      "id": "m3-e04",
+      "type": "code",
+      "title": "City totals, clean vs raw",
+      "points": 4,
+      "notebook": "03b_cleaning_horror_file",
+      "brief": "Top city by spend after cleaning; compare against the raw file.",
+      "starterCode": "# your code",
+      "checkCode": "",
+      "hints": [
+        "Raw has ~2x city strings due to padding/caps",
+        "Duplicates inflate raw totals"
+      ],
+      "solution": "clean = txn.groupby('city')['amount_inr'].sum().sort_values(ascending=False)\nraw_g = raw.groupby('city')['amount_inr'].sum()"
+    },
+    {
+      "id": "m3-e05",
+      "type": "code",
+      "title": "Monthly spend with honest missing-date handling",
+      "points": 4,
+      "notebook": "03b_cleaning_horror_file",
+      "brief": "Total spend per month; state explicitly what you did with unknown-date rows.",
+      "starterCode": "# your code",
+      "checkCode": "",
+      "hints": [
+        "dt.to_period('M')",
+        "dropna(subset=['txn_date_clean']) and SAY SO"
+      ],
+      "solution": "monthly = txn.dropna(subset=['txn_date_clean']).groupby(txn['txn_date_clean'].dt.to_period('M'))['amount_inr'].sum()"
+    },
+    {
+      "id": "m3-e06",
+      "type": "code",
+      "title": "Per-RM league table",
+      "points": 3,
+      "notebook": "03c_groupby_merge_pivot",
+      "brief": "Clients, total AUM and churn rate per relationship_manager.",
+      "starterCode": "# your code",
+      "checkCode": "",
+      "hints": [
+        "agg with named tuples",
+        "churn = ('churned','mean')"
+      ],
+      "solution": "clients.groupby('relationship_manager').agg(clients=('client_id','count'), total_aum=('aum_inr','sum'), churn=('churned','mean'))"
+    },
+    {
+      "id": "m3-e07",
+      "type": "code",
+      "title": "Spend by segment \u2014 the honest number",
+      "points": 4,
+      "notebook": "03c_groupby_merge_pivot",
+      "brief": "Average total_spend per segment, all clients vs transactors only \u2014 which do you report?",
+      "starterCode": "# your code",
+      "checkCode": "",
+      "hints": [
+        "fillna(0) for the all-clients view",
+        "Report all-clients; mention the split"
+      ],
+      "solution": "m.groupby('segment')['total_spend'].mean()  # all clients (zero-filled); excluding zeros overstates"
+    },
+    {
+      "id": "m3-e08",
+      "type": "code",
+      "title": "Churn pivot with sample-size guard",
+      "points": 4,
+      "notebook": "03c_groupby_merge_pivot",
+      "brief": "Churn rate by city \u00d7 risk_profile, with a count pivot beside it.",
+      "starterCode": "# your code",
+      "checkCode": "",
+      "hints": [
+        "Two pivots: aggfunc='mean' and aggfunc='count'"
+      ],
+      "solution": "rate = m.pivot_table(index='city', columns='risk_profile', values='churned', aggfunc='mean')\ncnt = m.pivot_table(index='city', columns='risk_profile', values='churned', aggfunc='count')"
+    },
+    {
+      "id": "m3-e09",
+      "type": "code",
+      "title": "Worst month vs drawdown trough",
+      "points": 3,
+      "notebook": "03d_full_eda_nifty",
+      "brief": "Do the worst calendar month and the drawdown trough coincide?",
+      "starterCode": "# your code",
+      "checkCode": "",
+      "hints": [
+        "resample('ME').sum() on returns",
+        "idxmin() on both"
+      ],
+      "solution": "monthly = px['ret'].resample('ME').sum(); monthly.idxmin()"
+    },
+    {
+      "id": "m3-e10",
+      "type": "code",
+      "title": "Days underwater",
+      "points": 3,
+      "notebook": "03d_full_eda_nifty",
+      "brief": "Count days spent more than 10% below the running peak.",
+      "starterCode": "# your code",
+      "checkCode": "",
+      "hints": [
+        "Boolean mask on the drawdown series",
+        ".sum() counts Trues"
+      ],
+      "solution": "(px['drawdown'] < -0.10).sum()"
+    }
+  ]
+}

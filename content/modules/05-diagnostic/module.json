@@ -1,0 +1,49 @@
+{
+ "id": "05-diagnostic",
+ "number": "5",
+ "part": "B",
+ "title": "Diagnostic Analytics",
+ "subtitle": "Why did it happen",
+ "estimatedMinutes": 330,
+ "status": "published",
+ "prerequisites": [
+  "04-descriptive-viz"
+ ],
+ "learningOutcomes": [
+  "Decompose changes into parts that reconcile",
+  "Run cohorts and know a snapshot's limits",
+  "Standardise for mix before comparing",
+  "Detect hidden populations and reversals",
+  "Close with mechanisms plus the separating test"
+ ],
+ "pages": [
+  {
+   "slug": "content",
+   "title": "Diagnostic Analytics",
+   "file": "pages/01-content.mdx"
+  }
+ ],
+ "notebooks": [
+  {
+   "id": "05a_variance_attribution",
+   "title": "5A \u00b7 Variance & Attribution",
+   "file": "notebooks/05a_variance_attribution.ipynb",
+   "colabEnabled": true,
+   "solutionFile": "notebooks/solutions/05_solutions.ipynb"
+  },
+  {
+   "id": "05b_cohorts_drivers",
+   "title": "5B \u00b7 Cohorts & Drivers",
+   "file": "notebooks/05b_cohorts_drivers.ipynb",
+   "colabEnabled": true,
+   "solutionFile": "notebooks/solutions/05_solutions.ipynb"
+  }
+ ],
+ "quiz": {
+  "file": "quiz.json",
+  "passingScore": 70
+ },
+ "exercises": {
+  "file": "exercises.json"
+ }
+}

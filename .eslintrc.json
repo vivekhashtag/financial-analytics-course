@@ -1,0 +1,7 @@
+{
+  "extends": ["next/core-web-vitals"],
+  "ignorePatterns": ["public/**", ".next/**", "notebooks/**", "streamlit/**"],
+  "rules": {
+    "@next/next/no-html-link-for-pages": "off"
+  }
+}

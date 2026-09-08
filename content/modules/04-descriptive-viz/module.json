@@ -1,0 +1,60 @@
+{
+ "id": "04-descriptive-viz",
+ "number": "4",
+ "part": "B",
+ "title": "Descriptive Analytics & Visualisation",
+ "subtitle": "What happened \u2014 and how to show it",
+ "estimatedMinutes": 360,
+ "status": "published",
+ "prerequisites": [
+  "03-pandas"
+ ],
+ "learningOutcomes": [
+  "Choose the right chart from the seven intents",
+  "Build waterfall, candlestick, heatmap and tornado from scratch",
+  "Avoid the chart crimes and pass the screenshot test",
+  "Run and modify a Streamlit dashboard locally",
+  "Rebuild it in Looker Studio and argue tool-vs-room"
+ ],
+ "pages": [
+  {
+   "slug": "content",
+   "title": "Descriptive Analytics & Visualisation",
+   "file": "pages/01-content.mdx"
+  }
+ ],
+ "notebooks": [
+  {
+   "id": "04a_chart_grammar",
+   "title": "4A \u00b7 The Grammar of Charts",
+   "file": "notebooks/04a_chart_grammar.ipynb",
+   "colabEnabled": true,
+   "solutionFile": "notebooks/solutions/04_solutions.ipynb"
+  },
+  {
+   "id": "04b_finance_exhibits",
+   "title": "4B \u00b7 The Finance Exhibits",
+   "file": "notebooks/04b_finance_exhibits.ipynb",
+   "colabEnabled": true,
+   "solutionFile": "notebooks/solutions/04_solutions.ipynb"
+  }
+ ],
+ "quiz": {
+  "file": "quiz.json",
+  "passingScore": 70
+ },
+ "exercises": {
+  "file": "exercises.json"
+ },
+ "streamlitApps": [
+  {
+   "id": "m4_price_dashboard",
+   "title": "NIFTY Descriptive Dashboard",
+   "file": "streamlit/m4_price_dashboard.py",
+   "runInstructions": "pip install streamlit pandas numpy matplotlib, place data/ alongside, then: streamlit run m4_price_dashboard.py",
+   "datasets": [
+    "nifty50_prices.csv"
+   ]
+  }
+ ]
+}

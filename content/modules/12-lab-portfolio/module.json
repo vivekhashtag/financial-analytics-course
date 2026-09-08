@@ -1,0 +1,49 @@
+{
+ "id": "12-lab-portfolio",
+ "number": "12",
+ "part": "D",
+ "title": "Lab 4 \u00b7 Portfolio Optimisation",
+ "subtitle": "The frontier, built and humbled",
+ "estimatedMinutes": 330,
+ "status": "published",
+ "prerequisites": [
+  "11-lab-algo-trading"
+ ],
+ "learningOutcomes": [
+  "Show the correlation bend; build the frontier",
+  "Explain why solvers convulse on noisy inputs",
+  "Measure risk-vs-return estimability",
+  "Run the honest tournament; explain 1/N",
+  "Recite the survivors' list"
+ ],
+ "pages": [
+  {
+   "slug": "content",
+   "title": "Lab 4 \u00b7 Portfolio Optimisation",
+   "file": "pages/01-content.mdx"
+  }
+ ],
+ "notebooks": [
+  {
+   "id": "12a_frontier",
+   "title": "12A \u00b7 The Efficient Frontier",
+   "file": "notebooks/12a_frontier.ipynb",
+   "colabEnabled": true,
+   "solutionFile": "notebooks/solutions/12_solutions.ipynb"
+  },
+  {
+   "id": "12b_fragility",
+   "title": "12B \u00b7 The Fragility Lab",
+   "file": "notebooks/12b_fragility.ipynb",
+   "colabEnabled": true,
+   "solutionFile": "notebooks/solutions/12_solutions.ipynb"
+  }
+ ],
+ "quiz": {
+  "file": "quiz.json",
+  "passingScore": 70
+ },
+ "exercises": {
+  "file": "exercises.json"
+ }
+}

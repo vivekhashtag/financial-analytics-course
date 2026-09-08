@@ -1,0 +1,144 @@
+{
+  "questions": [
+    {
+      "id": "q1",
+      "type": "single",
+      "prompt": "Which type would you use for a share quantity?",
+      "options": [
+        "float",
+        "int",
+        "str",
+        "bool"
+      ],
+      "answer": 1,
+      "explanation": "Quantities are whole numbers; prices and rates are floats.",
+      "difficulty": "easy"
+    },
+    {
+      "id": "q2",
+      "type": "single",
+      "prompt": "What does `0.1 + 0.2 == 0.3` evaluate to in Python?",
+      "options": [
+        "True",
+        "False",
+        "Error",
+        "Depends on the OS"
+      ],
+      "answer": 1,
+      "explanation": "Binary floating point. Round or use a tolerance before comparing money.",
+      "difficulty": "medium"
+    },
+    {
+      "id": "q3",
+      "type": "single",
+      "prompt": "`watchlist[1:3]` on a 5-item list returns how many items?",
+      "options": [
+        "1",
+        "2",
+        "3",
+        "4"
+      ],
+      "answer": 1,
+      "explanation": "Slices exclude the end index: items 1 and 2.",
+      "difficulty": "medium"
+    },
+    {
+      "id": "q4",
+      "type": "single",
+      "prompt": "Which structure best models a portfolio of ticker \u2192 quantity?",
+      "options": [
+        "list",
+        "tuple",
+        "dict",
+        "set"
+      ],
+      "answer": 2,
+      "explanation": "A dict maps keys to values \u2014 exactly the portfolio shape.",
+      "difficulty": "easy"
+    },
+    {
+      "id": "q5",
+      "type": "single",
+      "prompt": "Which structure would you use to strip duplicate tickers from a trade log?",
+      "options": [
+        "list",
+        "set",
+        "tuple",
+        "str"
+      ],
+      "answer": 1,
+      "explanation": "Sets hold unique values only.",
+      "difficulty": "easy"
+    },
+    {
+      "id": "q6",
+      "type": "single",
+      "prompt": "What does `+=` do?",
+      "options": [
+        "Compares two values",
+        "Adds and reassigns in one step",
+        "Concatenates only strings",
+        "Creates a new variable"
+      ],
+      "answer": 1,
+      "explanation": "`total += x` is shorthand for `total = total + x`.",
+      "difficulty": "easy"
+    },
+    {
+      "id": "q7",
+      "type": "single",
+      "prompt": "In `def cagr(start, end, years=1):`, what is `years=1`?",
+      "options": [
+        "A required argument",
+        "A default argument used when the caller omits it",
+        "A return value",
+        "A type hint"
+      ],
+      "answer": 1,
+      "explanation": "Defaults make functions convenient without losing flexibility.",
+      "difficulty": "medium"
+    },
+    {
+      "id": "q8",
+      "type": "single",
+      "prompt": "`[round(p) for p in closes if p > 3460]` is called a\u2026",
+      "options": [
+        "Dictionary",
+        "List comprehension",
+        "Generator function",
+        "Lambda"
+      ],
+      "answer": 1,
+      "explanation": "A comprehension: transform plus filter, in one line.",
+      "difficulty": "medium"
+    },
+    {
+      "id": "q9",
+      "type": "single",
+      "prompt": "Why test `portfolio_value({'X':10},{'X':100})` before using the function on real data?",
+      "options": [
+        "It runs faster",
+        "It's a tracer bullet \u2014 you can verify the answer (1000) by hand",
+        "Python requires a test",
+        "To warm up the interpreter"
+      ],
+      "answer": 1,
+      "explanation": "Verify on known-answer inputs before trusting unknown ones.",
+      "difficulty": "medium"
+    },
+    {
+      "id": "q10",
+      "type": "single",
+      "prompt": "A tuple differs from a list because it:",
+      "options": [
+        "Can hold only numbers",
+        "Cannot be changed after creation",
+        "Is always sorted",
+        "Cannot be looped over"
+      ],
+      "answer": 1,
+      "explanation": "Tuples are immutable \u2014 good for fixed records like a completed trade.",
+      "difficulty": "easy"
+    }
+  ]
+}

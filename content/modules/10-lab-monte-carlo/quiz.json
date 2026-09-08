@@ -1,0 +1,88 @@
+{
+ "questions": [
+  {
+   "id": "q1",
+   "type": "single",
+   "prompt": "Monte Carlo in a sentence:",
+   "options": [
+    "Simulate the mean",
+    "Play the game many times and count",
+    "Assume normal, integrate",
+    "Bootstrap medians"
+   ],
+   "answer": 1,
+   "explanation": "Code the rules \u2192 know the odds.",
+   "difficulty": "core"
+  },
+  {
+   "id": "q2",
+   "type": "single",
+   "prompt": "Uncertainty grows with:",
+   "options": [
+    "t",
+    "\u221at",
+    "t\u00b2",
+    "log t"
+   ],
+   "answer": 1,
+   "explanation": "4\u00d7 horizon, 2\u00d7 spread \u2014 hence \u221a252.",
+   "difficulty": "core"
+  },
+  {
+   "id": "q3",
+   "type": "single",
+   "prompt": "Simulate prices multiplicatively because:",
+   "options": [
+    "Speed",
+    "Prices compound and can't go below zero",
+    "Normal returns",
+    "Excel"
+   ],
+   "answer": 1,
+   "explanation": "Additive 10-year paths go negative \u2014 impossible.",
+   "difficulty": "core"
+  },
+  {
+   "id": "q4",
+   "type": "single",
+   "prompt": "The deterministic retirement calculator fails because:",
+   "options": [
+    "Wrong return",
+    "It prices the average lifetime, not the unlucky one",
+    "Ignores inflation",
+    "SIPs vary"
+   ],
+   "answer": 1,
+   "explanation": "Random order alone creates a material ruin rate.",
+   "difficulty": "core"
+  },
+  {
+   "id": "q5",
+   "type": "single",
+   "prompt": "Bootstrap beats normal for VaR because:",
+   "options": [
+    "Jargon",
+    "Drawing real days keeps the fat tails",
+    "Speed",
+    "Less data"
+   ],
+   "answer": 1,
+   "explanation": "Deep-tail losses are multiples more likely in reality.",
+   "difficulty": "core"
+  },
+  {
+   "id": "q6",
+   "type": "single",
+   "prompt": "Expected Shortfall answers:",
+   "options": [
+    "Breach frequency",
+    "IF we breach, how bad on average",
+    "Worst case",
+    "Median loss"
+   ],
+   "answer": 1,
+   "explanation": "The question VaR dodges; quote them together.",
+   "difficulty": "core"
+  }
+ ]
+}

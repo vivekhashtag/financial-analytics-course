@@ -1,0 +1,88 @@
+{
+ "questions": [
+  {
+   "id": "q1",
+   "type": "single",
+   "prompt": "Markowitz in one sentence:",
+   "options": [
+    "Buy low sell high",
+    "Risk depends on how holdings move TOGETHER",
+    "Diversify brokers",
+    "Risk=return"
+   ],
+   "answer": 1,
+   "explanation": "Covariance turned folklore into arithmetic.",
+   "difficulty": "core"
+  },
+  {
+   "id": "q2",
+   "type": "single",
+   "prompt": "The efficient frontier is:",
+   "options": [
+    "Best 10 stocks",
+    "The cloud's north-west edge",
+    "A regression",
+    "Max-Sharpe"
+   ],
+   "answer": 1,
+   "explanation": "Best return per risk level; nothing stands beyond it.",
+   "difficulty": "core"
+  },
+  {
+   "id": "q3",
+   "type": "single",
+   "prompt": "A 2pp nudge made the allocation:",
+   "options": [
+    "Barely move",
+    "Convulse \u2014 a third reshuffled",
+    "Improve",
+    "Hit caps"
+   ],
+   "answer": 1,
+   "explanation": "Error and opportunity look identical to a solver.",
+   "difficulty": "core"
+  },
+  {
+   "id": "q4",
+   "type": "single",
+   "prompt": "The estimability asymmetry:",
+   "options": [
+    "Both estimate well",
+    "Risk forecastable; returns not \u2014 and max-Sharpe leans on the wrong one",
+    "Returns better",
+    "Neither"
+   ],
+   "answer": 1,
+   "explanation": "9B + 6B, unified \u2014 the fragility in one line.",
+   "difficulty": "core"
+  },
+  {
+   "id": "q5",
+   "type": "single",
+   "prompt": "1/N competes out-of-sample because:",
+   "options": [
+    "Equal is optimal",
+    "Optimisation's edge < estimation error's damage",
+    "Efficient markets",
+    "Daily rebalancing"
+   ],
+   "answer": 1,
+   "explanation": "The most replicated humbling in modern finance.",
+   "difficulty": "core"
+  },
+  {
+   "id": "q6",
+   "type": "single",
+   "prompt": "Constraints like the 10% cap:",
+   "options": [
+    "Pointless drag",
+    "Cost in-sample Sharpe, buy out-of-sample survival",
+    "Regulatory only",
+    "Solver speed"
+   ],
+   "answer": 1,
+   "explanation": "Purchased robustness.",
+   "difficulty": "core"
+  }
+ ]
+}

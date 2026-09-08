@@ -1,0 +1,49 @@
+{
+ "id": "11-lab-algo-trading",
+ "number": "11",
+ "part": "D",
+ "title": "Lab 3 \u00b7 Algorithmic Trading",
+ "subtitle": "The order book and the honest backtest",
+ "estimatedMinutes": 360,
+ "status": "published",
+ "prerequisites": [
+  "10-lab-monte-carlo"
+ ],
+ "learningOutcomes": [
+  "Read books: spread, depth, impact",
+  "Build a maker and its first risk control",
+  "Explain the speed race and the Flash Crash lesson",
+  "Backtest with lagged signals, costs, universes",
+  "Catch corporate-action landmines; deliver nuance"
+ ],
+ "pages": [
+  {
+   "slug": "content",
+   "title": "Lab 3 \u00b7 Algorithmic Trading",
+   "file": "pages/01-content.mdx"
+  }
+ ],
+ "notebooks": [
+  {
+   "id": "11a_order_book",
+   "title": "11A \u00b7 The Order Book",
+   "file": "notebooks/11a_order_book.ipynb",
+   "colabEnabled": true,
+   "solutionFile": "notebooks/solutions/11_solutions.ipynb"
+  },
+  {
+   "id": "11b_honest_backtest",
+   "title": "11B \u00b7 The Honest Backtest",
+   "file": "notebooks/11b_honest_backtest.ipynb",
+   "colabEnabled": true,
+   "solutionFile": "notebooks/solutions/11_solutions.ipynb"
+  }
+ ],
+ "quiz": {
+  "file": "quiz.json",
+  "passingScore": 70
+ },
+ "exercises": {
+  "file": "exercises.json"
+ }
+}

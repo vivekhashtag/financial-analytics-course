@@ -1,0 +1,88 @@
+{
+ "questions": [
+  {
+   "id": "q1",
+   "type": "single",
+   "prompt": "A chart's title should state:",
+   "options": [
+    "The column names",
+    "The finding, as a sentence",
+    "The data source",
+    "The chart type"
+   ],
+   "answer": 1,
+   "explanation": "Titles carry the message \u2014 'Churn falls from 34% to 10%' \u2014 not labels.",
+   "difficulty": "core"
+  },
+  {
+   "id": "q2",
+   "type": "single",
+   "prompt": "Truncating the y-axis is lying on which chart type?",
+   "options": [
+    "Line charts",
+    "Bar charts",
+    "Scatter plots",
+    "All equally"
+   ],
+   "answer": 1,
+   "explanation": "Bars encode value by length; lines by position, so truncation there can be legitimate.",
+   "difficulty": "core"
+  },
+  {
+   "id": "q3",
+   "type": "single",
+   "prompt": "For skewed money data, the 'typical' case is the:",
+   "options": [
+    "Mean",
+    "Median",
+    "Mode",
+    "Maximum"
+   ],
+   "answer": 1,
+   "explanation": "The mean is dragged by giants; say which you used, always.",
+   "difficulty": "core"
+  },
+  {
+   "id": "q4",
+   "type": "single",
+   "prompt": "A waterfall chart must always:",
+   "options": [
+    "Use red/green",
+    "Reconcile exactly to the reported end figure",
+    "Start at zero",
+    "Have \u22648 steps"
+   ],
+   "answer": 1,
+   "explanation": "A bridge that doesn't land has a leak \u2014 bug or data hole.",
+   "difficulty": "core"
+  },
+  {
+   "id": "q5",
+   "type": "single",
+   "prompt": "Streamlit's mental model:",
+   "options": [
+    "Server with callbacks",
+    "A script that re-runs top-to-bottom on every interaction",
+    "A spreadsheet",
+    "A browser notebook"
+   ],
+   "answer": 1,
+   "explanation": "Hence @st.cache_data on the expensive parts.",
+   "difficulty": "core"
+  },
+  {
+   "id": "q6",
+   "type": "single",
+   "prompt": "Sector-ordering the heatmap axes matters because:",
+   "options": [
+    "Alphabetical tidiness",
+    "It makes sector blocks visible along the diagonal",
+    "Speed",
+    "Colour scales"
+   ],
+   "answer": 1,
+   "explanation": "Banks-move-with-banks appears as blocks \u2014 diversify ACROSS sectors.",
+   "difficulty": "core"
+  }
+ ]
+}

@@ -1,0 +1,163 @@
+{
+ "id": "03-pandas",
+ "number": "3",
+ "part": "A",
+ "title": "Pandas for Data Analysis",
+ "subtitle": "Load, clean, join, aggregate, explore",
+ "estimatedMinutes": 360,
+ "status": "published",
+ "prerequisites": [
+  "02-python-foundations"
+ ],
+ "learningOutcomes": [
+  "Load any CSV and run the first-look ritual: head, shape, info, describe",
+  "Filter, sort and derive columns without writing loops",
+  "Clean a genuinely dirty dataset: duplicates, mixed dates, entity variants, contamination",
+  "Join tables with merge and choose the join type as an analytical decision",
+  "Aggregate with groupby and reshape with pivot_table",
+  "Produce the four core market exhibits: price+MAs, return distribution, drawdown, rolling volatility"
+ ],
+ "pages": [
+  {
+   "slug": "full-content",
+   "title": "Full Module Text",
+   "file": "pages/00-full-content.mdx"
+  },
+  {
+   "slug": "why-pandas",
+   "title": "From Loops to Vectors",
+   "file": "pages/01-why-pandas.mdx"
+  },
+  {
+   "slug": "first-look",
+   "title": "The First-Look Ritual",
+   "file": "pages/02-first-look.mdx"
+  },
+  {
+   "slug": "cleaning",
+   "title": "Cleaning Is Analysis",
+   "file": "pages/03-cleaning.mdx"
+  },
+  {
+   "slug": "groupby-merge",
+   "title": "Groupby, Merge and the Join Decision",
+   "file": "pages/04-groupby-merge.mdx"
+  },
+  {
+   "slug": "market-eda",
+   "title": "Market EDA: The Four Exhibits",
+   "file": "pages/05-market-eda.mdx"
+  }
+ ],
+ "notebooks": [
+  {
+   "id": "03a_dataframe_fundamentals",
+   "title": "3A \u00b7 DataFrame Fundamentals",
+   "file": "notebooks/03a_dataframe_fundamentals.ipynb",
+   "colabEnabled": true,
+   "datasets": [
+    "nifty50_prices"
+   ],
+   "packages": [
+    "pandas"
+   ],
+   "solutionFile": "notebooks/solutions/03_solutions.ipynb"
+  },
+  {
+   "id": "03b_cleaning_horror_file",
+   "title": "3B \u00b7 Cleaning the Horror File",
+   "file": "notebooks/03b_cleaning_horror_file.ipynb",
+   "colabEnabled": true,
+   "datasets": [
+    "messy_transactions"
+   ],
+   "packages": [
+    "pandas",
+    "numpy"
+   ],
+   "solutionFile": "notebooks/solutions/03_solutions.ipynb"
+  },
+  {
+   "id": "03c_groupby_merge_pivot",
+   "title": "3C \u00b7 Groupby, Merge & Pivot",
+   "file": "notebooks/03c_groupby_merge_pivot.ipynb",
+   "colabEnabled": true,
+   "datasets": [
+    "client_book",
+    "messy_transactions"
+   ],
+   "packages": [
+    "pandas",
+    "numpy"
+   ],
+   "solutionFile": "notebooks/solutions/03_solutions.ipynb"
+  },
+  {
+   "id": "03d_full_eda_nifty",
+   "title": "3D \u00b7 Full EDA on NIFTY",
+   "file": "notebooks/03d_full_eda_nifty.ipynb",
+   "colabEnabled": true,
+   "datasets": [
+    "nifty50_prices"
+   ],
+   "packages": [
+    "pandas",
+    "numpy",
+    "matplotlib",
+    "scipy",
+    "yfinance"
+   ],
+   "solutionFile": "notebooks/solutions/03_solutions.ipynb"
+  }
+ ],
+ "streamlitApps": [],
+ "quiz": {
+  "file": "quiz.json",
+  "passingScore": 7
+ },
+ "exercises": {
+  "file": "exercises.json"
+ },
+ "biasCheck": {
+  "enabled": true,
+  "prompt": "3C demonstrated survivorship in one line and 3D showed a regime change as a picture. Before any analysis on these datasets: which of the four biases applies, and where?"
+ },
+ "aiSidebar": {
+  "green": [
+   {
+    "situation": "Generate a pandas snippet",
+    "prompt": "Write pandas code to [task] on a DataFrame with columns [list]. Then explain each line."
+   },
+   {
+    "situation": "Decode a cryptic pandas error",
+    "prompt": "This pandas code gives this error: [paste both]. Explain what pandas is complaining about in plain words, then fix it."
+   }
+  ],
+  "red": [
+   {
+    "danger": "Trusting generated pandas without a tracer bullet",
+    "why": "AI-generated groupby/merge code is frequently plausible and subtly wrong (wrong join type, silent NaN handling)",
+    "rule": "Verify on a slice you can count by hand before running on the full table"
+   }
+  ]
+ },
+ "streamConnector": {
+  "corporateFinance": "Variance analysis is a groupby; consolidation is a merge",
+  "assetManagement": "The client book analysis in 3C is the daily life of a wealth analytics team",
+  "banking": "Transaction cleaning in 3B is the front line of AML and fraud analytics",
+  "markets": "3D's four exhibits are page one of every asset research note"
+ },
+ "badge": {
+  "id": "data-wrangler",
+  "label": "Data Wrangler",
+  "icon": "table"
+ },
+ "caseStudy": null,
+ "widgets": [
+  "CodePeek",
+  "NotebookCard",
+  "ExerciseList",
+  "Quiz",
+  "DatasetPreview"
+ ]
+}

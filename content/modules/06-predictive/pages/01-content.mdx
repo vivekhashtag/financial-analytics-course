@@ -1,0 +1,153 @@
+# Module 6 · Predictive Analytics: What Is Likely: Without the Machine Learning
+
+*Reading time: about 70 minutes, interleaved with two notebooks: **6A** (trend fitting & regression) and **6B** (the forecast bake-off). This is the third rung of the ladder, and the module where this course's "no ML" promise gets cashed in deliberately: you'll learn what prediction honestly is, using tools whose every moving part you can read, and you'll build the evaluation harness that every future model, however exotic, must pass through.*
+
+---
+
+## Lesson 6.1 — What Prediction Actually Is
+
+Strip the mystique. A prediction is a claim of the form: *given what we know today, here is a range for what happens next, and here are the assumptions carrying it.* Three parts, the estimate, the range, the assumptions, and professional forecasting is the discipline of never shipping the first without the other two.
+
+Notice what prediction is *not*: it is not knowing the future. Every forecast is a bet that some pattern from the past continues, a trend persists, a relationship holds, a regime endures. The forecast's honest value lies as much in *surfacing that bet* as in the number itself. Module 1 gave you the vocabulary (regime change, look-ahead, point-in-time); this module is where those biases stop being cautionary tales and start being the specific ways *your own notebooks* can go wrong.
+
+And a scope statement, kept deliberately loud: **this module uses no machine learning.** A straight line, an average, a five-line smoothing loop, tools whose formulas you can read. That's not a limitation to apologise for. Most deployed business forecasts *are* these tools; a well-handled trend line beats a badly-handled neural network; and the thing that actually separates good forecasters from bad ones, the evaluation harness, is identical at every level of model sophistication. Learn the harness on glass-box models, and the black boxes can't fool you later.
+
+---
+
+## Lesson 6.2 — The Trend Line, and the Judgment Inside It
+
+Notebook 6A opens with the humblest predictive act: fitting a straight line to MoneyMart's ten years of revenue. One scipy call returns the slope, the intercept, and **R²**, the share of variation the line explains.
+
+And immediately, the module's first big lesson: **R² looks decent, and the picture calls it a liar.** The single line, fitted through all ten years, overshoots the COVID dip and undershoots both the before and the after, *one model fitted across an earthquake, true of nothing*. Regime change, no longer a warning but a visible fitting failure.
+
+The professional response is not a cleverer curve. It is a **decision about the world**: which era do you believe continues? Fit post-COVID only, and the slope changes, the forecast changes, and 6A prints both forecasts side by side with the line worth writing on your wall:
+
+> **Same data, two defensible forecasts, and the gap between them is a judgment, not a calculation.**
+
+Every forecast contains a judgment about which past continues. Good analysts surface it ("this assumes the post-COVID trajectory holds"); bad ones bury it inside a model choice and call it mathematics. Exercise 1 drives it home brutally: fit on 2016–19, "forecast" the COVID year, and measure the miss, because *no* trend fitted on the old world could see the new one coming. Models extrapolate worlds; they do not foresee new ones. What forecasting owes the world is not clairvoyance but honesty: intervals, and stated regime assumptions.
+
+---
+
+## Lesson 6.3 — Regression: Predicting From a Driver
+
+A trend predicts from *time*, useful, but time isn't something you can manage. A **regression** predicts from a *driver*: something plannable, budgetable, controllable. MoneyMart's obvious one is store count, and the fit is tight: each additional store associates with a readable ₹-crore of annual revenue.
+
+Then 6A teaches the habit that separates users of regression from readers of it: **plot the residuals**, actual minus predicted, row by row. Patterns in residuals are exactly the rows your model cannot explain, and here the COVID years sit far below the line: the stores existed; the revenue didn't. *A residual plot is a lie detector.* Run it on every regression, forever.
+
+Three honest readings to staple to every regression you ever present:
+
+1. **"Associates with," never "causes."** The slope says stores and revenue move together. Whether *building* a store buys that revenue is Module 5's three-worlds question all over again, maybe stores drive revenue; maybe management opens stores where revenue was coming anyway; maybe a booming economy drives both.
+2. **Interpolation is not extrapolation.** The fit is trustworthy inside the range it has seen (180–400 stores). At 800 stores live saturation, cannibalisation, and weaker locations, none of which the line knows about. Extrapolating silently past your data's range is a forecast crime; do it, if you must, out loud.
+3. **Point-in-time discipline, implemented.** Your dataset carries FY20-21's revenue twice, as first reported (₹3,511 cr) and as later restated (₹3,366 cr). A model built *in 2021* could only have seen the first number. Exercise 2 has you refit using the first-reported figure, the shift is small here, one cell, but you will have *implemented* Module 1's third bias-check once, which is how you recognise the trap when it's a thousand restated cells at production scale.
+
+---
+
+## Lesson 6.4 — From a Point to a Range
+
+A single number, "FY26-27 revenue: ₹11,240 crore", is, in this course's standing phrase, **a guess wearing a suit**. The honest product is a range, and 6A builds the simplest defensible one from the model's own track record: if the fit's residuals have standard deviation *s*, then roughly 95% of outcomes land within **±2s** of the line (assuming the errors stay bell-ish, an assumption you *state*, because Module 3 taught you what financial tails actually look like).
+
+The full analyst sentence, every clause load-bearing:
+
+> *"Central estimate ₹11,240 crore; we'd be surprised outside ₹10,600–11,900, assuming the post-COVID regime holds."*
+
+And the honesty footnote that keeps you humble: this residual band is a **floor on your uncertainty, not a ceiling**. It ignores that the slope itself was estimated from a handful of points, and it trusts the regime completely. Proper intervals widen for both. When in doubt, your range is too narrow, the empirical finding across decades of forecasting research is that nearly everyone's is.
+
+> **📓 Do notebook 6A now.**
+
+---
+
+## Lesson 6.5 — The Bake-Off: Evaluation Is the Skill
+
+Notebook 6B reframes the entire subject. Anyone can *produce* a forecast; the professional skill is **judging forecasts honestly**, and most forecasting scandal, in academia and in trading, is evaluation failure, not model failure.
+
+### The one unbreakable rule
+
+To test a forecaster you hold back data it never sees. With time series there is exactly **one legal way**:
+
+> **Train on the past. Test on the future. Never shuffle.**
+
+Random splitting, standard elsewhere in statistics, lets the model train on March while being "tested" on January. It has seen the future: **look-ahead bias wearing a methodology costume**, and the single most common way "profitable" strategies are manufactured by accident. The split is a date. Full stop.
+
+### Three humble forecasters
+
+- **Naive**: tomorrow = today. The village idiot of forecasting, hold that thought.
+- **Moving average**: tomorrow = mean of the last k months. Smooths noise; drags its feet on trends.
+- **Simple exponential smoothing (SES)**: a weighted blend where recent months matter most, one dial (alpha) setting how fast the past fades. 6B implements it in **five lines**, and inside those five lines sits the module's most chilling detail: the forecast must be recorded *before* the level updates with the new observation. **Swap two lines, and every forecast quietly contains the month it's predicting.** A one-line look-ahead bug of exactly the kind that has "validated" real trading systems. That is how thin the ice is, and why you build these things yourself at least once.
+
+### Three rulers, three personalities
+
+**MAE** (mean absolute error) counts every miss by its size, democratic. **RMSE** squares before averaging, it punishes big misses disproportionately; use it when disasters cost more than their size. **MAPE** speaks in percent, comparable across series, but it explodes when actuals sit near zero. Choosing the metric *is* choosing what you fear; say which you chose and why.
+
+### The leaderboard, and the floor
+
+Run the bake-off on NIFTY monthly closes and read the result slowly: **naive is at or near the top.** The moving average, which *sounds* more sophisticated, trails it, because averaging lags a trending series. From this, the rule that saves careers:
+
+> **No forecast has proven anything until it beats naive on honest, out-of-sample data.** Naive is the floor. A model that loses to "tomorrow = today" is not a model; it is overhead.
+
+Exercise 1 adds the subtle trap: tune SES's alpha *using the test set*, and your "best" score is contaminated, you used the exam to choose the student. The clean protocol: choose on train (or a validation slice), touch the test set once, report that. Even honest people leak the future through their *choices*; the harness exists because good intentions don't compile.
+
+### Walk-forward: the track record, not the snapshot
+
+One split is one exam. **Walk-forward** re-sits it every month: stand at month *t*, forecast *t+1* using only data through *t*, step forward, repeat. Every forecast is out-of-sample; the output is a rolling error curve, the honest *movie* of model performance, in which you can see whether a model is consistently better or merely lucky in patches. This is how forecasting systems are actually validated in industry, and 6B builds it in a dozen readable lines.
+
+---
+
+## Lesson 6.6 — The Punchline About Markets
+
+Why is the village idiot so hard to beat *on prices*? Because markets are self-devouring: if next month's move were reliably predictable from the past, traders would trade it **today**, moving today's price until the predictability vanished. **Prices eat their own forecasts.** The residue is a series close to a random walk, on which "tomorrow = today" is, by construction, near-optimal.
+
+Three consequences to carry forward:
+
+1. **Any backtest that beats the market easily should be presumed broken**, look-ahead, survivorship, ignored costs, until proven otherwise. Module 11 adopts this as its opening stance, and now you know why.
+2. **Not everything is a price.** Revenue, transaction volumes, loan losses, power demand, series with genuine seasonality and inertia, are honestly forecastable, and that's where these humble tools earn real salaries. Module 9's time-series lab lives exactly there.
+3. **The harness transfers even where forecastability doesn't.** Time-respecting splits, the naive floor, walk-forward, intervals, the bias checks: that machinery is the module. The models were almost incidental.
+
+---
+
+## Lesson 6.7 — The ML Border (The Promised Signpost)
+
+Everything in this module had a formula you could read: a line, an average, a five-line loop. One step past this signpost live regularised regressions, tree ensembles, gradient boosting, neural networks, models that *learn their structure from data*. They are powerful, genuinely useful in finance, and **out of scope here by design**: they belong to the ML course, where they get the room they deserve.
+
+Here is what crosses the border with you, and it is worth more than any model: **the harness.** Every ML forecaster ever deployed is judged by exactly the machinery you just built, honest splits, naive baselines, walk-forward, intervals, and the four biases standing guard at the door. The industry's quiet embarrassment is how many impressive ML numbers evaporate in production for want of this harness. People who learn models before evaluation produce those numbers. You learned evaluation first. You will not be those people.
+
+> **📓 Do notebook 6B now.** Exercise 2's drift forecaster (naive plus the average historical drift) typically edges plain naive by a sliver on a trending series, and that sliver *is* the trend premium, whose survival after costs is precisely Module 11's question.
+
+---
+
+## Lesson 6.8 — The AI Sidebar
+
+**Green, the assumptions auditor.** Before shipping any forecast:
+
+> *"Here is my forecast and method: [describe]. List every assumption this forecast makes, ordered by how badly the forecast breaks if the assumption fails."*
+
+AI is genuinely strong at enumerating assumptions you've internalised so deeply you've stopped seeing them. The regime assumption always tops the list; seeing it written by someone else makes it easier to say out loud to a stakeholder.
+
+**Red, the leak you can't see.** Ask AI to "write forecasting code with a train/test split" and it will frequently produce a *random* split, because most training data it learned from concerns non-temporal problems where shuffling is correct. The code runs, the scores look great, and the greatness *is the bug*. You now know the tell: for time series, the split must be a **date**. Check every AI-generated evaluation for it, tracer-bullet style, and more generally, treat suspiciously good scores the way Module 1 taught you to treat suspiciously clean data.
+
+---
+
+## Lesson 6.9 — The Stream Connector
+
+- **Corporate finance:** the budget *is* a forecast with governance, trend plus drivers plus management judgment, and the variance analysis you built in Module 5 is next year's forecast-error autopsy.
+- **Asset management:** capital-market assumptions (long-run return forecasts feeding every financial plan) are trend estimates with intervals, and the honest houses publish the intervals.
+- **Banking:** expected credit loss under Ind AS 109 is *regulated forecasting*, point-in-time discipline isn't a nicety there; examiners test for it by name.
+- **Markets:** the desk's realised-volatility forecast (an exponentially weighted average, literally SES pointed at squared returns) sizes positions every single day. Your five-line loop is a production risk tool wearing gym clothes.
+
+---
+
+## Module 6 Checklist
+
+- [ ] You can state what a forecast is (estimate + range + assumptions) and refuse to ship the first without the other two
+- [ ] You fitted a trend through a regime break, saw R² lie, and can articulate the judgment inside every trend choice
+- [ ] You read residuals as a lie detector, and you never extrapolate past the data's range silently
+- [ ] You implemented point-in-time discipline once, by hand
+- [ ] You can build a ±2s interval and say the full analyst sentence, and you know your interval is a floor, not a ceiling
+- [ ] Train past / test future / never shuffle is reflex, and you can explain the two-line SES bug from memory
+- [ ] You know what MAE, RMSE and MAPE each reward, and that choosing the metric is choosing what you fear
+- [ ] Naive is your floor; walk-forward is your court; a contaminated test set is a self-graded exam
+- [ ] You can explain *why* prices eat their own forecasts, and where genuine forecastability lives instead
+- [ ] Notebooks 6A–6B complete · exercises attempted before solutions · quiz passed
+
+**Badge earned: Honest Forecaster 🔮**
+
+Next: Module 7: Prescriptive Analytics, the top of the ladder. You can describe, diagnose, and predict; the final question is the one businesses actually pay for: **"so what should we do?"** Objectives, constraints, and your first optimiser, where analytics stops advising and starts deciding.

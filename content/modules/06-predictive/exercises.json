@@ -1,0 +1,34 @@
+{
+ "exercises": [
+  {
+   "id": "ex1",
+   "title": "Forecast the COVID year from 2016-19",
+   "notebookRef": "6A Ex1",
+   "requiresAttempt": true
+  },
+  {
+   "id": "ex2",
+   "title": "Point-in-time refit",
+   "notebookRef": "6A Ex2",
+   "requiresAttempt": true
+  },
+  {
+   "id": "ex3",
+   "title": "Two intervals, one sentence",
+   "notebookRef": "6A Ex3",
+   "requiresAttempt": true
+  },
+  {
+   "id": "ex4",
+   "title": "Tune alpha, then confess",
+   "notebookRef": "6B Ex1",
+   "requiresAttempt": true
+  },
+  {
+   "id": "ex5",
+   "title": "Add the drift forecaster",
+   "notebookRef": "6B Ex2",
+   "requiresAttempt": true
+  }
+ ]
+}

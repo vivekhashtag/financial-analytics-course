@@ -1,0 +1,56 @@
+---
+title: "Data Structures: Lists, Dicts, Tuples, Sets"
+slug: structures
+---
+
+Four containers. Choosing the right one is most of good code design.
+
+## Lists `[ ]` — order matters, duplicates allowed
+
+A watchlist. A series of daily closes. Anything sequential.
+
+<CodePeek code={`closes = [3450.75, 3462.10, 3438.90, 3475.25]
+
+closes[0]     // 3450.75 - Python counts from ZERO
+closes[-1]    // 3475.25 - negative counts from the end
+closes[1:3]   // two items - end index EXCLUDED
+max(closes)   // 3475.25`} />
+
+<Callout type="warn">
+Two things trip up every beginner: indexing starts at **0**, and slices **exclude** the end index. `closes[1:3]` gives you two items, not three.
+</Callout>
+
+## Dicts `{ }` — the most important structure in this course
+
+A dict maps **keys** to **values**. A portfolio *is* a dict: ticker → quantity.
+
+<CodePeek code={`portfolio = {
+    "RELIANCE.NS": 150,
+    "TCS.NS": 95,
+    "HDFCBANK.NS": 200,
+}
+
+portfolio["TCS.NS"]          // 95 - look up by key
+portfolio["ITC.NS"] = 500    // add a holding
+del portfolio["TCS.NS"]      // sell out completely
+"ITC.NS" in portfolio        // True`} />
+
+Two dicts working together, holdings and prices, is the pattern behind every portfolio valuation in finance. You'll build exactly that in notebook 2C.
+
+## Tuples `( )` — a list that can't change
+
+Use for fixed records. A completed trade never changes: `("TCS.NS", 50, 3450.75, "2026-08-17")`.
+
+## Sets `{ }` — unique values only
+
+Strip duplicates instantly. `set(["TCS.NS", "INFY.NS", "TCS.NS"])` → two items.
+
+## Choosing between them
+
+<DecisionTree tree={[
+  { q: "Does order matter and can items repeat?", yes: "list", no: "next" },
+  { q: "Do you look items up by a label?", yes: "dict", no: "next" },
+  { q: "Must it never change after creation?", yes: "tuple", no: "set" }
+]} />
+
+→ **Now finish notebook 2A, sections 4–6.**

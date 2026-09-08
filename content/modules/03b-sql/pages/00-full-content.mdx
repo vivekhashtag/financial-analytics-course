@@ -1,0 +1,211 @@
+# Module 3.5 · SQL: The Language of Where Data Lives
+
+*Reading time: about 70 minutes, interleaved with two notebooks: **3.5A** (first queries) and **3.5B** (joins & window functions). This module is shorter than Module 3 for a happy reason: **you already know every concept in it.** Filtering, grouping, joining, ranking, you did all of it in pandas. SQL is the same thinking in different clothes, and this module teaches it as a translation exercise: every new phrase introduced beside its pandas twin.*
+
+---
+
+## Lesson 3.5.1 — Why a Second Language?
+
+A fair question after Module 3: pandas already filters, groups and joins. Why learn SQL at all? Three honest answers, in ascending order of importance.
+
+**First: that's where the data lives.** Your course CSVs are a teaching convenience. In a real firm, data lives in **databases**, systems built to hold millions of rows safely, serve many users at once, and survive crashes mid-write. The transactions you cleaned in 3B would live in a bank's core system; the client book in a CRM database. Before any pandas can happen, someone must *get the data out*, and SQL (Structured Query Language) is how you ask a database for data. Every analyst's real pipeline starts with a SQL query and *then* becomes a DataFrame.
+
+**Second: the database does heavy lifting better.** Asking pandas to load 80 million transaction rows just to sum them by month means shipping 80 million rows across a network into your laptop's memory. Asking the *database* to sum them means shipping back twelve rows. The professional pattern, **filter and aggregate in SQL, analyse and visualise in Python**, is not a style preference; it's physics.
+
+**Third: it's the most-listed skill, full stop.** Scan analyst postings in any of Module 8's four streams and SQL appears more often than Python, Excel, or any other single skill. It is the lingua franca between analysts, engineers, and every BI tool (Looker Studio speaks it underneath). An analyst who can't self-serve from the warehouse queues behind one who can.
+
+### Your setup: two paths, zero friction
+
+The course gives you both worlds, and the notebooks auto-detect which you're in:
+
+- **Path A, real PostgreSQL (recommended once):** the course package includes `sql/01_schema.sql` and `sql/02_seed_core.sql`, which create and fill the course tables in a free cloud Postgres (Neon or Supabase, both have generous free tiers; the course site walks through the 5-minute signup). Set the connection string in the `COURSE_DB_URL` environment variable and the notebooks use it. This path gives you the real experience: a server, a connection, the thing your first job will hand you.
+- **Path B: SQLite fallback (zero setup):** if `COURSE_DB_URL` isn't set, the notebooks quietly build a local SQLite database *from the course CSVs* in the first cell and run every query against that. Same SQL, same results, no accounts, works offline and in Colab. **Start here today; do Path A once before the capstone.**
+
+Either way, the tables mirror your old friends: `clients` (the client book), `transactions` (the horror file, in its *cleaned* form, the database holds what 3B produced), plus the price tables. Same data, new address.
+
+---
+
+## Lesson 3.5.2 — The Query, Read Aloud (3.5A begins)
+
+Here is a complete SQL query, and the whole grammar of the language in six lines:
+
+```sql
+SELECT   segment, COUNT(*) AS clients, AVG(aum_inr) AS avg_aum
+FROM     clients
+WHERE    city = 'Mumbai'
+GROUP BY segment
+HAVING   COUNT(*) >= 20
+ORDER BY avg_aum DESC;
+```
+
+Read it as English: *from the clients table, keep Mumbai rows, group them by segment, keep only groups with at least 20 members, and show each group's count and average AUM, biggest first.* Now the Rosetta Stone, the same query in the pandas you already speak:
+
+```python
+(clients[clients.city == "Mumbai"]
+   .groupby("segment")
+   .agg(clients=("client_id","count"), avg_aum=("aum_inr","mean"))
+   .query("clients >= 20")
+   .sort_values("avg_aum", ascending=False))
+```
+
+Line for line, the mapping holds, and this module's entire method is that mapping:
+
+| SQL | pandas twin | The idea |
+|---|---|---|
+| `SELECT cols` | `df[["cols"]]` | choose columns |
+| `WHERE` | boolean mask | filter **rows** |
+| `GROUP BY` | `.groupby()` | split into groups |
+| `HAVING` | filter *after* groupby | filter **groups** |
+| `ORDER BY` | `.sort_values()` | sort |
+| `LIMIT 10` | `.head(10)` | peek |
+
+Two grammar points that trip up every newcomer, disarmed now:
+
+**WHERE vs HAVING is row-filter vs group-filter.** `WHERE city='Mumbai'` discards *rows* before grouping; `HAVING COUNT(*) >= 20` discards *groups* after. And notice what that HAVING clause just did: it enforced Module 3's law, **never report a rate without its count**, *in the grammar itself*. A churn-rate query with `HAVING COUNT(*) >= 30` cannot produce the three-person-pocket panic. SQL lets you legislate your own discipline.
+
+**The order you write is not the order it runs.** SQL executes roughly FROM → WHERE → GROUP BY → HAVING → SELECT → ORDER BY. This explains the classic beginner error: a column alias defined in SELECT can't be used in WHERE (WHERE ran first, the alias didn't exist yet). When a query errors mysteriously, replay it in execution order.
+
+### The first-look ritual, translated
+
+Module 3's ritual survives the move, new incantations, same paranoia:
+
+```sql
+SELECT * FROM clients LIMIT 5;                        -- head()
+SELECT COUNT(*) FROM clients;                         -- shape
+SELECT COUNT(*) - COUNT(risk_profile) AS missing_risk
+FROM clients;                                         -- info()'s missing count
+SELECT MIN(aum_inr), MAX(aum_inr), AVG(aum_inr)
+FROM clients;                                         -- describe(), the useful bits
+```
+
+That third query carries this module's first big idea: **NULL**: SQL's missing value, cousin of NaN, with sharper teeth. `COUNT(*)` counts rows; `COUNT(risk_profile)` counts *non-null* values; the difference is your missing-data report. And NULL's famous trap, learned once and never forgotten: `WHERE risk_profile = NULL` matches **nothing** (NULL isn't equal to anything, even itself, it means "unknown", and is unknown equal to unknown? unknown). The correct phrase is `WHERE risk_profile IS NULL`. Module 1's completeness pillar, now with syntax.
+
+> **📓 Do notebook 3.5A now.** It walks SELECT through HAVING on the client book with the Rosetta Stone beside every query, and its exercises are Module 3 questions re-asked in SQL: the segment summary, the city league table with its count guard, and the missing-values audit. If you can answer "how would I do this in pandas?", you can do the exercise, that's the design.
+
+---
+
+## Lesson 3.5.3 — Joins: The Decision You Already Made Once (3.5B begins)
+
+Module 3 taught the join as an *analytical decision*, inner joins silently commit survivorship bias by dropping clients with no transactions. SQL is where that lesson gets its industry-standard vocabulary, because in SQL the decision is spelled out in capital letters:
+
+```sql
+SELECT c.client_id, c.segment, SUM(t.amount_inr) AS total_spend
+FROM   clients c
+LEFT JOIN transactions t  ON c.client_id = t.customer_id
+GROUP BY c.client_id, c.segment;
+```
+
+The translation table you already own, now with SQL's names:
+
+| SQL | pandas `how=` | Keeps | The trap |
+|---|---|---|---|
+| `INNER JOIN` | `"inner"` | only matches | silently deletes non-transactors — survivorship in capitals |
+| `LEFT JOIN` | `"left"` | every left row | the honest default for "all clients, with spend where it exists" |
+| `FULL OUTER JOIN` | `"outer"` | everything | the reconciliation join: what's in one system but not the other? |
+
+Two SQL-specific habits that mark out professionals:
+
+**Table aliases and prefixes** (`clients c`, `c.client_id`): with two tables in play, every column gets a home address. Ambiguity errors ("column client_id is ambiguous") are the database refusing to guess, a feature.
+
+**After a LEFT JOIN, NULLs are information.** Clients with no transactions come back with NULL spend. `COALESCE(SUM(t.amount_inr), 0)` converts that to zero, and Module 3's judgment question travels with it: is zero *correct* here (they truly spent nothing through this account, yes) or fabrication (2021's missing volume, no)? Same `fillna(0)` decision, new spelling.
+
+And 3.5B makes you *watch* the bias again, in SQL this time: the INNER JOIN version of the spend query returns fewer rows than the LEFT, count the difference, and you've counted the clients an innocent keyword just erased. Once in pandas, once in SQL: the lesson is now bilingual, and bilingual lessons stick.
+
+---
+
+## Lesson 3.5.4 — Window Functions: The Superpower Worth the Module
+
+If joins are SQL's table stakes, **window functions** are its genuine superpower, the feature that makes analysts gasp, and the single most common "senior SQL" interview topic. The idea in one sentence:
+
+> A window function computes something *across a group of rows*, a rank, a running total, a previous value, **without collapsing the rows** the way GROUP BY does.
+
+GROUP BY answers "what's the average AUM per segment?" and hands you four rows. A window function answers "show me *every client*, each with their segment's average beside them, and their rank within it", a thousand rows, each enriched by its neighbourhood:
+
+```sql
+SELECT client_id, segment, aum_inr,
+       RANK() OVER (PARTITION BY segment ORDER BY aum_inr DESC) AS rank_in_segment,
+       AVG(aum_inr) OVER (PARTITION BY segment)                 AS segment_avg
+FROM   clients;
+```
+
+Read `OVER (PARTITION BY segment ORDER BY aum_inr DESC)` as: *within each segment, ordered by AUM descending.* The pandas twins you already know: `groupby().rank()` and `groupby().transform("mean")`, window functions are `transform`, generalised and industrialised.
+
+The three families, each with a finance job attached:
+
+- **Ranking**, `RANK()`, `ROW_NUMBER()`: top-N per group ("each RM's three biggest clients"), the query behind every league table you built in 3C.
+- **Offsets**: `LAG()`, `LEAD()`: fetch the previous row's value. `(close - LAG(close) OVER (ORDER BY date)) / LAG(close) OVER (ORDER BY date)` *is* `pct_change()`, day-over-day returns computed inside the database, before a single row ships to Python.
+- **Running frames**: `SUM(...) OVER (ORDER BY date)`, moving averages via `ROWS BETWEEN 49 PRECEDING AND CURRENT ROW`: cumulative totals and the 50-day MA, in pure SQL. Module 3's rolling machinery, server-side.
+
+Why this matters beyond elegance: these computations run *where the data lives*, on all of it, before transfer. The Module 9-style question "flag every day a stock closed below its 50-day average" runs on the warehouse's millions of rows and ships back only the flags. That's the filter-and-aggregate physics from Lesson 3.5.1, extended to genuinely analytical work.
+
+> **📓 Do notebook 3.5B now.** It joins clients to transactions (watching the inner-join erasure live), builds the RM league table with window ranks, computes returns with LAG on the price table, and closes with the module's signature exercise: the segment churn report with counts, rates, and a HAVING guard, the complete Module 3C analysis, re-expressed in the language your first employer's warehouse speaks.
+
+---
+
+## Lesson 3.5.5 — The Working Pattern: SQL and pandas Together
+
+The module's closing lesson is the professional workflow, stated plainly, because job one will assume you know it:
+
+```python
+import pandas as pd
+from sqlalchemy import create_engine
+
+engine = create_engine(COURSE_DB_URL)
+df = pd.read_sql("""
+    SELECT c.segment, t.category, SUM(t.amount_inr) AS spend
+    FROM clients c
+    JOIN transactions t ON c.client_id = t.customer_id
+    WHERE t.txn_date >= '2025-01-01'
+    GROUP BY c.segment, t.category
+""", engine)
+# ...and from here it's Module 3: pivot, chart, present.
+```
+
+**`pd.read_sql` is the bridge**: the query runs in the database, the *result* arrives as a DataFrame, and both languages do what they're best at. The division of labour to internalise:
+
+| Do it in SQL | Do it in pandas |
+|---|---|
+| Filtering millions of rows | Anything after the data is small |
+| Joins on indexed tables | Complex reshaping, pivots |
+| Aggregation before transfer | Statistics, modelling (Modules 5–12) |
+| Window functions on full history | Visualisation, Streamlit, exports |
+
+One boundary marker for honesty: this module teaches SQL for **analysis** (reading, aggregating, joining). Writing to databases, INSERT, UPDATE, schema design, transactions, is data *engineering*, a neighbouring craft this course points at but doesn't teach. Knowing the boundary is itself interview-worthy.
+
+---
+
+## Lesson 3.5.6 — The AI Sidebar
+
+**Green, the dialect translator.** SQL has dialects (Postgres, MySQL, SQLite differ in small, maddening ways, date functions especially), and AI is superb at converting between them, and between pandas and SQL:
+
+> *"Convert this pandas chain to PostgreSQL: [paste]. Then explain any place the translation isn't exact."*
+
+That second sentence matters, the inexact spots (NULL handling, row order guarantees) are precisely where bugs live.
+
+**Red, the confident wrong join.** The classic AI-generated SQL failure is a plausible query with the wrong join type or a missing join condition, the latter producing a *cross join* that silently multiplies rows (1,000 clients × 5,000 transactions = five million garbage rows that *sum to confident nonsense*). The tracer bullet for SQL, mandatory: **check the row count against expectation before trusting any result.** `SELECT COUNT(*)` costs nothing; a five-million-row "total" in a board pack costs everything.
+
+---
+
+## Lesson 3.5.7 — The Stream Connector
+
+- **Corporate finance:** the monthly close runs on SQL, every FP&A pack starts as queries against the ERP's tables, and "can you self-serve from the warehouse?" is the first-week question.
+- **Asset management:** client, holdings and transaction tables joined daily; the RM league table with window ranks is a production report in every wealth firm.
+- **Banking:** the deepest SQL stream of all, regulatory reports are SQL against core banking systems, and vintage analysis is GROUP BY on disbursal cohorts at warehouse scale.
+- **Markets:** tick and reference databases (often specialised, kdb+/columnar: SQL-ish dialects) where LAG-style logic computes returns on billions of rows; your window functions are the small-scale twin.
+
+---
+
+## Module 3.5 Checklist
+
+- [ ] You can read a six-clause query aloud in English and write its pandas twin (and vice versa)
+- [ ] WHERE vs HAVING is row-filter vs group-filter in your bones, and you know why aliases fail in WHERE
+- [ ] You can audit missing data with COUNT(*) vs COUNT(col), and you never write `= NULL`
+- [ ] You can spell the join decision in capitals, count what an INNER JOIN erased, and defend a COALESCE
+- [ ] You can rank within groups, compute returns with LAG, and build a running frame, and say why server-side matters
+- [ ] `pd.read_sql` is your bridge, and the division-of-labour table is your default architecture
+- [ ] You row-count before you trust, especially anything AI-generated
+- [ ] Notebooks 3.5A–3.5B complete · exercises attempted before solutions · quiz passed
+
+**Badge earned: Warehouse Keyholder 🔑**
+
+*(Sequence note: this module slots between Modules 3 and 4, if you're reading it later in your journey, its exercises will feel pleasantly easy, which is the proof the Rosetta Stone method worked.)*

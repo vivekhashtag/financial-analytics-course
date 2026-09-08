@@ -1,0 +1,88 @@
+{
+ "questions": [
+  {
+   "id": "q1",
+   "type": "single",
+   "prompt": "The four deliverables:",
+   "options": [
+    "Notebook, app, memo, Trust Report + disclosure",
+    "Deck/essay/video/quiz",
+    "Model/API/tests/docs",
+    "Two notebooks + PDF"
+   ],
+   "answer": 0,
+   "explanation": "Analysis, shipping, being heard, being trusted.",
+   "difficulty": "core"
+  },
+  {
+   "id": "q2",
+   "type": "single",
+   "prompt": "'Restart & Run All must succeed' enforces:",
+   "options": [
+    "Speed",
+    "Reproducibility",
+    "Style",
+    "Colab"
+   ],
+   "answer": 1,
+   "explanation": "Auditability, with grades attached.",
+   "difficulty": "core"
+  },
+  {
+   "id": "q3",
+   "type": "single",
+   "prompt": "Full disclosure vs zero AI use:",
+   "options": [
+    "Different grades",
+    "Identical \u2014 concealment is what fails",
+    "Both fail",
+    "Track-dependent"
+   ],
+   "answer": 1,
+   "explanation": "The bar: a reader could re-trace your use.",
+   "difficulty": "core"
+  },
+  {
+   "id": "q4",
+   "type": "single",
+   "prompt": "Every predictive claim must name:",
+   "options": [
+    "p-value",
+    "Its naive floor and the verdict",
+    "Its library",
+    "Runtime"
+   ],
+   "answer": 1,
+   "explanation": "Floors before flourishes.",
+   "difficulty": "core"
+  },
+  {
+   "id": "q5",
+   "type": "single",
+   "prompt": "The prescriptive close includes:",
+   "options": [
+    "Three options",
+    "The flip \u2014 what input change reverses it",
+    "Gantt",
+    "ROI only"
+   ],
+   "answer": 1,
+   "explanation": "Plus the change-my-mind pre-commitment.",
+   "difficulty": "core"
+  },
+  {
+   "id": "q6",
+   "type": "single",
+   "prompt": "The cold read means:",
+   "options": [
+    "Night re-read",
+    "A stranger reads while you watch silently",
+    "Peer review",
+    "Spellcheck"
+   ],
+   "answer": 1,
+   "explanation": "Squints mark rewrites.",
+   "difficulty": "core"
+  }
+ ]
+}

@@ -1,0 +1,110 @@
+{
+ "id": "01-data-foundations",
+ "number": "1",
+ "part": "A",
+ "title": "Data Before Models",
+ "subtitle": "The financial data landscape \u2014 and how to distrust it",
+ "estimatedMinutes": 180,
+ "status": "published",
+ "prerequisites": [
+  "00-orientation"
+ ],
+ "learningOutcomes": [
+  "Classify any financial data into quantitative, qualitative or alternative",
+  "Name the free and paid sources of Indian market data and what each gives you",
+  "Audit a dataset against the six pillars of data quality",
+  "Identify the four biases that ruin financial models \u2014 look-ahead, survivorship, point-in-time, regime change",
+  "Produce a Trust Report on an unfamiliar dataset before writing any code"
+ ],
+ "pages": [
+  {
+   "slug": "full-content",
+   "title": "Full Module Text",
+   "file": "pages/00-full-content.mdx"
+  },
+  {
+   "slug": "anatomy-of-a-disaster",
+   "title": "The Hook: Anatomy of a Disaster",
+   "file": "pages/01-hook.mdx"
+  },
+  {
+   "slug": "three-buckets",
+   "title": "The Three Buckets of Financial Data",
+   "file": "pages/02-three-buckets.mdx"
+  },
+  {
+   "slug": "where-data-comes-from",
+   "title": "Where Data Comes From (And What It Costs)",
+   "file": "pages/03-sources.mdx"
+  },
+  {
+   "slug": "six-pillars",
+   "title": "The Six Pillars of Data Quality",
+   "file": "pages/04-six-pillars.mdx"
+  },
+  {
+   "slug": "four-biases",
+   "title": "The Four Biases That Ruin Financial Models",
+   "file": "pages/05-four-biases.mdx"
+  },
+  {
+   "slug": "eda-preview",
+   "title": "Looking Before Computing",
+   "file": "pages/06-eda-preview.mdx"
+  }
+ ],
+ "notebooks": [],
+ "streamlitApps": [],
+ "quiz": {
+  "file": "quiz.json",
+  "passingScore": 7
+ },
+ "exercises": {
+  "file": "exercises.json"
+ },
+ "biasCheck": {
+  "enabled": true,
+  "prompt": "You've just met the four biases. For each dataset in this module, which could apply?"
+ },
+ "aiSidebar": {
+  "green": [
+   {
+    "situation": "Expand your audit checklist",
+    "prompt": "I'm looking at a dataset with columns: [list]. Generate 10 skeptical questions a data-quality auditor would ask about it."
+   }
+  ],
+  "red": [
+   {
+    "danger": "Asking 'is this dataset reliable?'",
+    "why": "AI cannot know the lineage, the source, or what's missing from 20 pasted rows",
+    "rule": "Reliability comes from provenance, not inspection"
+   }
+  ]
+ },
+ "streamConnector": {
+  "corporateFinance": "Inconsistent revenue definitions wreck variance analysis",
+  "assetManagement": "Survivorship bias inflates every fund performance comparison",
+  "banking": "Non-point-in-time data invalidates credit models \u2014 and regulators check",
+  "markets": "Look-ahead bias is the number one killer of 'profitable' backtests"
+ },
+ "badge": {
+  "id": "data-skeptic",
+  "label": "Data Skeptic",
+  "icon": "search"
+ },
+ "caseStudy": {
+  "id": "knight-capital-2012",
+  "title": "Knight Capital, 2012",
+  "hook": "One wrong setting on one computer lost $440 million in 45 minutes",
+  "lesson": "Check the data and the config before you trust the machine",
+  "file": "pages/case-knight-capital.mdx"
+ },
+ "widgets": [
+  "SortingGame",
+  "FlipCards",
+  "BiasDetective",
+  "TrustReportForm",
+  "DatasetPreview",
+  "Quiz"
+ ]
+}

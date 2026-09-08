@@ -1,0 +1,30 @@
+---
+title: Cleaning Is Analysis
+slug: cleaning
+---
+
+Data cleaning is 60–80% of real analyst work, and it's where Module 1's Trust Report becomes executable. Notebook 3B fixes all eight defects in the horror file. The pattern matters more than the syntax:
+
+## Measure → Fix → Prove
+
+1. **Measure before you clean.** Count every problem first, so you can show what changed. (Auditability pillar.)
+2. **Fix with documented decisions.** Every fix is a choice: quarantine or delete? Infer or label? Convert or escalate?
+3. **Prove the after picture.** Re-count, reconcile to the registry, keep audit flags like `was_usd`.
+
+## The decisions, not just the code
+
+| Defect | Naive fix | Professional fix |
+|---|---|---|
+| Impossible amounts | Delete silently | **Quarantine + report upstream** |
+| Ambiguous dates (`04/02/2025`) | Let pandas guess | **Check provenance — never guess a format** |
+| Unmarked USD rows | Convert on the hunch | **Detect statistically, confirm with source, convert with an audit flag** |
+| Missing categories | Fill with the mode | **Infer only where the merchant makes it obvious; label the rest honestly** |
+| Epoch dates (1970-01-01) | Treat as real dates | **Convert to NaT — missing, not time travel** |
+
+<Callout type="danger">
+The USD conversion in 3B is only legitimate because the dataset registry documents the defect. On real data, converting on a statistical hunch alone is how analysts create new errors while fixing old ones.
+</Callout>
+
+<NotebookCard id="03b_cleaning_horror_file" />
+
+The payoff at the end of 3B: the spending-by-category table that would have been **wrong in every row** on the raw file. Cleaning isn't preparation for analysis, it *is* analysis.

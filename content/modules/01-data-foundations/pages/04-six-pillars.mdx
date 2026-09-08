@@ -1,0 +1,28 @@
+---
+title: The Six Pillars of Data Quality
+slug: six-pillars
+---
+
+Six questions to ask of any dataset. Each card flips to reveal a real scandal caused by its absence.
+
+<FlipCards cards={[
+  { title: "Accuracy", front: "Does the value match reality?", back: "Reconcile to a golden source. In 2005 a Mizuho trader sold 610,000 shares at ¥1 instead of 1 share at ¥610,000, a ~$225M error from one transposed field." },
+  { title: "Completeness", front: "What's missing, and is it missing at random?", back: "Missing rows and missing fields are different diseases needing different cures. A missing trading day is not the same as a blank volume column." },
+  { title: "Consistency", front: "Same entity, same definition, everywhere?", back: "Is 'revenue' pre- or post-returns? Is the customer 'HDFC Bank' or 'HDFC BANK LTD'? Entity mess becomes analytics mess." },
+  { title: "Timeliness", front: "Is it there when the decision is made?", back: "A perfect risk report delivered after the market closes is trivia, not risk management." },
+  { title: "Lineage", front: "Can you trace the number to its source?", back: "'Where did this 4.7% come from?' is the most common question in any finance meeting. If you can't answer it, the number doesn't count." },
+  { title: "Auditability", front: "Is it reproducible and defensible?", back: "If you can't reproduce last month's number, you don't have analytics, you have anecdotes. Regulators treat this as non-negotiable." }
+]} />
+
+## The student translation
+
+Think about your own marksheet:
+
+- **Accuracy**, the marks are right
+- **Completeness**, no subject is missing
+- **Consistency**, your name is spelled the same on every certificate
+- **Timeliness**, results arrive before the admission deadline
+- **Lineage**, the question paper and your answer sheet still exist
+- **Auditability**, re-totalling gives the same result
+
+Same six questions. Bigger numbers.

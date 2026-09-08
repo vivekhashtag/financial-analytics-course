@@ -1,0 +1,34 @@
+{
+ "exercises": [
+  {
+   "id": "ex1",
+   "title": "Price the overnight buffer",
+   "notebookRef": "7A Ex1",
+   "requiresAttempt": true
+  },
+  {
+   "id": "ex2",
+   "title": "Drop corp to 7.0% \u2014 drama queen",
+   "notebookRef": "7A Ex2",
+   "requiresAttempt": true
+  },
+  {
+   "id": "ex3",
+   "title": "Raise salvage: who loses?",
+   "notebookRef": "7B Ex1",
+   "requiresAttempt": true
+  },
+  {
+   "id": "ex4",
+   "title": "Loss-averse board",
+   "notebookRef": "7B Ex2",
+   "requiresAttempt": true
+  },
+  {
+   "id": "ex5",
+   "title": "Per-scenario optima",
+   "notebookRef": "7B Ex3",
+   "requiresAttempt": true
+  }
+ ]
+}

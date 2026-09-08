@@ -1,0 +1,40 @@
+{
+ "exercises": [
+  {
+   "id": "ex1",
+   "title": "The seed experiment",
+   "notebookRef": "10A Ex1",
+   "requiresAttempt": true
+  },
+  {
+   "id": "ex2",
+   "title": "Two regimes, two cones",
+   "notebookRef": "10A Ex2",
+   "requiresAttempt": true
+  },
+  {
+   "id": "ex3",
+   "title": "Find the honest SIP",
+   "notebookRef": "10B Ex1",
+   "requiresAttempt": true
+  },
+  {
+   "id": "ex4",
+   "title": "Correlate the inputs",
+   "notebookRef": "10B Ex3",
+   "requiresAttempt": true
+  },
+  {
+   "id": "ex5",
+   "title": "Block bootstrap",
+   "notebookRef": "10C Ex2",
+   "requiresAttempt": true
+  },
+  {
+   "id": "ex6",
+   "title": "Backtest the VaR",
+   "notebookRef": "10C Ex3",
+   "requiresAttempt": true
+  }
+ ]
+}

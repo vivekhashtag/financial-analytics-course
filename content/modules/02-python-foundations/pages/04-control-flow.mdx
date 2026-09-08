@@ -1,0 +1,52 @@
+---
+title: Conditions and Loops
+slug: control-flow
+---
+
+## Conditions — making a decision
+
+Every trading rule, risk limit and client segmentation is an `if`.
+
+<CodePeek code={`if price <= stop_loss:
+    action = "SELL - stop loss hit"
+elif price >= target:
+    action = "SELL - target reached"
+else:
+    action = "HOLD"`} />
+
+The indented lines belong to the branch above them. That indentation *is* the logic.
+
+## Loops — repeating over many items
+
+This is where finance code earns its keep: one stock or five thousand, the code is identical.
+
+<CodePeek code={`total = 0
+for ticker, qty in holdings.items():
+    total += qty * prices[ticker]`} />
+
+Four lines value an entire portfolio. In a spreadsheet that's a column of formulas you have to drag, check and re-drag every time the portfolio changes.
+
+<Callout type="info">
+`total += x` is shorthand for `total = total + x`. The pattern, start at zero, add as you go, is called an **accumulator**, and you'll write it hundreds of times.
+</Callout>
+
+## Loop plus condition = every trading strategy
+
+<CodePeek code={`signals = []
+for day, price in enumerate(closes):
+    if price < buy_below:
+        signals.append((day, price, "BUY"))`} />
+
+`enumerate` gives you the position *and* the value. That's the skeleton of every backtest in Module 11, a loop over trading days with a condition inside.
+
+## Comparing to the previous day
+
+Many financial questions are about *change*, which means comparing each item to the one before it:
+
+<CodePeek code={`for i in range(1, len(closes)):
+    if closes[i] > closes[i - 1]:
+        up_days += 1`} />
+
+Start at `1`, not `0`, because index 0 has no previous day to compare against.
+
+→ **Now do notebook 2B, sections 1–2.**

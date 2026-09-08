@@ -1,0 +1,446 @@
+# Module 2 · Python Foundations: The Instrument
+
+*Reading time: about 75 minutes, interleaved with roughly 3–4 hours of notebook work. This module assumes you have never written a line of code. By the end, you will have built a working portfolio tracker from scratch, in pure Python, no libraries, and you will understand every line of it.*
+
+*This module has three notebooks: **2A** (types and structures), **2B** (conditions, loops, functions) and **2C** (the mini-project). This document tells you exactly when to open each. The rhythm is: read a lesson here → do the matching notebook section → come back. Reading is 30% of learning to code; typing is 70%.*
+
+---
+
+## Lesson 2.1 — Why Python, and How to Read a Line of Code
+
+### Why finance runs on Python
+
+You already know Excel exists, and you may wonder why anyone needs more. Three honest answers:
+
+**Repeatability.** In Excel, your analysis lives in cells. Change the data, and you drag formulas, re-check ranges, hope nothing broke. In Python, your analysis is a *script*: run it on 500 rows or 5 million, this month's file or next month's, and the identical logic executes every time. The monthly report that takes an analyst two hours of Excel surgery becomes one keypress.
+
+**Lineage.** Remember Module 1's fifth pillar, *can you trace this number to its source?* In a spreadsheet, the logic is buried across hundreds of cells; nobody can review formula F47 buried in a 30-tab workbook. In Python, the logic is written down, top to bottom, readable like a recipe. When someone asks "where did this 4.7% come from?", you point at the line.
+
+**Reach.** Every technique in the rest of this course, the Monte Carlo simulations, the portfolio optimiser, the forecasting, exists as a free Python library, built and tested by thousands of people. Learn the language once, and the entire toolbox of modern finance opens.
+
+Excel isn't going anywhere, it remains where finance *presents* its results, and this course has a whole appendix on making Python and Excel work together. But Python is where finance *computes*. You need both; this module gives you the second one.
+
+### Your first line of code
+
+Here is a complete, legal Python program:
+
+```python
+shares_held = 150
+```
+
+Read it right to left: *take the value 150, and give it the name `shares_held`.* That's called **assignment**, and the `=` sign is doing something different from school mathematics:
+
+> **In Python, `=` means "store this", not "these are equal".** To *ask* whether two things are equal, Python uses `==` (two equals signs). Mixing these up is the single most common beginner error on Earth, so let's get it wrong-proofed now: one `=` stores, two `==` compares.
+
+The name on the left, `shares_held`, is a **variable**: a labelled box holding a value. You choose the names, and choosing *descriptive* names is half of writing readable code. `shares_held` tells a reader everything; `x` tells them nothing. In finance, where your code may be audited, readable names aren't style, they're professionalism.
+
+### The one weird rule: indentation is grammar
+
+In most programming languages, spacing is decoration. In Python, **indentation is the grammar**, it's how Python knows which lines belong inside an `if` or a loop:
+
+```python
+if price > 3500:
+    print("Target reached")      # indented: belongs to the if
+print("Checked the price")       # not indented: happens regardless
+```
+
+Four spaces, consistently. Colab and every modern editor handle it for you automatically, but when an `IndentationError` appears (it will), you now know exactly what it's complaining about.
+
+---
+
+## Lesson 2.2 — Data Types: Numbers, Text, Truth
+
+Everything in Python has a **type**, and the type determines what you can do with it. Four types cover nearly all financial work.
+
+### Numbers: `int` and `float`
+
+- **`int`**, whole numbers: `150`. For counting things: shares, days, stores.
+- **`float`**, decimal numbers: `3450.75`. For measuring things: prices, returns, rates.
+
+The rule of thumb worth memorising: **quantities are ints, money and rates are floats.** You can't own 150.5 shares of most stocks; you can absolutely pay ₹3,450.75 for one.
+
+```python
+shares_held = 150                 # int
+price_per_share = 3450.75         # float
+position_value = shares_held * price_per_share    # 517,612.5 — Python does the maths
+```
+
+The arithmetic symbols are what you'd expect: `+ - * /`, plus `**` for powers (compounding will use this constantly: `(1 + rate) ** years`).
+
+**Now, the float trap, a genuine "welcome to computing" moment.** Ask Python:
+
+```python
+print(0.1 + 0.2)          # 0.30000000000000004  ← not a typo
+print(0.1 + 0.2 == 0.3)   # False!
+```
+
+Computers store decimals in binary (base 2), and just as 1/3 can't be written exactly in decimal (0.3333…), one-tenth can't be written exactly in binary. Tiny errors creep in at the 17th decimal place. This isn't a Python bug: Excel, Java, and every bank's core system have the same behaviour; they just hide it from you.
+
+Why should a finance student care about the 17th decimal? Because of **reconciliation**. If you compare two ledgers with `==` on float values, you will get *false mismatches*, the systems agree to the paisa, but differ at the 17th decimal, and your check screams "MISMATCH". The professional fix: round before comparing, or check that the difference is smaller than a tolerance (say, half a paisa). You'll do this for real in Module 3.
+
+### Text: `str` (strings)
+
+Ticker symbols, company names, categories, text lives in **strings**, written in quotes:
+
+```python
+ticker = "RELIANCE.NS"
+company = "Reliance Industries Limited"
+```
+
+That `.NS` suffix matters: on data platforms like yfinance, it marks the exchange — `.NS` for NSE, `.BO` for BSE. Reliance on the NSE is `RELIANCE.NS`. You'll strip and attach these suffixes constantly, using string **methods**, small built-in tools attached to every string with a dot:
+
+```python
+ticker.replace(".NS", "")     # "RELIANCE"  — swap text for other text
+company[:8]                   # "Reliance" — the first 8 characters ("slicing")
+len(company)                  # 27 — how many characters
+```
+
+And the string skill you'll use in every report you ever write, **f-strings**, which drop values directly into text:
+
+```python
+qty, px = 150, 3450.75
+print(f"Bought {qty} shares of {ticker} at Rs {px:,.2f}")
+# Bought 150 shares of RELIANCE.NS at Rs 3,450.75
+```
+
+The `f` before the quote activates it; anything in `{curly braces}` gets evaluated and inserted. The mysterious `:,.2f` is a **format code**: comma thousands-separators, two decimal places. Memorise that one code, it formats every money figure from here to the capstone.
+
+### Truth: `bool`
+
+Just two values: `True` and `False`. Every trading rule, every risk limit, every filter in this entire course eventually boils down to a bool:
+
+```python
+price = 3450.75
+stop_loss = 3300.00
+is_above_stop = price > stop_loss     # True
+```
+
+The comparison operators: `>` `<` `>=` `<=` `==` (equal) `!=` (not equal). And three words combine bools: `and`, `or`, `not`, plain English, doing exactly what they say.
+
+> **📓 Open notebook 2A now and work through sections 1–3** (numbers, text, truth, including the float-trap experiment and your first two exercises). Then come back here.
+
+---
+
+## Lesson 2.3 — Data Structures: Containers for Financial Objects
+
+Single values are atoms. Real financial objects, a watchlist, a portfolio, a trade, are *collections* of values, and Python gives you four containers. Choosing the right one is most of good design, so learn them as answers to a question: *what is this thing, really?*
+
+### Lists `[ ]` — when order matters and repeats are allowed
+
+A watchlist. A series of daily closing prices. Anything that is a *sequence*:
+
+```python
+watchlist = ["RELIANCE.NS", "TCS.NS", "HDFCBANK.NS", "INFY.NS"]
+closes = [3450.75, 3462.10, 3438.90, 3475.25, 3491.00]
+```
+
+Two rules that trip up every beginner alive, stated loudly:
+
+> **Rule 1: Python counts from zero.** `watchlist[0]` is the *first* item. `watchlist[3]` is the fourth. Why? Historical reasons from the 1970s, and it's never changing, so absorb it now: **position = how many steps from the start**, and the start is zero steps from itself.
+>
+> **Rule 2: slices exclude their end.** `closes[1:3]` gives you items 1 and 2, *two* items, not three. The slice runs *up to but not including* the end index. Annoying for a week, then it becomes invisible.
+
+One more convenience: negative indices count from the end. `closes[-1]` is the last item, the latest price, and you'll type that particular expression a thousand times in this course.
+
+Lists come with useful built-ins: `max(closes)`, `min(closes)`, `sum(closes)`, `len(closes)`. Average price? `sum(closes) / len(closes)`. You just did analytics.
+
+### Dictionaries `{ }` — the most important structure in this course
+
+A **dict** maps *keys* to *values*, a lookup table. And here is the observation that makes this module click:
+
+> **A portfolio *is* a dictionary.** Ticker → quantity. That's not an analogy; it's the literal data structure.
+
+```python
+portfolio = {
+    "RELIANCE.NS": 150,
+    "TCS.NS": 95,
+    "HDFCBANK.NS": 200,
+}
+
+portfolio["TCS.NS"]           # 95 — look up a value by its key
+portfolio["ITC.NS"] = 500     # buy a new stock: add a key
+portfolio["TCS.NS"] = 80      # sell some TCS: update a value
+del portfolio["RELIANCE.NS"]  # exit the position entirely
+"ITC.NS" in portfolio         # True — do we hold it?
+```
+
+And the pattern behind every valuation in finance, **two dicts working together**:
+
+```python
+holdings = {"TCS.NS": 95, "HDFCBANK.NS": 200}
+prices   = {"TCS.NS": 3450.75, "HDFCBANK.NS": 1520.40}
+
+value_tcs = holdings["TCS.NS"] * prices["TCS.NS"]    # quantity × price
+```
+
+One dict says *what we own*, the other says *what things cost*, and multiplying across them is valuation. In Lesson 2.4 a loop will do this for the whole portfolio at once; in Module 3, pandas will do it for ten thousand positions in one line. But it is this pattern, all the way up.
+
+### Tuples `( )` — records that must never change
+
+A tuple is a list that is **immutable**, locked at creation. Perfect for things that are historical facts:
+
+```python
+trade = ("TCS.NS", 50, 3450.75, "2026-08-17")   # ticker, qty, price, date
+```
+
+A completed trade *happened*; nothing should be able to edit it afterwards. (Auditability, again.) Try `trade[1] = 60` and Python refuses with a `TypeError`, which is exactly the protection you want.
+
+### Sets `{ }` — unique values only
+
+A set keeps one copy of everything, automatically:
+
+```python
+traded = ["TCS.NS", "INFY.NS", "TCS.NS", "ITC.NS", "TCS.NS"]
+set(traded)     # {"TCS.NS", "INFY.NS", "ITC.NS"} — duplicates gone
+```
+
+Deduplication in one function call. (Module 3's horror file has 54 duplicate rows; you now know the family of tools that kills them.)
+
+### The choosing guide
+
+| The thing is… | Use | Finance example |
+|---|---|---|
+| A sequence where order matters | **list** | Daily closing prices |
+| A lookup: label → value | **dict** | Portfolio, price table |
+| A fixed record, never edited | **tuple** | A completed trade |
+| Unique membership | **set** | Distinct tickers traded today |
+
+> **📓 Return to notebook 2A and finish sections 4–6** (lists, dicts, tuples/sets, including the exercise where you add ITC to a portfolio and value the position).
+
+---
+
+## Lesson 2.4 — Conditions and Loops: Making Code *Act*
+
+So far, code has stored and calculated. Now it starts *deciding* and *repeating*, the two abilities that turn a calculator into an analyst.
+
+### Conditions: `if` / `elif` / `else`
+
+Every rule in finance is an `if`. Watch one:
+
+```python
+if price <= stop_loss:
+    action = "SELL — stop loss hit"
+elif price >= target:
+    action = "SELL — target reached"
+else:
+    action = "HOLD"
+```
+
+Read it aloud and it's already English: *if the price fell to the stop, sell; otherwise if it reached the target, sell; otherwise hold.* Python checks the branches top to bottom and runs the **first** one that's true. `elif` means "else, if"; the final `else` catches everything remaining. And the indentation, those four spaces, is what tells Python which lines belong to which branch.
+
+The same skeleton runs a bank's risk desk:
+
+```python
+if position_value > limit:
+    print(f"BREACH: over limit by Rs {position_value - limit:,.0f}")
+else:
+    print(f"OK: Rs {limit - position_value:,.0f} of headroom remaining")
+```
+
+and a wealth firm's client segmentation (you'll write this one yourself: below ₹10 lakh → Mass, up to ₹1 crore → Affluent, above → HNI). Different domains, identical shape. Learn the shape once.
+
+*(A tiny readability gift: Python lets you write big numbers with underscores: `5_000_000` is five million. The underscores do nothing except save your eyes.)*
+
+### Loops: `for` — where code earns its keep
+
+A loop repeats work across many items. Here is the profound part: **the code is the same whether there is one item or one million.** That's the entire economic argument for programming.
+
+```python
+for ticker in watchlist:
+    print("Checking", ticker)
+```
+
+*For each ticker in the watchlist, do the indented thing.* Now the pattern you've been building toward since Lesson 2.3, valuing an entire portfolio:
+
+```python
+total = 0
+for ticker, qty in holdings.items():
+    value = qty * prices[ticker]
+    total = total + value
+    print(f"{ticker}: Rs {value:,.2f}")
+
+print(f"TOTAL: Rs {total:,.2f}")
+```
+
+Three ideas live in those six lines, and each is a keeper:
+
+1. **`.items()`** hands you each dict entry as a pair, ticker *and* quantity together.
+2. **The accumulator pattern:** start `total` at zero, add to it each pass. You will write this pattern hundreds of times, so Python has a shorthand: `total += value` means `total = total + value`.
+3. **Looking up across dicts:** `prices[ticker]` fetches the matching price for whichever ticker the loop is currently holding.
+
+You just wrote the single most common calculation in asset management.
+
+### Loop + condition = every trading strategy ever
+
+Put an `if` inside a `for`, and you have the skeleton of every backtest in existence:
+
+```python
+signals = []
+for day, price in enumerate(closes):
+    if price < buy_below:
+        signals.append((day, price, "BUY"))
+```
+
+*Walk through every trading day; when the condition triggers, record a signal.* `enumerate` gives you the position *and* the value together, and `.append` adds to a list. In Module 11, the strategy will be a moving-average crossover and the record-keeping will be more careful, but it will be **this exact skeleton**, and you'll recognise it.
+
+One more looping idiom, because so many financial questions are about *change*: comparing each day with the day before.
+
+```python
+up_days = 0
+for i in range(1, len(closes)):
+    if closes[i] > closes[i - 1]:
+        up_days += 1
+```
+
+Notice the loop starts at `1`, not `0`, because day zero has no yesterday to compare against. That small detail (where does the comparison start?) is precisely the kind of thing that separates code that runs from code that's *right*, and, flag from Module 1, it's a cousin of look-ahead bias: always be exact about *which day's information you're using*.
+
+> **📓 Open notebook 2B and work through sections 1–2** (conditions and loops, the segmentation rule and the up-days counter are your exercises).
+
+---
+
+## Lesson 2.5 — Functions: Building Tools You Can Trust
+
+You've now written useful chunks of logic. The problem: they're loose. To reuse the portfolio valuation, you'd copy-paste it, and copy-pasting logic is how errors breed. The fix is the **function**: logic with a name.
+
+```python
+def simple_return(buy_price, sell_price):
+    """Return the percentage gain or loss on a trade."""
+    return (sell_price - buy_price) / buy_price * 100
+```
+
+Anatomy: **`def`** starts the definition; the parentheses hold the **inputs** (parameters); the quoted sentence is a **docstring**, one line saying what this does, for future readers including future you; and **`return`** hands the answer back. Once defined, use it forever:
+
+```python
+simple_return(3450.75, 3502.15)    # 1.49
+simple_return(1480.50, 1421.30)    # -4.00
+```
+
+### Why functions matter *more* in finance
+
+Suppose your return calculation contains a bug. If the calculation lives in **one function**, you fix one place, and every use of it is fixed. If it's copy-pasted across forty notebook cells, you now have forty bugs, you'll fix some of them, and you will never again be sure which numbers in your analysis came from the fixed version. In a regulated industry, that uncertainty is disqualifying. **One calculation, one function, one place to audit**, this is Module 1's lineage pillar, expressed in code.
+
+### Default arguments — sensible unless told otherwise
+
+```python
+def cagr(start_value, end_value, years=1):
+    """Compound annual growth rate, as a percentage."""
+    return ((end_value / start_value) ** (1 / years) - 1) * 100
+
+cagr(100, 112)              # 12.0   — one year, using the default
+cagr(100, 180, years=5)     # 12.47  — overriding it
+```
+
+`years=1` is a **default**: used when the caller doesn't say otherwise. Real functions you'll meet have many defaults (a brokerage function might default to 0.03% with a ₹20 minimum, that's one of your exercises), and this is how libraries manage to be both simple to call and deeply configurable.
+
+### The tracer bullet — the habit that makes you trustworthy
+
+Module 0 introduced it; here's where it becomes law. **Before trusting a function on real data, test it on an input whose answer you can verify in your head:**
+
+```python
+portfolio_value({"X": 10}, {"X": 100})    # expect exactly 1000
+```
+
+Ten shares at ₹100 is ₹1,000, no calculator needed. If the function says anything else, it's broken, and you found out on a toy example instead of on a real client's portfolio. Every function in every remaining notebook of this course carries a tracer-bullet test, and yours should too. This habit, not syntax fluency, is what separates an analyst whose numbers get *believed* from one whose numbers get quietly re-checked by someone else.
+
+### List comprehensions — a shorthand you must be able to read
+
+You'll see this compressed loop everywhere in real Python:
+
+```python
+rounded = [round(p) for p in closes]              # transform every item
+above  = [p for p in closes if p > 3460]          # transform + filter
+```
+
+Each is exactly a `for` loop building a list, folded into one line, *"give me round(p) for every p in closes."* Write the long form whenever it's clearer; but read comprehensions fluently, because the rest of the world writes them.
+
+> **📓 Finish notebook 2B** (functions, including `brokerage_cost` with its minimum-fee logic, and tracer bullets for everything).
+
+---
+
+## Lesson 2.6 — Reading Errors Without Panic
+
+Somewhere in notebook 2B, you hit a wall of red text. Good. Let's remove its power over you.
+
+An error message, a **traceback**, is not the computer judging you. It's the computer telling you, with a line number, exactly what it couldn't do. The skill is knowing how to read it: **start from the bottom.** The last line names the error; everything above it is the trail that led there.
+
+The six you'll actually meet, and what each really means:
+
+| The red text says | Translation | Usual fix |
+|---|---|---|
+| `NameError: name 'x' is not defined` | You used a variable that doesn't exist yet | A typo — or you didn't run the cell above |
+| `KeyError: 'ITC.NS'` | That key isn't in the dict | Spelling, or a missing `.NS` suffix |
+| `IndexError: list index out of range` | You asked for item 5 of a 4-item list | Remember: 4 items are indexed 0–3 |
+| `TypeError: can only concatenate str…` | You mixed text and numbers | Wrap the number: `str(qty)`, or use an f-string |
+| `IndentationError` | The spacing is inconsistent | Four spaces, consistently |
+| `ZeroDivisionError` | You divided by zero | Guard it: `if cost != 0:` — real data *will* contain zeros (your horror file has fifteen) |
+
+And the **Colab-specific gotcha**, worth its own paragraph: a `NameError` on a variable you are *certain* you defined usually means you ran cells **out of order**. A notebook remembers whatever you executed, in whatever sequence you executed it, so a variable from a cell you skipped simply doesn't exist. The universal reset: **Runtime → Restart and run all**. Do this *before* concluding your code is broken; half the time, it isn't.
+
+### Debugging with AI — the pattern that builds you, not just the fix
+
+The Green List says AI is superb at errors. Here's the specific prompt that makes you better rather than merely unblocked:
+
+> *"Here's my code and the error: [paste both, complete]. **Don't fix it yet**, ask me questions until I spot the problem myself."*
+
+You'll find the bug in roughly the same time as asking for the answer, and you'll be able to find the *next* one alone. Interviews don't come with a chat window.
+
+**The Red List reminder for this module**, because this is where the temptation starts: pasting exercises into AI and copying answers back will get you through Module 2 and destroy you in Module 9, where the exercises assume the earlier skills are *in your hands*. Attempt first. The solutions notebook unlocks after you do.
+
+---
+
+## Lesson 2.7 — The Mini-Project: A Portfolio Position Tracker
+
+Everything converges. Notebook 2C walks you through building a genuinely useful tool, in pure Python, no libraries, and then hands you the keyboard.
+
+**What you'll build, step by step:**
+
+1. **The data:** five Indian stock positions (Reliance, TCS, HDFC Bank, Infosys, ITC) as a *dict of dicts*, each holding stores its quantity, buy price and current price.
+2. **The calculations, as functions:** `cost_basis`, `market_value`, `pnl`, `pnl_pct`, each three lines, each with a tracer-bullet test on numbers you can verify mentally.
+3. **The report:** a loop over the portfolio printing a formatted table, ticker, quantity, cost, value, profit & loss in rupees and percent, with totals. (This is where `:>12,.2f` format codes earn their keep: right-aligned, comma-separated, two decimals. Bankers' formatting.)
+4. **Risk checks:** a stop-loss monitor that flags any position down more than a threshold, and a **concentration check**, what share of the portfolio sits in each name, with a flag above 25%. That's a real mandate rule in real portfolios, and you'll implement it in eight lines.
+
+**Then three extensions you write alone:** `add_holding` (buy a new position), `best_and_worst` (rank by percentage P&L), and `sell`, which must reduce a quantity *and remove the holding entirely when it reaches zero*. That last requirement is deliberately the hardest thing in the module: it needs a condition, dict deletion, and thinking about edge cases (what if someone sells a stock we don't hold?). If you can write `sell`, Module 2 has done its job.
+
+### And then, the honest reveal
+
+The final cell of 2C shows you something slightly deflating and completely intentional. Everything you just built, the valuation, the P&L, the weights, collapses, in Module 3, into about four lines of pandas:
+
+```python
+df["value"]  = df["qty"] * df["current"]
+df["pnl"]    = df["value"] - df["qty"] * df["buy_price"]
+df["weight"] = df["value"] / df["value"].sum() * 100
+```
+
+So why did we spend hours doing it by hand? Because pandas will now be **shorthand for something you understand**, instead of magic you invoke. Learners who skip straight to pandas can use it until the moment it misbehaves, and then they're stuck, because they never saw the machinery. You have seen the machinery. You *built* the machinery.
+
+> **📓 Do notebook 2C now, end to end.** Budget 60–90 unhurried minutes. Fire tracer bullets. Note your AI disclosure line honestly.
+
+---
+
+## Lesson 2.8 — The Stream Connector
+
+Where does this module's material live in the real world? One line per stream:
+
+- **Corporate finance:** every FP&A automation, the scripts that assemble monthly packs, is these loops and functions over ledger extracts.
+- **Asset management:** a portfolio is a dictionary before it is anything else; you have now built the toy version of a position-keeping system.
+- **Banking:** a credit scorecard is a stack of `if/elif` rules; nightly batch processing is a loop over accounts.
+- **Markets:** every backtest, including the one you'll build in Module 11, is a loop over trading days with a condition inside. You already know its skeleton.
+
+---
+
+## Module 2 Checklist
+
+Before Module 3, confirm, honestly, since only you are checking:
+
+- [ ] You can explain the difference between `=` and `==` without looking
+- [ ] You know why `0.1 + 0.2 == 0.3` is `False`, and what reconciliation code does about it
+- [ ] You can say which container fits a watchlist, a portfolio, a completed trade, and a dedup job, and why
+- [ ] You wrote the portfolio-valuation loop and can narrate it line by line
+- [ ] You wrote at least one function with a default argument, and tracer-bullet-tested it
+- [ ] You hit at least three different errors and fixed them by reading the traceback bottom-up
+- [ ] Your `sell` function handles the sold-to-zero case
+- [ ] Notebooks 2A, 2B, 2C complete · exercises attempted before solutions · quiz passed (10 questions)
+
+**Badge earned: Speaks Python 🐍**
+
+Next: Module 3, pandas. You've been valuing five positions; it's time to handle five thousand rows. The horror file from Module 1 is waiting, and now you have the tools to fix it.

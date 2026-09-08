@@ -1,0 +1,289 @@
+# Module 3 · Pandas: Making Python Speak Fluent Data
+
+*Reading time: about 90 minutes, interleaved with 4–6 hours of notebook work across four notebooks: **3A** (DataFrame fundamentals), **3B** (cleaning the horror file), **3C** (groupby, merge and pivot), and **3D** (a full market analysis). This is the biggest module in Part A and the one that most directly maps to a job description. When an analyst posting says "proficiency in Python," it means this module.*
+
+*Everything here builds on Module 2. If `holdings.items()` or the accumulator pattern feel shaky, spend twenty minutes back in notebook 2B first, it will repay itself immediately.*
+
+---
+
+## Lesson 3.1 — From Loops to Vectors
+
+In Module 2 you valued a portfolio like this:
+
+```python
+total = 0
+for ticker, qty in holdings.items():
+    total += qty * prices[ticker]
+```
+
+It works. It would also work on five million rows, eventually, slowly, with you writing every loop by hand. **pandas** is the library that makes this unnecessary. The same valuation:
+
+```python
+df["value"] = df["qty"] * df["current"]
+total = df["value"].sum()
+```
+
+No loop in sight, yet a loop absolutely ran. It ran *inside* pandas, in fast compiled code written and battle-tested by thousands of contributors. This style is called **vectorisation**: you declare *what* should happen to every row; pandas handles *how*. You describe; it executes.
+
+And here is why Module 2 wasn't a detour: because you built the loop version yourself, the pandas version is **shorthand for machinery you've seen**, not magic you invoke. When pandas misbehaves, and it will, in instructive ways, you'll be able to reason about what it must be doing underneath. People who skip straight to pandas can't.
+
+### The two objects
+
+pandas gives you exactly two things to learn:
+
+- A **Series**, one labelled column of values.
+- A **DataFrame**, a table of Series sharing a common index. Rows and columns, like a spreadsheet, but a spreadsheet where every operation is *code*: repeatable, reviewable, auditable. A smart spreadsheet with a memory of everything done to it.
+
+That's the whole object model. Every technique in this module is "do something to a DataFrame."
+
+### Loading data — and one habit to start immediately
+
+```python
+import pandas as pd
+
+BASE = "data/"
+prices = pd.read_csv(BASE + "nifty50_prices.csv", parse_dates=["date"])
+```
+
+Two things to notice. First, `import pandas as pd`, the universal nickname; all code everywhere writes `pd`. Second, **`parse_dates=["date"]`**: this tells pandas that the date column contains actual dates, not text that looks like dates. Forget it, and everything *appears* fine, until weeks later a date comparison or a monthly grouping silently misbehaves, because you've been comparing strings alphabetically instead of dates chronologically. It's the kind of bug that produces plausible wrong answers, which are the most dangerous kind. Make `parse_dates` a reflex.
+
+*(That `BASE` variable is deliberate: locally it points at your data folder; on the course site the same notebooks point at a URL. One line changes; everything else is identical, which is the whole argument for writing analysis as code.)*
+
+---
+
+## Lesson 3.2 — The First-Look Ritual
+
+Here is the professional habit this module drills hardest, and it takes twenty seconds. On **every** new dataset, before any analysis, run four commands **in this order**:
+
+```python
+prices.head()        # 1. What does it look like?
+prices.shape         # 2. How big is it?  → (1277, 6)
+prices.info()        # 3. Types and non-null counts
+prices.describe()    # 4. Summary statistics per numeric column
+```
+
+Why the ceremony? Because of what happens when you run it on your NIFTY file, a file that *looks* immaculate:
+
+**`info()` betrays a secret immediately.** Every column shows 1,277 non-null values… except `volume`, which shows far fewer. Nobody told you; no error appeared. But there it is: an entire field, blank for a whole stretch of the data: Module 1's "field-level completeness" defect, caught for free before you calculated a single thing. (The registry confirms: volume is missing for all of 2021.)
+
+**`describe()` betrays a second one.** Read the `max` row. The maximum of `high` is roughly **ten times** the maximum of `close`. An index cannot spike 10× intraday and come back, that number is impossible. You've just found the fat-finger defect from Module 1's story, in one line, using nothing but a summary table and the question *"is this value even possible?"*
+
+That's the ritual's entire point: **the defects that ruin analyses announce themselves in `info()` and `describe()`, but only if you look.** The analyst who skips the ritual finds the same defects three hours later, embedded in a wrong answer, usually after presenting it.
+
+### Selecting and filtering — the daily bread
+
+Three patterns cover most of daily work:
+
+**Pick a column** (you get a Series):
+
+```python
+closes = prices["close"]
+```
+
+**Filter rows with a condition**, the "boolean mask":
+
+```python
+recent = prices[prices["date"] >= "2025-01-01"]
+```
+
+Read the inner part first: `prices["date"] >= "2025-01-01"` produces a column of True/False — one verdict per row. Wrapping it in `prices[...]` keeps only the True rows. To combine conditions, use `&` (and) and `|` (or), and — this rule bites everyone exactly once — **wrap each condition in parentheses**:
+
+```python
+big_up = prices[(prices["close"] > prices["open"]) & (prices["date"] >= "2025-01-01")]
+```
+
+Without the parentheses, Python's precedence rules produce either an error or, worse, a silently wrong filter. Parentheses always; no exceptions; it becomes muscle memory in a day.
+
+**Rows and columns together, by label**, `loc`:
+
+```python
+prices.loc[prices["date"] == "2024-08-13", ["date", "high", "close"]]
+```
+
+That line isolates the fat-finger row and shows only the columns that matter. In Module 2, this was a loop with an `if` inside. Same logic, industrial strength.
+
+### Creating columns — arithmetic on everything at once
+
+```python
+prices["range"] = prices["high"] - prices["low"]              # intraday range, every row
+prices["return_pct"] = prices["close"].pct_change() * 100     # day-on-day % change
+```
+
+The second line deserves a pause. **`pct_change()`** compares every row with the previous row, the up-days loop you wrote by hand in 2B, now built in. And its first value is `NaN` (Not a Number, pandas' marker for "missing"), because the first day has no yesterday. **That NaN is correct, not broken.** Distinguishing *expected* missing values from *problem* missing values is the same judgment as Module 1's expected-vs-problem gaps, it follows you everywhere in this field.
+
+Dates, once parsed, become a superpower via `.dt`:
+
+```python
+prices["year"] = prices["date"].dt.year
+prices["weekday"] = prices["date"].dt.day_name()
+```
+
+…which lets you ask calendar questions ("average return by weekday", a classic, and classically overhyped) in one line.
+
+> **📓 Do notebook 3A now, end to end.** Watch the ritual catch the two defects live. The exercises ask you to filter 2025's high closes, rank the best days, and find the choppiest year, and that last one has a sting: 2024's "choppiness" is partly the fat-finger row inflating the range column. Defects contaminate downstream answers. That's the lesson inside the exercise.
+
+---
+
+## Lesson 3.3 — Cleaning Is Analysis (The Horror File Falls)
+
+In Module 1 you audited `messy_transactions.csv` by eye and delivered a verdict: **not fit for analysis**. Every defect you found is still there: 54 duplicates, dates in three formats, nine visitors from 1970, twelve unmarked dollar amounts, one merchant spelled five ways, impossible zeros and negatives, cities wearing stray spaces. Today you fix all of it.
+
+First, adjust your expectations about the job you're training for: **data cleaning is 60–80% of real analyst work.** Not the glamorous part of the job description, the actual job. And notebook 3B is, accordingly, the most *employable* notebook in Part A.
+
+But the syntax is the easy half. What 3B really teaches is the professional pattern:
+
+### Measure → Fix → Prove
+
+**Measure before you clean.** The first thing 3B does is count every problem, duplicates, missing categories, epoch dates, zero amounts, into a little report, *before touching anything*. Two reasons. You can verify your counts against the dataset registry (they match exactly; if your counts ever don't match a dataset's documentation, believe neither until you know why). And afterwards, you can *prove what you changed*. That's Module 1's auditability pillar as a working habit: a cleaner who can't state what they altered has replaced one untrustworthy dataset with another.
+
+**Fix, with documented decisions.** Here's the part no tutorial tells you: most cleaning steps aren't techniques, they're *judgments*. Walk through the big five:
+
+| Defect | The lazy fix | The professional fix — and why |
+|---|---|---|
+| 23 impossible amounts (zero/negative) | Delete them silently | **Quarantine them** — move to a separate table, keep analysing without them, and *report upstream*. A zero-amount transaction is a symptom of a broken source system; deleting it hides the symptom from the people who can cure the disease. |
+| Ambiguous dates: is `04/02/2025` Feb 4 or Apr 2? | Let pandas guess | **Never guess a date format.** The value alone cannot tell you. Only *provenance* — documentation of the source system's convention — can. (Ours documents day-first; without that, the correct move is to go ask.) 3B writes a parser handling all three known formats explicitly, and anything unparseable becomes honestly missing. |
+| 9 epoch dates (`1970-01-01`) | Treat as real old dates | Convert to **NaT** — pandas' "not-a-time." You know from Module 1: 1970 means *missing timestamp*, not time travel. Left in place, nine phantom transactions from 1970 would quietly poison every monthly trend. |
+| 12 unmarked USD amounts | Multiply by 83 and move on | **Detect statistically, confirm with provenance, convert with an audit flag.** The suspiciously tiny amounts are *evidence*, not proof — ₹3 at a fuel pump is absurd, but absurdity isn't certainty. We convert only because the registry documents the defect, and we keep a `was_usd` flag on every converted row so the decision is forever visible. On real data, converting on a hunch alone is how analysts create new errors while fixing old ones. |
+| 190 missing categories | Fill with the most common value | Infer **only where the merchant makes it unambiguous** (Swiggy → Dining, IRCTC → Travel), and label the remainder honestly as "Uncategorised." A fabricated category is worse than an admitted gap. |
+
+Alongside these, the mechanical fixes: `drop_duplicates()` kills the 54 double-postings; `.str.strip().str.title()` collapses `" MUMBAI "` and `"Mumbai"` into one city (watch `nunique()`, the count of distinct city strings, drop when you run it: entity mess, quantified and cured); and a small mapping dict merges the five spellings of each merchant into one. How do you *build* that mapping dict? By looking: `value_counts()` on the raw column shows the variants sitting right next to their parents.
+
+**Prove.** 3B ends with the after-picture, rows in, rows removed and why, dates parsed, conversions flagged, and then the payoff: a spending-by-category table. Pause on that table, because it justifies the whole module: **on the raw file, every single number in it would have been wrong.** Inflated by duplicates, distorted by unconverted dollars, fragmented across merchant spellings and city variants. Same code, same groupby, garbage in, garbage out; clean in, truth out.
+
+> Cleaning isn't *preparation for* analysis. Cleaning **is** analysis. The clean table is the first true thing this dataset has ever said.
+
+> **📓 Do notebook 3B now.** Budget 90 minutes. The exercises include re-running the city totals on the *raw* file to see exactly how wrong the lazy path is, and a monthly-trend question whose honest answer requires you to state, out loud, what you did with the rows whose dates are unknowable.
+
+---
+
+## Lesson 3.4 — Groupby, Merge, Pivot: The Business Questions
+
+With clean data, you can finally ask the questions a business actually pays for: *per segment, per city, per relationship manager, how much, how many, how often, and who's leaving?* Three operations answer nearly all of them, and notebook 3C teaches them on the wealth-client book.
+
+### groupby — split, apply, combine
+
+```python
+clients.groupby("segment").agg(
+    clients=("client_id", "count"),
+    total_aum=("aum_inr", "sum"),
+    churn_rate=("churned", "mean"),
+)
+```
+
+The mental model: **split** the rows into groups (one per segment), **apply** a calculation to each group, **combine** the results into a summary table. Three lines replace an afternoon of spreadsheet pivoting.
+
+And smuggled into that snippet is the most useful trick in business analytics: **the mean of a 0/1 flag is a rate.** `churned` holds 1 for clients who left and 0 for those who stayed, so its average *is* the churn rate. Run it and a real pattern appears in your data: the Mass segment churns at roughly 25%, Affluent at about 13%. You just produced a finding a wealth firm's management would genuinely act on, in three lines, on day one of groupby.
+
+### The survivorship trap — watch yourself commit it
+
+Now the moment this module has been building toward since Module 1. The registry warned you: churned clients remain in this file. Watch what a perfectly innocent-looking line does:
+
+```python
+clients["aum_inr"].mean()                          # average AUM, everyone
+clients[clients["churned"] == 0]["aum_inr"].mean() # average AUM, "active clients"
+```
+
+Filter to active clients, it feels tidy, even *rigorous*, and "our average client's AUM" jumps by double digits. Neither number is wrong. But presenting the second one as *the* average client is **survivorship bias**, Module 1's second horseman, committed in one line of pandas by an analyst trying to be careful. The bias doesn't arrive wearing a villain's costume; it arrives as a reasonable-sounding filter. This is why the bias check becomes a ritual: not because you're careless, but because the traps are camouflaged as diligence.
+
+### merge — and why the join type is an analytical decision
+
+Clients hold the *who*; transactions hold the *what*; business questions need both. `merge` joins them on the shared key:
+
+```python
+merged = clients.merge(spend, left_on="client_id", right_on="customer_id", how="left")
+```
+
+Everything hinges on that last argument. **`how=` is not a technicality, it changes your answer:**
+
+| `how=` | Keeps | The consequence |
+|---|---|---|
+| `"left"` | **every client**, with spend where it exists | The honest default here: non-transactors appear with NaN spend, visible and countable |
+| `"inner"` | only clients *with* transactions | **Silently deletes every non-transacting client.** Survivorship bias again — this time committed by a keyword |
+| `"outer"` | everything from both tables | The reconciliation join: what's in one system but not the other? |
+
+After a left join, some clients show `NaN` for spend, and here the NaN judgment call returns with a twist: these clients truly spent nothing through this account, so for spend arithmetic, `fillna(0)` is *correct*. (Contrast with 2021's missing volume, where filling zeros would have been fabrication.) **Same tool, opposite verdicts, decided by what the missingness means.** There is no rule that replaces thinking; there is only the question *"what does missing mean here?"*
+
+### pivot_table — the report grid
+
+Long data is good for computers; grids are good for humans:
+
+```python
+merged.pivot_table(index="city", columns="segment", values="aum_inr", aggfunc="sum")
+```
+
+One line: cities down the side, segments across the top, AUM in the cells, the Excel pivot table, fully scripted, reproducible, and traceable to code.
+
+And one last rule, learned here and enforced by syntax in Module 3.5: **never report a rate without its count.** A churn rate of 67% in some city-and-risk-profile pocket sounds alarming, until the count pivot beside it shows the pocket contains three people. A rate on three people is noise wearing a percentage. 3C makes you build the rate pivot and the count pivot side by side, always.
+
+> **📓 Do notebook 3C now.** The exercises: a relationship-manager league table, the spend-by-segment question (where you must decide *which* average is the honest one to report), and the churn pivot with its sample-size guard.
+
+---
+
+## Lesson 3.5 — Market EDA: The Four Exhibits
+
+Notebook 3D is the capstone: a complete exploratory analysis of the NIFTY series, ending in the four charts every market analyst produces on day one with *any* asset. Learn these four and you can walk up to any price series in the world and say something intelligent about it within ten minutes.
+
+First, one idea that reorients everything: **prices tell you where you are; returns tell you what happened.** Almost everything downstream, volatility, correlation, risk, the entire Part D, is computed on returns (`pct_change()`), not prices. And two conventions to memorise, because they appear in every quant conversation forever:
+
+- Annualise a mean daily return: **× 252** (trading days per year)
+- Annualise daily volatility: **× √252**
+
+Why the square root on the second one? Because independent risks add up in *variance* (volatility squared), not in volatility itself. Take that on trust for now: Module 10's simulations will make you *feel* it, watching uncertainty fan out with the square root of time.
+
+**Exhibit 1: Price with moving averages.** `rolling(50).mean()` slides a 50-day window along the series, averaging as it goes (the first 49 values are NaN, the window isn't full yet; expected, not broken). Plot the price with its 50-day and 200-day averages, and you can *see* trend versus noise. The crossovers of these two lines are the exact strategy you'll backtest, honestly, with costs, in Module 11.
+
+**Exhibit 2: The return distribution versus the bell curve.** Pile every daily return into a histogram and overlay a normal ("bell") curve with the same mean and spread. The middle matches beautifully. The **tails do not**: real markets produce extreme days far, far more often than the bell curve permits. 3D quantifies it, events the normal distribution expects roughly *once* in this dataset occurred many times, and the kurtosis statistic (fat-tailedness; zero for a true bell) comes out strongly positive.
+
+Sit with this chart, because it is arguably **the most important picture in quantitative finance**: every risk model that assumes the tidy bell curve understates danger *precisely when danger matters*. The 2008 crisis was, under normality assumptions, essentially impossible. It happened anyway. Module 1 told you fat tails were the norm; now you've measured them yourself, and Module 10 will simulate their consequences.
+
+**Exhibit 3, The drawdown curve.** Three lines of code, the running peak (`cummax()`), a division, a filled chart, produce the "underwater" plot: at every moment, how far below the highest-point-so-far you are. This answers the investor's *real* questions: how bad did it get (−29.8% here), and how long did it last? Every fund factsheet on earth carries this exhibit; now you can produce it from scratch.
+
+**Exhibit 4: Rolling volatility.** A 60-day rolling standard deviation of returns, annualised. Plot it and something Module 1 promised becomes visible: partway through the series, volatility **steps up and stays up**. That is the regime change, no longer a warning in a lesson, but a shape in a chart. And it carries a sting: a single "average volatility of 14%" for this whole period describes *neither* regime. One number, fitted across an earthquake, true of nothing.
+
+*(Housekeeping first, though: 3D opens by fixing the fat-finger high, because leaving known-bad values in a dataset you're passing forward is how the next person gets hurt, and explicitly notes, without fixing, the defects that don't affect a close-based analysis. Every decision documented, including the decision to do nothing. That's the discipline.)*
+
+### Then: real data, same code
+
+3D ends by pulling **live NIFTY data** over the internet with the yfinance library and re-running the pipeline. The point isn't the fresher numbers, it's what you'll notice: **the code barely changes.** Written against course data, it runs against the real market. Analysis-as-code means your work transfers; that has been the quiet thesis of this entire module.
+
+> **📓 Do notebook 3D now.** The exercises align the worst month with the drawdown trough, count days spent >10% underwater, and include one sneaky question about what `.mean()` silently does with missing values (it skips them, averaging *only the present days* without telling you; a default you should know exists before it surprises you inside a KPI).
+
+---
+
+## Lesson 3.6 — The AI Sidebar for This Module
+
+**Green, generating pandas snippets.** AI is genuinely excellent at this. The prompt pattern:
+
+> *"Write pandas code to [task] on a DataFrame with columns [list them]. Then explain each line."*
+
+The column list matters, it stops the AI inventing column names, and the explanation demand keeps you on the right side of Module 0's code rule.
+
+**Red, and this is the module where it gets dangerous.** AI-generated pandas is frequently *plausible and subtly wrong*: the wrong join type (an `inner` where you needed `left`, you now know exactly what that silently does), silent NaN handling, a groupby on the dirty column instead of the clean one. The code runs, produces a confident table, and the table is wrong.
+
+The defence is the one you already own: **the tracer bullet, scaled up.** Before trusting generated code on the full table, run it on a slice small enough to verify by hand, five rows, one group, numbers you can check on paper. Thirty seconds of verification versus a wrong number in a presentation. In this module's exercises, make it a habit; by Module 9 it must be reflex.
+
+---
+
+## Lesson 3.7 — The Stream Connector
+
+- **Corporate finance:** variance analysis *is* a groupby; consolidating subsidiaries *is* a merge; the monthly management pack is a pivot_table with formatting.
+- **Asset management:** notebook 3C, segments, AUM, churn, RM league tables, is the literal daily work of a wealth-analytics team.
+- **Banking:** the horror-file cleanup is the front line of AML and fraud analytics, where entity resolution ("is `amazon india` the same payee as `Amazon India`?") is a discipline with whole teams attached.
+- **Markets:** 3D's four exhibits are page one of every asset research note ever written; produce them fluently and you can *start* conversations that most juniors can't.
+
+---
+
+## Module 3 Checklist
+
+- [ ] The first-look ritual (head → shape → info → describe) is automatic, and you can say what each command caught in the NIFTY file
+- [ ] You can filter with a boolean mask, combine conditions with `&` and parentheses, and use `loc`
+- [ ] You cleaned the horror file and can defend each *decision*: why quarantine, why never guess a date format, why the audit flag on converted rows
+- [ ] You can produce a rate from a 0/1 flag, and you never report a rate without its count
+- [ ] You watched survivorship bias happen in one line, once via a filter, once via an inner join, and can explain both to someone else
+- [ ] You know when `fillna(0)` is correct and when it's fabrication, and the question that decides it
+- [ ] You can produce all four market exhibits from a raw price file, and explain the fat-tails chart to a non-technical person
+- [ ] Notebooks 3A–3D complete · exercises attempted before solutions · quiz passed
+
+**Badge earned: Data Wrangler 🗃️**
+
+Next: Module 3.5: SQL. Everything you just did lives in CSV files; in a real firm, it lives in a database, and there's a language for asking databases questions. The good news that makes it a short module: you already know all the *concepts*. Groupby, merge, filter, rank, you'll meet each one again wearing different syntax, side by side with its pandas twin.

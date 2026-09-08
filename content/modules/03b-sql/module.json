@@ -1,0 +1,120 @@
+{
+ "id": "03b-sql",
+ "number": "3.5",
+ "part": "A",
+ "title": "SQL for Financial Analysts",
+ "subtitle": "PostgreSQL \u2014 still the core skill",
+ "estimatedMinutes": 240,
+ "status": "published",
+ "prerequisites": [
+  "03-pandas"
+ ],
+ "learningOutcomes": [
+  "Query a PostgreSQL database from Python with SQLAlchemy",
+  "SELECT, WHERE, GROUP BY, HAVING and ORDER BY fluently",
+  "Join tables and choose the join type deliberately",
+  "Structure multi-step queries with CTEs",
+  "Use window functions for ranks, running totals and shares",
+  "Translate any query to its pandas twin and verify results match"
+ ],
+ "pages": [
+  {
+   "slug": "full-content",
+   "title": "Full Module Text",
+   "file": "pages/00-full-content.mdx"
+  },
+  {
+   "slug": "why-sql",
+   "title": "Why SQL (Still)",
+   "file": "pages/01-why-sql.mdx"
+  },
+  {
+   "slug": "setup-db",
+   "title": "Connecting to the Course Database",
+   "file": "pages/02-setup-db.mdx"
+  },
+  {
+   "slug": "rosetta",
+   "title": "The pandas \u2194 SQL Rosetta Stone",
+   "file": "pages/03-rosetta.mdx"
+  }
+ ],
+ "notebooks": [
+  {
+   "id": "035a_sql_first_queries",
+   "title": "3.5-A \u00b7 First Queries",
+   "file": "notebooks/035a_sql_first_queries.ipynb",
+   "colabEnabled": true,
+   "datasets": [
+    "client_book",
+    "messy_transactions"
+   ],
+   "packages": [
+    "pandas",
+    "sqlalchemy"
+   ],
+   "solutionFile": "notebooks/solutions/035_solutions.ipynb"
+  },
+  {
+   "id": "035b_sql_joins_windows",
+   "title": "3.5-B \u00b7 JOINs, CTEs & Window Functions",
+   "file": "notebooks/035b_sql_joins_windows.ipynb",
+   "colabEnabled": true,
+   "datasets": [
+    "client_book",
+    "messy_transactions"
+   ],
+   "packages": [
+    "pandas",
+    "sqlalchemy"
+   ],
+   "solutionFile": "notebooks/solutions/035_solutions.ipynb"
+  }
+ ],
+ "streamlitApps": [],
+ "quiz": {
+  "file": "quiz.json",
+  "passingScore": 7
+ },
+ "exercises": {
+  "file": "exercises.json"
+ },
+ "biasCheck": {
+  "enabled": true,
+  "prompt": "An INNER JOIN can commit survivorship bias in one keyword. Explain how, using the clients/transactions tables."
+ },
+ "aiSidebar": {
+  "green": [
+   {
+    "situation": "Business question to SQL",
+    "prompt": "Table schemas: [paste]. Write a PostgreSQL query answering: [business question]. Use a CTE if it needs more than one step, and explain the query."
+   }
+  ],
+  "red": [
+   {
+    "danger": "Running generated SQL unverified",
+    "why": "A wrong JOIN or missing WHERE returns confident, wrong numbers",
+    "rule": "Check row counts at each step and hand-verify one group before believing the answer"
+   }
+  ]
+ },
+ "streamConnector": {
+  "corporateFinance": "ERP and ledger data is queried in SQL before it ever reaches a spreadsheet",
+  "assetManagement": "Client and holdings systems are relational databases",
+  "banking": "Core banking is SQL all the way down; every scorecard starts with a query",
+  "markets": "Trade and order repositories are queried in SQL for surveillance and TCA"
+ },
+ "badge": {
+  "id": "query-fluent",
+  "label": "Query Fluent",
+  "icon": "database"
+ },
+ "caseStudy": null,
+ "widgets": [
+  "CodePeek",
+  "NotebookCard",
+  "ExerciseList",
+  "Quiz",
+  "SqlBlock"
+ ]
+}

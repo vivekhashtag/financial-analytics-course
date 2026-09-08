@@ -1,0 +1,24 @@
+---
+title: "Market EDA: The Four Exhibits"
+slug: market-eda
+---
+
+Notebook 3D produces the four charts every analyst makes on day one with any asset:
+
+1. **Price + moving averages**, `rolling(50).mean()`; the crossovers feed Lab 3's strategy
+2. **Return distribution vs the bell curve**, *the most important chart in quantitative finance*: real markets have fat tails, and models assuming normality understate risk exactly when it matters
+3. **Drawdown curve**, `close / close.cummax() − 1`: the pain chart on every fund factsheet
+4. **Rolling volatility**, where Module 1's "regime change" stops being a warning and becomes a visible step in the chart
+
+Two conventions to memorise: **×252** annualises a mean daily return; **×√252** annualises daily volatility (risks add in variance, not standard deviation: Module 10 will make you feel why).
+
+## Course data, then real data
+
+3D ends by re-running the pipeline on live NIFTY data from yfinance. The code needs almost no changes, which is the entire argument for writing analysis as code.
+
+<NotebookCard id="03d_full_eda_nifty" />
+
+<ExerciseList moduleId="03-pandas" />
+<Quiz moduleId="03-pandas" />
+
+**Module 3 complete → Data Wrangler badge.** Next: the same skills, in the language of databases.

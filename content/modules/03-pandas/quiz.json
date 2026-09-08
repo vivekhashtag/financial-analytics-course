@@ -1,0 +1,144 @@
+{
+  "questions": [
+    {
+      "id": "q1",
+      "type": "single",
+      "prompt": "What is the correct first-look ritual on a new dataset?",
+      "options": [
+        "describe \u2192 plot \u2192 model",
+        "head \u2192 shape \u2192 info \u2192 describe",
+        "Just start filtering",
+        "sort_values first"
+      ],
+      "answer": 1,
+      "explanation": "Look before computing \u2014 info() alone exposed the missing-volume defect.",
+      "difficulty": "easy"
+    },
+    {
+      "id": "q2",
+      "type": "single",
+      "prompt": "prices[(prices.close>17000) & (prices.year==2025)] \u2014 why the parentheses?",
+      "options": [
+        "Style preference",
+        "& binds tighter than comparisons, so each condition must be wrapped",
+        "They're optional",
+        "To make it faster"
+      ],
+      "answer": 1,
+      "explanation": "Without them Python evaluates close > (17000 & year) \u2014 an error or worse, a silent wrong answer.",
+      "difficulty": "medium"
+    },
+    {
+      "id": "q3",
+      "type": "single",
+      "prompt": "pct_change() on the first row returns:",
+      "options": [
+        "0",
+        "NaN \u2014 there is no previous row",
+        "An error",
+        "The row's value"
+      ],
+      "answer": 1,
+      "explanation": "Correct, not broken: no previous day exists.",
+      "difficulty": "easy"
+    },
+    {
+      "id": "q4",
+      "type": "single",
+      "prompt": "In the horror file, '04/02/2025' was parsed as 4 February because:",
+      "options": [
+        "pandas guessed",
+        "The dataset registry documents the source as day-first \u2014 never guess a date format",
+        "Slash formats are always day-first",
+        "It doesn't matter"
+      ],
+      "answer": 1,
+      "explanation": "Provenance, not guessing. Without documentation you go ask the source system.",
+      "difficulty": "medium"
+    },
+    {
+      "id": "q5",
+      "type": "single",
+      "prompt": "Why quarantine impossible amounts rather than delete them?",
+      "options": [
+        "Deleting is slow",
+        "Someone upstream should be told, and the audit trail must survive",
+        "They might be real",
+        "pandas can't delete rows"
+      ],
+      "answer": 1,
+      "explanation": "Flag and quarantine preserves auditability; silent deletion hides a data-quality signal.",
+      "difficulty": "medium"
+    },
+    {
+      "id": "q6",
+      "type": "single",
+      "prompt": "Mean of a 0/1 churned flag equals:",
+      "options": [
+        "The churn count",
+        "The churn rate",
+        "Always 0.5",
+        "Nothing useful"
+      ],
+      "answer": 1,
+      "explanation": "The most-used aggregation trick in business analytics.",
+      "difficulty": "easy"
+    },
+    {
+      "id": "q7",
+      "type": "single",
+      "prompt": "Joining clients to transactions with how='inner' quietly:",
+      "options": [
+        "Duplicates rows",
+        "Drops every client with no transactions \u2014 survivorship bias by keyword",
+        "Keeps everything",
+        "Sorts the result"
+      ],
+      "answer": 1,
+      "explanation": "Join type is an analytical decision, not a technicality.",
+      "difficulty": "hard"
+    },
+    {
+      "id": "q8",
+      "type": "single",
+      "prompt": "To annualise daily volatility you multiply by:",
+      "options": [
+        "252",
+        "\u221a252",
+        "12",
+        "\u221a12"
+      ],
+      "answer": 1,
+      "explanation": "Independent risks add in variance, so volatility scales with the square root of time.",
+      "difficulty": "medium"
+    },
+    {
+      "id": "q9",
+      "type": "single",
+      "prompt": "The return histogram vs the normal curve showed:",
+      "options": [
+        "A perfect match",
+        "Fat tails \u2014 extreme days far more frequent than the bell curve allows",
+        "Thin tails",
+        "No pattern"
+      ],
+      "answer": 1,
+      "explanation": "The most important chart in quant finance; normality understates risk when it matters.",
+      "difficulty": "medium"
+    },
+    {
+      "id": "q10",
+      "type": "single",
+      "prompt": "A drawdown curve shows:",
+      "options": [
+        "Daily returns",
+        "Percentage below the highest point so far",
+        "Volume trends",
+        "Moving-average gaps"
+      ],
+      "answer": 1,
+      "explanation": "close / cummax \u2212 1: the pain chart on every fund factsheet.",
+      "difficulty": "easy"
+    }
+  ]
+}

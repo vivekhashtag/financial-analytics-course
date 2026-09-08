@@ -1,0 +1,157 @@
+{
+  "questions": [
+    {
+      "id": "q1",
+      "type": "match",
+      "prompt": "Match each example to its data bucket",
+      "pairs": [
+        {
+          "left": "Satellite images of parking lots",
+          "right": "Alternative"
+        },
+        {
+          "left": "Quarterly P&L statement",
+          "right": "Quantitative"
+        },
+        {
+          "left": "Earnings-call transcript",
+          "right": "Qualitative"
+        },
+        {
+          "left": "Credit-card spending panel",
+          "right": "Alternative"
+        },
+        {
+          "left": "NIFTY closing levels",
+          "right": "Quantitative"
+        }
+      ],
+      "explanation": "Quant = structured numbers. Qual = text and judgement. Alt = neither, and increasingly where edge lives.",
+      "difficulty": "easy"
+    },
+    {
+      "id": "q2",
+      "type": "single",
+      "prompt": "A backtest decides on 1 January using that same year's full-year earnings. Which bias?",
+      "options": [
+        "Survivorship",
+        "Look-ahead",
+        "Point-in-time",
+        "Regime change"
+      ],
+      "answer": 1,
+      "explanation": "Those earnings weren't published until months later. The strategy is time-travelling.",
+      "difficulty": "medium"
+    },
+    {
+      "id": "q3",
+      "type": "single",
+      "prompt": "Why did Abraham Wald recommend armouring the places where returning bombers had NO bullet holes?",
+      "options": [
+        "Those areas were structurally weaker",
+        "Planes hit there never returned to be counted",
+        "Bullets bounce off flat surfaces",
+        "To save weight"
+      ],
+      "answer": 1,
+      "explanation": "Classic survivorship logic: the sample excludes the casualties.",
+      "difficulty": "medium"
+    },
+    {
+      "id": "q4",
+      "type": "single",
+      "prompt": "A transaction dated 1970-01-01 almost always means:",
+      "options": [
+        "A genuine 1970 transaction",
+        "A missing timestamp defaulting to the Unix epoch",
+        "A data-entry typo for 1997",
+        "A test record"
+      ],
+      "answer": 1,
+      "explanation": "Unix time starts 1970-01-01. Systems default there when a timestamp is absent.",
+      "difficulty": "medium"
+    },
+    {
+      "id": "q5",
+      "type": "single",
+      "prompt": "Which quality pillar is violated when nobody can explain where a reported KPI came from?",
+      "options": [
+        "Accuracy",
+        "Timeliness",
+        "Lineage",
+        "Completeness"
+      ],
+      "answer": 2,
+      "explanation": "Lineage is the traceable path from source through every transformation.",
+      "difficulty": "easy"
+    },
+    {
+      "id": "q6",
+      "type": "truefalse",
+      "prompt": "Extreme crisis observations should be removed from financial datasets as outliers.",
+      "options": [
+        "True",
+        "False"
+      ],
+      "answer": 1,
+      "explanation": "A crisis is not an outlier \u2014 it is often the observation that matters most.",
+      "difficulty": "medium"
+    },
+    {
+      "id": "q7",
+      "type": "single",
+      "prompt": "A deposit-behaviour model trained on 2010\u20132019 fails badly in 2023. Most likely bias?",
+      "options": [
+        "Survivorship",
+        "Look-ahead",
+        "Regime change",
+        "Point-in-time"
+      ],
+      "answer": 2,
+      "explanation": "Near-zero rates gave way to the fastest hiking cycle in decades \u2014 a structural break.",
+      "difficulty": "medium"
+    },
+    {
+      "id": "q8",
+      "type": "single",
+      "prompt": "Why can't AI certify a dataset as 'reliable' from a pasted sample of 20 rows?",
+      "options": [
+        "The sample is too small statistically",
+        "Reliability comes from provenance \u2014 source, lineage, what's missing \u2014 none of which is visible in a sample",
+        "AI is bad at tables",
+        "It can, if you ask nicely"
+      ],
+      "answer": 1,
+      "explanation": "Inspection can reveal defects; only provenance establishes trust.",
+      "difficulty": "hard"
+    },
+    {
+      "id": "q9",
+      "type": "single",
+      "prompt": "Name two free sources this course uses for Indian prices and macro data.",
+      "options": [
+        "Bloomberg and FactSet",
+        "yfinance (.NS tickers) and RBI DBIE / MOSPI",
+        "EDGAR and FRED only",
+        "Kaggle and Reddit"
+      ],
+      "answer": 1,
+      "explanation": "yfinance for NSE prices, RBI's DBIE and MOSPI for Indian macro series.",
+      "difficulty": "easy"
+    },
+    {
+      "id": "q10",
+      "type": "single",
+      "prompt": "MoneyMart's FY20-21 revenue was first reported as \u20b93,511 cr and later restated to \u20b93,366 cr. Using the restated figure in a model of 2021 decisions is which bias?",
+      "options": [
+        "Survivorship",
+        "Point-in-time",
+        "Look-ahead",
+        "Regime change"
+      ],
+      "answer": 1,
+      "explanation": "Point-in-time: you must model what was believed at the time, not what was later corrected.",
+      "difficulty": "hard"
+    }
+  ]
+}

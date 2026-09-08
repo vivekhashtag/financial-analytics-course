@@ -1,0 +1,39 @@
+---
+title: Groupby, Merge and the Join Decision
+slug: groupby-merge
+---
+
+Three operations answer most business questions:
+
+## groupby — "per segment, per city, per RM…"
+
+Split → apply → combine. And the trick used everywhere: **the mean of a 0/1 flag is a rate.**
+
+<CodePeek code={`clients.groupby("segment").agg(
+    clients=("client_id", "count"),
+    total_aum=("aum_inr", "sum"),
+    churn_rate=("churned", "mean"),   # 0/1 mean = the rate
+)`} />
+
+## merge — the join decision
+
+`how=` is not a technicality. It changes your answer:
+
+| how | Keeps | The trap |
+|---|---|---|
+| `left` | every client | — the honest default here |
+| `inner` | only matched rows | **silently drops non-transactors: survivorship bias by keyword** |
+| `outer` | everything | for reconciliations |
+
+Notebook 3C demonstrates the trap live: filter to active clients before averaging AUM and "our average client" changes by double digits. Neither number is wrong, presenting the filtered one as the population average is.
+
+## pivot_table — the report grid
+
+<CodePeek code={`df.pivot_table(index="city", columns="segment",
+               values="aum_inr", aggfunc="sum")`} />
+
+<Callout type="warn">
+Never report a rate without its count. A churn rate of 67% built on 3 clients is noise wearing a percentage. In 3C you build the rate pivot and the count pivot side by side; in Module 3.5 the same rule becomes a HAVING clause.
+</Callout>
+
+<NotebookCard id="03c_groupby_merge_pivot" />

@@ -1,0 +1,88 @@
+{
+ "questions": [
+  {
+   "id": "q1",
+   "type": "single",
+   "prompt": "A decomposition is trustworthy only when:",
+   "options": [
+    "3+ factors",
+    "Its parts add back exactly to the total",
+    "Computed in SQL",
+    "All parts positive"
+   ],
+   "answer": 1,
+   "explanation": "Reconciliation is the discipline.",
+   "difficulty": "core"
+  },
+  {
+   "id": "q2",
+   "type": "single",
+   "prompt": "The volume effect uses:",
+   "options": [
+    "New price \u00d7 \u0394volume",
+    "OLD price \u00d7 \u0394volume",
+    "Avg price \u00d7 \u0394volume",
+    "New price \u00d7 old volume"
+   ],
+   "answer": 1,
+   "explanation": "Freeze the other factor at baseline to isolate one change.",
+   "difficulty": "core"
+  },
+  {
+   "id": "q3",
+   "type": "single",
+   "prompt": "Before blaming a high-churn RM:",
+   "options": [
+    "Check tenure",
+    "Compute mix-expected churn; judge the residual",
+    "Interview clients",
+    "Compare YoY"
+   ],
+   "answer": 1,
+   "explanation": "Different mixes churn differently by themselves.",
+   "difficulty": "core"
+  },
+  {
+   "id": "q4",
+   "type": "single",
+   "prompt": "SIP: ~zero overall, opposite within segments. The average was:",
+   "options": [
+    "Wrong",
+    "Answering a question nobody should ask",
+    "A data error",
+    "Proof SIPs don't matter"
+   ],
+   "answer": 1,
+   "explanation": "It priced a blend-client who doesn't exist.",
+   "difficulty": "core"
+  },
+  {
+   "id": "q5",
+   "type": "single",
+   "prompt": "Brinson's selection effect measures skill at:",
+   "options": [
+    "Choosing sectors",
+    "Picking stocks WITHIN sectors",
+    "Timing",
+    "Cost control"
+   ],
+   "answer": 1,
+   "explanation": "Insulated from the sector bet by construction.",
+   "difficulty": "core"
+  },
+  {
+   "id": "q6",
+   "type": "single",
+   "prompt": "A products-vs-churn gradient licenses:",
+   "options": [
+    "Cross-sell reduces churn",
+    "Association between depth and retention",
+    "Loyalty causes products",
+    "Nothing"
+   ],
+   "answer": 1,
+   "explanation": "Three worlds fit; rank mechanisms, propose the separating test.",
+   "difficulty": "core"
+  }
+ ]
+}

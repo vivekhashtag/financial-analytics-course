@@ -1,0 +1,42 @@
+{
+ "id": "08-finance-map",
+ "number": "8",
+ "part": "C",
+ "title": "The Finance Map",
+ "subtitle": "Four streams, one crossroads, two horizontals",
+ "estimatedMinutes": 330,
+ "status": "published",
+ "prerequisites": [
+  "07-prescriptive"
+ ],
+ "learningOutcomes": [
+  "Name the streams and their sixteen problem areas",
+  "Walk one technique across the 4\u00d74 grid",
+  "Build and defend a valuation football field",
+  "Name the IB stations with Indian anchors",
+  "See Module 1 under every AI failure mode"
+ ],
+ "pages": [
+  {
+   "slug": "content",
+   "title": "The Finance Map",
+   "file": "pages/01-content.mdx"
+  }
+ ],
+ "notebooks": [
+  {
+   "id": "08b_valuation_football_field",
+   "title": "8B \u00b7 DCF, Comps & the Football Field",
+   "file": "notebooks/08b_valuation_football_field.ipynb",
+   "colabEnabled": true,
+   "solutionFile": "notebooks/solutions/08_solutions.ipynb"
+  }
+ ],
+ "quiz": {
+  "file": "quiz.json",
+  "passingScore": 70
+ },
+ "exercises": {
+  "file": "exercises.json"
+ }
+}

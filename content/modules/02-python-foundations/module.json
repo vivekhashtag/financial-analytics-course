@@ -1,0 +1,134 @@
+{
+ "id": "02-python-foundations",
+ "number": "2",
+ "part": "A",
+ "title": "Python Foundations",
+ "subtitle": "The instrument \u2014 types, structures, logic and functions",
+ "estimatedMinutes": 300,
+ "status": "published",
+ "prerequisites": [
+  "01-data-foundations"
+ ],
+ "learningOutcomes": [
+  "Use Python's core data types and know when each applies",
+  "Build and manipulate lists, dictionaries, tuples and sets to model financial objects",
+  "Write conditions and loops to process a series of trading days",
+  "Write reusable functions with parameters and return values",
+  "Debug a Python error by reading the traceback"
+ ],
+ "pages": [
+  {
+   "slug": "full-content",
+   "title": "Full Module Text",
+   "file": "pages/00-full-content.mdx"
+  },
+  {
+   "slug": "why-python",
+   "title": "Why Python, and How to Read Code",
+   "file": "pages/01-why-python.mdx"
+  },
+  {
+   "slug": "types",
+   "title": "Data Types: Numbers, Text, Truth",
+   "file": "pages/02-types.mdx"
+  },
+  {
+   "slug": "structures",
+   "title": "Data Structures: Lists, Dicts, Tuples, Sets",
+   "file": "pages/03-structures.mdx"
+  },
+  {
+   "slug": "control-flow",
+   "title": "Conditions and Loops",
+   "file": "pages/04-control-flow.mdx"
+  },
+  {
+   "slug": "functions",
+   "title": "Functions: Writing Reusable Tools",
+   "file": "pages/05-functions.mdx"
+  },
+  {
+   "slug": "errors",
+   "title": "Reading Errors Without Panic",
+   "file": "pages/06-errors.mdx"
+  }
+ ],
+ "notebooks": [
+  {
+   "id": "02a_types_structures",
+   "title": "2A \u00b7 Types & Data Structures",
+   "file": "notebooks/02a_types_structures.ipynb",
+   "colabEnabled": true,
+   "datasets": [],
+   "packages": [],
+   "solutionFile": "notebooks/solutions/02_solutions.ipynb"
+  },
+  {
+   "id": "02b_control_flow_functions",
+   "title": "2B \u00b7 Control Flow & Functions",
+   "file": "notebooks/02b_control_flow_functions.ipynb",
+   "colabEnabled": true,
+   "datasets": [],
+   "packages": [],
+   "solutionFile": "notebooks/solutions/02_solutions.ipynb"
+  },
+  {
+   "id": "02c_position_tracker",
+   "title": "2C \u00b7 Mini-Project: Portfolio Position Tracker",
+   "file": "notebooks/02c_position_tracker.ipynb",
+   "colabEnabled": true,
+   "datasets": [],
+   "packages": [],
+   "solutionFile": "notebooks/solutions/02_solutions.ipynb"
+  }
+ ],
+ "streamlitApps": [],
+ "quiz": {
+  "file": "quiz.json",
+  "passingScore": 7
+ },
+ "exercises": {
+  "file": "exercises.json"
+ },
+ "biasCheck": {
+  "enabled": false,
+  "prompt": null
+ },
+ "aiSidebar": {
+  "green": [
+   {
+    "situation": "Rubber-duck a bug",
+    "prompt": "Here's my code and the error. Don't fix it yet \u2014 ask me questions until I spot the problem myself."
+   },
+   {
+    "situation": "Trace execution",
+    "prompt": "Walk through this loop one iteration at a time, showing the value of each variable after every step: [paste]"
+   }
+  ],
+  "red": [
+   {
+    "danger": "Pasting the exercise and copying output",
+    "why": "You'll be fluent at prompting and helpless at coding",
+    "rule": "Attempt first \u2014 solutions unlock after you submit"
+   }
+  ]
+ },
+ "streamConnector": {
+  "corporateFinance": "Every FP&A automation script starts with these loops and functions",
+  "assetManagement": "A portfolio is a dictionary before it is anything else",
+  "banking": "Scorecard rules are conditions; batch processing is loops",
+  "markets": "Every backtest is a loop over trading days with a condition inside"
+ },
+ "badge": {
+  "id": "python-fluent",
+  "label": "Speaks Python",
+  "icon": "code"
+ },
+ "caseStudy": null,
+ "widgets": [
+  "CodePeek",
+  "NotebookCard",
+  "ExerciseList",
+  "Quiz"
+ ]
+}

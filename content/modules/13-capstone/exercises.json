@@ -1,0 +1,28 @@
+{
+ "exercises": [
+  {
+   "id": "ex1",
+   "title": "Stations 0-1: Bias Check + Trust Report",
+   "notebookRef": "starter",
+   "requiresAttempt": true
+  },
+  {
+   "id": "ex2",
+   "title": "Stations 2-5: the ladder",
+   "notebookRef": "starter",
+   "requiresAttempt": true
+  },
+  {
+   "id": "ex3",
+   "title": "Ship: app, memo, README",
+   "notebookRef": "ship",
+   "requiresAttempt": true
+  },
+  {
+   "id": "ex4",
+   "title": "Self-score the rubric",
+   "notebookRef": "rubric",
+   "requiresAttempt": true
+  }
+ ]
+}

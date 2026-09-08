@@ -1,0 +1,177 @@
+# Module 8 · The Finance Map: Four Streams, One Crossroads, Two Horizontals
+
+*Reading time: about 95 minutes, plus one notebook (**8B**, the valuation football field). This module is deliberately different in texture: Part A gave you tools, Part B gave you methods: Part C gives you the **territory**. Light on code, heavy on orientation. By the end, every job title in finance has an address on your map, and every skill you've built has a home in the industry.*
+
+---
+
+# PART 8A — THE FOUR STREAMS
+
+## Lesson 8.1 — Why You Need a Map
+
+Here's a moment coming in your future. An interviewer, a recruiter, or a LinkedIn posting says: *"FP&A analyst,"* *"credit risk,"* *"buy-side research,"* *"market risk,"* *"TCA analyst."* Candidates without a map hear noise and bluff. Candidates with a map hear *coordinates*, they know which stream the role sits in, what problem it solves, which techniques it runs daily, and (because of this course) which of their own notebooks is basically that job's Tuesday.
+
+Finance divides into **four streams**, four fundamentally different businesses that happen to share a vocabulary:
+
+| Stream | The business, in one line | The money question it lives on |
+|---|---|---|
+| **1 · Corporate Finance** | Running a company's money | "Are we creating value with the capital we have?" |
+| **2 · Asset Management & Advisory** | Growing other people's money | "Are we compounding client wealth, after fees, for the risk taken?" |
+| **3 · Banking** | Lending money and moving money | "Will they pay us back — and is this customer profitable?" |
+| **4 · Financial Institutions & Markets** | Trading and pricing risk itself | "What is this risk worth, right now?" |
+
+And the teaching point that makes the map worth learning, the sentence this module repeats until it's yours:
+
+> **The same technique means different things in different streams.** A regression on interest-rate spreads is a *pricing tool* on a trading desk, a *credit decision* in a bank, and a *cost-of-debt input* in a CFO's office. Same scipy call, three different jobs, three different consequences of being wrong. **Context defines the model, not the other way round.**
+
+Each stream below gets the same treatment: its four core problem areas, the techniques from *your* modules that run there, one honest India-specific note, and which of the four labs (Modules 9–12) is that stream's natural gym.
+
+---
+
+## Lesson 8.2 — Stream 1: Corporate Finance (the CFO's world)
+
+Every company, a steel giant, a SaaS startup, MoneyMart, has an internal finance function answering one question: *are we using our money well?* Four problem areas:
+
+**Cash flow & working capital.** The unglamorous killer. Profitable companies die of cash starvation regularly, because profit is an accounting opinion while payroll is a Friday fact. The analytics: cash forecasting (your Module 6 tools, pointed at receipts and payments), receivables aging, and working-capital cycles. *Your notebook that is this job:* 6B's forecasting harness, aimed at weekly cash instead of index levels.
+
+**Capital budgeting.** Which projects deserve money? NPV, IRR, payback, every project is a mini-DCF (you now build those), and the choose-among-projects problem is 7A's optimiser with projects as decision variables. The pilot-vs-launch tree from 7B *is* the capex committee's actual agenda.
+
+**FP&A, financial planning & analysis.** The largest employer of analysts in this stream. Budgeting (a forecast with governance), and above all **variance analysis**: why did actuals differ from plan? You've already done this professionally: 5A's price/volume/mix decomposition and cost bridge are, almost literally, the FP&A job description. The monthly business review is that notebook, twelve times a year.
+
+**Capital structure.** Debt vs equity, the cheapest safe mix of funding. This is where the WACC you used in 8B's DCF actually comes from, and where a markets-desk regression on credit spreads re-enters as the CFO's cost-of-debt input (the map's crossing-lines, live).
+
+*India note:* the FP&A boom is real: GCCs (global capability centres) in Bengaluru, Hyderabad and Pune run FP&A for the world's largest companies, and it is arguably the single most accessible analytics entry point for a commerce/MBA student with this course's skills.
+*Natural lab:* **Module 10** (Monte Carlo on project NPV, replacing the base case with a distribution).
+
+---
+
+## Lesson 8.3 — Stream 2: Asset Management & Advisory (other people's money)
+
+Mutual funds, PMS, wealth managers, advisory firms. The fiduciary business: clients hand over savings; the firm's entire value is compounding them honestly. Four problem areas:
+
+**Portfolio construction.** How much of what to hold, diversification, risk budgeting, the efficient frontier. This is Module 12's entire subject, and the correlation heatmap from 4B is its raw material.
+
+**Performance & attribution.** Did we do well, and *why*? Returns, drawdowns, Sharpe-style risk-adjustment (Module 3's exhibits), and the Brinson allocation-vs-selection split you ran in 5A, which is a production system, computed quarterly, in every fund house on earth.
+
+**Client analytics.** The business side: segmentation, churn, share-of-wallet, RM effectiveness. You've *done* this stream's daily work: 3C and 5B on the client book (the survivorship trap, the mix-adjusted RM table, the SIP heterogeneity) are a wealth-analytics team's actual backlog.
+
+**Valuation & deals.** Buy-side research: is this stock worth its price? The 8B notebook, DCF, comps, football field, is the analytical spine of every research note, run from the buyer's chair instead of the banker's.
+
+*India note:* the SIP revolution, tens of millions of monthly systematic investors, has made client analytics (retention, ticket-size growth, digital engagement) the fastest-growing analytics function in Indian AMCs and wealth platforms.
+*Natural labs:* **Module 12** (portfolio optimisation) and **Module 9** (time series on NAVs and flows).
+
+---
+
+## Lesson 8.4 — Stream 3: Banking (the lending machine)
+
+Deposits in, loans out, spread in between, plus payments flowing through everything. Banking's analytics exists because of one asymmetry: **a loan's upside is capped (the interest) while its downside is the whole principal.** Four problem areas:
+
+**Credit risk & scorecards.** *Will they repay?* The scorecard, points for income stability, tenure, repayment history, is a stack of Module 2's `if/elif` rules at industrial scale, calibrated on historical outcomes. Under **Ind AS 109** (India's expected-credit-loss standard, sibling of IFRS 9), banks must *forecast* losses, not just record them, which drags Module 6's entire harness, point-in-time discipline included, into regulated territory where examiners test for it by name. And Module 1's warning was literal: a credit model trained on restated or survivor-filtered data is invalid, and the RBI's validation teams know where to look.
+
+**Fraud & AML.** Finding the crooked needle in the transaction haystack. The front line is exactly notebook 3B, entity resolution ("is `amazon india` the same payee?"), impossible-value detection, currency anomalies, run continuously at scale. The pattern-detection layers above it are ML-course territory; the data discipline below is yours already.
+
+**Customer & pricing.** Which customers are profitable, what rate to offer, who's about to leave, the client-book analyses (cohorts, churn drivers, mix adjustment) wearing a banking badge.
+
+**ALM & stress testing.** Asset-liability management: the bank borrows short (deposits leave tomorrow) and lends long (home loans run 20 years). What happens when rates jump? Deposit-behaviour models here are the canonical **regime-change** casualty from Module 1, models trained in the zero-rate decade, broken by the hiking cycle, and RBI-mandated stress tests are Module 7's scenario protocol (optimise for the weighted world, *survive every world*) with regulatory teeth.
+
+*India note:* credit analytics is India's deepest analytics job market, banks, NBFCs, and fintech lenders all staff it, and the vocabulary of this lesson (scorecards, vintages, ECL, PIT vs TTC) is its interview vocabulary.
+*Natural labs:* **Module 9** (vintage/time-series on delinquencies) and **Module 10** (simulating loss distributions).
+
+---
+
+## Lesson 8.5 — Stream 4: Financial Institutions & Markets (pricing risk itself)
+
+Exchanges, brokers, trading desks, market-makers, the stream where risk is not a side-effect but the *product*. Four problem areas:
+
+**Market risk.** How much can we lose, how fast? VaR (Value at Risk) and its stress-test siblings, built directly on Module 3's return distributions, with Module 3's fat-tails chart as the standing reason naive VaR understates disaster. Module 10 computes VaR by simulation.
+
+**Strategy research & backtesting.** The systematic search for repeatable edges, and the discipline of not fooling yourself while searching. Module 6 gave you the opening stance (*prices eat their own forecasts; easy backtest wins are presumed broken*); Module 11 is the full lab: a real strategy, honest costs, the bias checklist as law.
+
+**Pricing & derivatives.** Options, futures, structured products, instruments whose value derives from other prices. The pricing engines are Monte Carlo machines (Module 10's technique, aimed at payoffs) plus closed-form results from the quant canon; awareness-level here, a course of its own beyond.
+
+**Microstructure & execution.** The plumbing: order books, spreads, market impact, TCA (transaction-cost analysis, did our own trading move the price against us?). Module 11's order-book simulator is this problem area's teaching toy, and the candlestick's interior finally gets explained there.
+
+*India note:* NSE is among the world's largest derivatives exchanges by contracts traded; SEBI's algo-trading and market-surveillance frameworks make Indian market microstructure a genuinely sophisticated, and hiring, field.
+*Natural labs:* **Modules 11 and 10**, in that order of identity.
+
+### The 4×4 grid, complete
+
+Sixteen problem areas, four streams, and here's the exercise that proves the map's value (the course app makes it a game): pick any technique from Modules 2–7 and walk it across the grid. *Groupby* → variance analysis (S1), attribution (S2), vintage analysis (S3), TCA aggregation (S4). *The forecast harness* → cash forecasting, capital-market assumptions, ECL, volatility forecasting. One toolkit, sixteen addresses. **You are not learning sixteen jobs; you are learning one toolkit that sixteen jobs rent.**
+
+---
+
+# PART 8B — THE CROSSROADS: INVESTMENT BANKING
+
+## Lesson 8.6 — Why IB Gets Its Own Section
+
+Investment banking refuses to sit in one stream, and that refusal is exactly why it's worth studying. An investment bank *advises* companies (a relationship business, stream-3 flavoured) while *pricing and distributing* securities through markets (pure stream 4), on behalf of corporate clients (stream 1's concerns) into the hands of asset managers (stream 2's money). It is the industry's crossroads, and its analytics inherit from every direction.
+
+The IB workflow runs through **four stations**, each with its own analytics:
+
+**Station 1: Deal origination.** Which company should acquire which? Who's ripe for an IPO? The analytics: screening (filters over fundamentals, your Module 3 boolean masks, pointed at a universe of companies), ownership and relationship mapping, and trigger-event monitoring (a CEO change, a stake sale, a leverage spike, each a flag rule from Module 2's `if` family, running on news and filings).
+
+**Station 2: Valuation & pitch.** The craft centre, and your notebook. **8B builds the real thing in skeleton form:** a DCF with its five-year explicit forecast and terminal value (and the honest reveal that 60–75% of the value typically sits in the terminal, *a DCF is an argument wearing arithmetic*); the WACC × growth sensitivity grid (Module 7's discipline in table form); comparables with the peers' verdict (and the warning that *choosing the peers is the analysis*); and the **football field**, every method as a range on one chart, with conviction living where independent methods overlap. Plus the two cliffs the exercises make you walk: the Gordon-formula explosion as growth approaches WACC, and the recession scenario where the convergence zone vanishes, teaching that *deal timing is itself a valuation output*.
+
+**Station 3: Capital markets.** Taking companies public and placing debt. The analytics of an IPO: book-building (an auction's demand curve, at what price does demand fill the offer?), allocation, and aftermarket performance. Anchor it to names you watched happen: **Zomato** (2021, the listing-pop debate), **LIC** (2022, India's largest-ever IPO and a hard aftermarket lesson), **Tata Technologies** (2023, oversubscription as a data event). Every one of those was, underneath the headlines, a demand-curve estimation problem.
+
+**Station 4, Risk & distribution.** The bank briefly *owns* what it underwrites, inventory risk, hedged and measured with stream-4 tools, then distributes it, tracked by league tables and wallet-share analytics (descriptive analytics as a competitive scoreboard).
+
+**The takeaway 8B's notebook states outright:** IB has no private mathematics. Its valuation is Module 6's regression plus Module 7's sensitivity plus Module 4's exhibits plus Module 1's skepticism. The crossroads doesn't invent tools; it *combines every stream's tools under deal pressure*, which is precisely why IB interviews probe breadth, and why this course's generalist build is the right shape for them.
+
+> **📓 Do notebook 8B now.** It's the course's first full valuation, and its three exercises (the Gordon cliff, regression comps, the vanishing convergence zone) are each a genuine interview conversation.
+
+---
+
+# PART 8C — THE TWO HORIZONTALS
+
+## Lesson 8.7 — Horizontal 1: AI in Every Stream
+
+AI doesn't belong to any stream; it runs through all of them, in four layers, worth knowing as a stack because job postings and vendor pitches blur them constantly:
+
+1. **The data layer**, pipelines, quality, entity resolution at scale. Module 1 and 3B, industrialised. (Unglamorous; where most of the actual work and hiring is.)
+2. **The prediction layer**: ML models for credit, fraud, churn, pricing. Your Module 6 harness plus the model families beyond this course's signposted border.
+3. **The language layer**: LLMs reading filings, calls, contracts, complaints: Module 1's qualitative bucket finally made computable at scale.
+4. **The agentic layer**, systems that decide *and act*: Module 7's fifth rung, arriving fast in operations (reconciliation, reporting) and cautiously everywhere else.
+
+And the failure-mode list, because in a regulated industry, knowing how AI fails *is* the professional knowledge: **unexplainable models in regulated decisions** (a credit decline must be explainable to the borrower and the RBI, a black box that can't say why is illegal, not just impolite); **hallucinated figures** (Module 0's Red List, now with compliance consequences); **training on non-point-in-time data** (Module 1's third bias, the most common silent defect in financial ML); **feedback loops** (a model that denies loans to a segment generates no repayment data from that segment, its own blindness compounds); and **regime fragility** (every model is a bet its training era continues). Notice something: **every item on that list is a Module 1 lesson wearing an AI costume.** The horizontal is new; the failure physics isn't.
+
+## Lesson 8.8 — Horizontal 2: Sustainability as a Data Problem
+
+Strip the politics and ESG/sustainability is, analytically, a familiar beast: **a measurement problem with terrible data.** Emissions accounting (Scope 1/2/3, the further from the company, the softer the number), climate stress-testing (Module 7's scenario protocol pointed at physical and transition risks; the RBI has begun down this road), and ESG ratings, where the famous finding is that major raters *disagree with each other* far more than credit raters do, because they measure different things with different weights on self-reported, sparse, rarely point-in-time data.
+
+Which is why this horizontal sits in this course at all: **every Module 1 pillar and bias applies with the volume turned up.** Lineage (who reported this emission figure, verified by whom?), point-in-time (restated sustainability reports are routine), survivorship (indices of "ESG leaders", chosen after the fact), consistency (three raters, three definitions). A student who can audit ESG data with Module 1's checklist is, right now, rarer and more useful than one who can recite ESG frameworks.
+
+## Lesson 8.9 — The "What Else Exists" Panorama
+
+One honest paragraph each, awareness-level, so no job posting ever blindsides you: **Financial crime & RegTech** (sanctions screening, transaction monitoring, 3B's entity resolution with legal consequences); **insurance & actuarial** (the original data science, pricing risk with Module 10's tools, a full profession with its own exams); **graph/network analytics** (fraud rings and ownership webs as networks, beyond this course, adjacent to it); **causal inference** (Module 5's three-worlds problem, given a proper toolkit, the natural *next* course after ML); **real-time streaming** (the engineering that makes stream 4 possible); **digital assets** (deliberately excluded, the analytics transfer, the data hygiene is worse than anything in this course, and the field moves faster than any syllabus); and **model risk & validation** (the profession of checking everyone else's homework: Module 1 and 6's disciplines *as a career*, and a genuinely strong one for skeptical temperaments).
+
+### Case study of Part C: IL&FS, 2018 — one page, plain language
+
+*What happened:* IL&FS, a giant infrastructure lender, carried top-grade credit ratings, until, within weeks, it defaulted and the ratings collapsed the full ladder. A AAA-adjacent name became a default with almost no gradient in between. *Why it matters here:* thousands of models, banks' credit systems, funds' mandates, treasuries' investment rules, consumed those ratings **as data**. Every one of them inherited the failure. *The one lesson:* **a rating is data too**, someone's model output, with lineage, staleness, and incentives attached. Module 1's questions ("where did this come from? as of when? who's missing?") apply to *inputs that arrive wearing authority*, most of all.
+
+---
+
+## Lesson 8.10 — The AI Sidebar & Stream Connector (Reversed)
+
+**Green:** the map you just learned is the perfect prompt scaffold: *"I'm interviewing for a [credit risk analyst] role at an [NBFC]. Using the four-streams framing, generate likely interview questions and map each to the analytics technique it's really testing."* AI is excellent at role-to-technique translation once *you* supply the map.
+
+**Red:** asking AI "which finance career is best for me" returns fluent generic content. The map's value is that *you* now locate roles yourself, outsourcing the locating throws away the module.
+
+**Stream connector, reversed for once:** this module *is* the connector. The closing exercise on the course app: take your own strongest notebook so far and write one sentence placing it in each stream. If you can do that for 3B, 5A, 6B and 7A, sixteen sentences, the map is yours.
+
+---
+
+## Module 8 Checklist
+
+- [ ] You can name the four streams, their one-line businesses, and their four problem areas each
+- [ ] You can walk one technique across the 4×4 grid ("same regression, different meanings") without notes
+- [ ] You built a DCF, can say where most of its value hides and why that's its dirty secret, and can walk the Gordon cliff
+- [ ] You can explain comps as "the market's verdict, borrowed", and why choosing peers is the analysis
+- [ ] You can draw and defend a football field, including what a vanishing convergence zone tells a deal team
+- [ ] You can name the four IB stations and anchor station 3 to a real Indian IPO
+- [ ] You know AI's four layers and can recite the failure-mode list, and see Module 1 underneath every item
+- [ ] You can argue why sustainability is a data-quality problem, and tell the IL&FS lesson in three sentences
+- [ ] Notebook 8B complete · exercises attempted · quiz passed
+
+**Badge earned: Cartographer 🗺️**
+
+**Part C complete.** You have the tools, the methods, and now the map. What remains is the craft: **Part D, the four labs**: time series (Module 9), Monte Carlo (10), algorithmic trading (11), portfolio optimisation (12). Everything so far has been training for these. The bias-check ritual becomes law at the top of every lab notebook, starting now.

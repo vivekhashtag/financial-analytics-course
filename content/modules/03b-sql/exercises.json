@@ -1,0 +1,79 @@
+{
+  "exercises": [
+    {
+      "id": "m35-e01",
+      "type": "code",
+      "title": "Filtered, sorted SELECT",
+      "points": 2,
+      "notebook": "035a_sql_first_queries",
+      "brief": "Aggressive-risk Mumbai clients with AUM > \u20b950 lakh, richest first.",
+      "starterCode": "q(\"\"\"SELECT ...\"\"\")",
+      "checkCode": "",
+      "hints": [
+        "Three AND conditions",
+        "ORDER BY aum_inr DESC"
+      ],
+      "solution": "SELECT client_id, aum_inr FROM clients WHERE risk_profile='Aggressive' AND city='Mumbai' AND aum_inr > 5000000 ORDER BY aum_inr DESC"
+    },
+    {
+      "id": "m35-e02",
+      "type": "code",
+      "title": "HAVING guard",
+      "points": 3,
+      "notebook": "035a_sql_first_queries",
+      "brief": "Churn and count per RM, only RMs with \u226530 clients, worst first.",
+      "starterCode": "q(\"\"\"SELECT ...\"\"\")",
+      "checkCode": "",
+      "hints": [
+        "HAVING COUNT(*) >= 30"
+      ],
+      "solution": "SELECT relationship_manager, COUNT(*) AS n, ROUND(AVG(churned),3) AS churn FROM clients GROUP BY relationship_manager HAVING COUNT(*) >= 30 ORDER BY churn DESC"
+    },
+    {
+      "id": "m35-e03",
+      "type": "code",
+      "title": "JOIN with DISTINCT count",
+      "points": 4,
+      "notebook": "035b_sql_joins_windows",
+      "brief": "Per city (clients table): distinct transacting clients + total spend.",
+      "starterCode": "q(\"\"\"SELECT ...\"\"\")",
+      "checkCode": "",
+      "hints": [
+        "COUNT(DISTINCT t.customer_id)",
+        "LEFT JOIN, spend > 0 filter inside or via CTE"
+      ],
+      "solution": "SELECT c.city, COUNT(DISTINCT t.customer_id) AS transactors, ROUND(SUM(t.amount_inr),0) AS spend FROM clients c LEFT JOIN transactions t ON c.client_id=t.customer_id AND t.amount_inr>0 GROUP BY c.city"
+    },
+    {
+      "id": "m35-e04",
+      "type": "code",
+      "title": "Top client per city (window)",
+      "points": 4,
+      "notebook": "035b_sql_joins_windows",
+      "brief": "Each city's largest client by AUM using RANK() OVER.",
+      "starterCode": "q(\"\"\"SELECT ...\"\"\")",
+      "checkCode": "",
+      "hints": [
+        "PARTITION BY city",
+        "Outer query keeps rnk = 1"
+      ],
+      "solution": "SELECT city, client_id, aum_inr FROM (SELECT city, client_id, aum_inr, RANK() OVER (PARTITION BY city ORDER BY aum_inr DESC) rnk FROM clients WHERE aum_inr IS NOT NULL) x WHERE rnk=1"
+    },
+    {
+      "id": "m35-e05",
+      "type": "code",
+      "title": "The five business questions",
+      "points": 8,
+      "notebook": "035b_sql_joins_windows",
+      "brief": "Answer all five in SQL, then reproduce each number in pandas. They must match exactly.",
+      "starterCode": "# five queries + five pandas verifications",
+      "checkCode": "",
+      "hints": [
+        "Q2: x / SUM(x) OVER ()",
+        "Q4: LEFT JOIN + IS NULL on the txn side",
+        "Q5: compare two share-of-total distributions"
+      ],
+      "solution": "See solutions notebook - each query paired with its pandas twin."
+    }
+  ]
+}

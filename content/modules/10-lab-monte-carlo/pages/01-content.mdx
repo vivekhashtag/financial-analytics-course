@@ -1,0 +1,120 @@
+# Module 10 · Lab 2: Monte Carlo: Ten Thousand Futures
+
+*Reading time: about 65 minutes, interleaved with three notebooks: **10A** (the simulation engine), **10B** (retirement & project NPV), **10C** (VaR and the fat-tail payoff). This is the lab where several of the course's oldest promissory notes get paid: Module 3's √252, Module 3's fat-tails chart, Module 4's tornado, Module 7's warning about point estimates, and Module 9's cone, all of them mature here into working machinery.*
+
+---
+
+## Lesson 10.1 — The Method in One Sentence
+
+**Monte Carlo:** when the mathematics of uncertainty gets hard, *play the game many times and count what happens.*
+
+That's genuinely the whole method, named for the casino, born in 1940s physics, and now the workhorse behind every serious answer to finance's biggest questions: *will my money last? what could this book lose? is this project worth its risk?* Its power comes from a trade: you give up closed-form elegance, and in exchange you can model **anything you can code**, path-dependence, weird rules, correlated inputs, real (non-bell) distributions. If you can write the game's rules as a loop, you can know its odds by playing it ten thousand times.
+
+Two disciplines come with the method, both from Module 1's oldest pillars:
+
+- **The seed** (`default_rng(42)`): same seed, same futures, byte-reproducible analysis, auditability, non-negotiable. Change the seed and every number wobbles slightly; that wobble isn't error, it *is* the method, and 10A's Exercise 1 makes you measure it and write the reporting policy it implies (disclose seed and N; never quote more precision than seed-to-seed wobble supports).
+- **The bias check**, now law at the top of every lab notebook, and especially potent here, because *simulations inherit their inputs' biases and then multiply them by ten thousand.* A survivor-biased return estimate doesn't get diluted by simulation; it gets industrialised.
+
+---
+
+## Lesson 10.2 — The Engine, From a Coin Flip Up (10A)
+
+10A refuses to start with formulas. It starts with a coin: each day, a price moves ±1 at 50/50. Three hundred such walks, and two profound things emerge *by counting*:
+
+**First: the √t law, derived empirically.** The spread of the walks after 100 days is almost exactly **2×** the spread after 25; after 225 days, **3×**. Four times the horizon, twice the uncertainty; nine times, thrice. **Uncertainty grows with the square root of time**, and the mysterious √252 you've been multiplying by since Module 3 just stopped being a convention and became something you *watched happen*. This is Monte Carlo's signature move: results you'd otherwise need algebra to prove, you simply observe.
+
+**Second: structure from pure chance.** Individual coin-flip walks trend, reverse, and form "patterns", with zero signal present. Calibrating your eye for what randomness alone produces (9B's noise-band vaccine, now in path form) is half of Module 11's survival kit.
+
+Then the engine gets real: estimate NIFTY's daily **drift** (μ) and **volatility** (σ) from history, and simulate each future day's return as μ + σ·(random draw), compounding *multiplicatively* with `cumprod`, because prices compound (a −50% then +50% doesn't round-trip) and multiplicative worlds can't go below zero. (10A names the textbook term, this structure is the intuition behind *geometric Brownian motion*, and immediately notes you've now **built** it, which beats naming it. Exercise 3 breaks the rule deliberately: additive simulation over ten years produces negative index levels, an impossibility that teaches why the structure matters.)
+
+Ten thousand paths, one year: **Module 9's cone, built from scratch.** The median drifts up (μ at work), the 5th–95th band fans out with √t (σ at work), and even with positive drift, a meaningful share of paths end the year *down*: a truth about equities that no average return communicates, and precisely the kind of truth this method exists to surface.
+
+The engine lesson closes with **Monte Carlo error**: every simulated answer is an estimate with its own noise, shrinking as **1/√N** (the square root, a third time). Practical rule: 10,000 paths for percentiles; more if you're pricing the extreme 1% tail.
+
+> **📓 Do notebook 10A now.** Exercise 2 (fit the engine separately to the calm and choppy regimes, compare the cones) has no clean answer, it has a *required sentence* about regime assumptions, which is the point.
+
+---
+
+## Lesson 10.3 — "Will My Money Last?" (10B, Part 1)
+
+The killer app, and arguably the most consequential calculation in personal finance.
+
+**Priya, 25**, SIPs ₹20,000/month for 35 years, retires at 60, withdraws ₹1.5 lakh/month for 30 years. Assumptions stated in *real* (inflation-adjusted) terms: 7% real return, 17% volatility. The **deterministic calculator**, the one every sales illustration uses, where the return arrives smoothly every single month, blesses the plan: corpus at 60, comfortable; money at 90, plenty left over. *The plan works perfectly.*
+
+Then 10B runs **ten thousand honest lifetimes**, same average return, same everything, just returns arriving in random order, and a material fraction of them end in ruin before 90. Sit with that gap: **randomness alone, with no change in assumptions, converts "works perfectly" into a double-digit failure rate.** The deterministic answer isn't a simplification; it's a different (and wrong) question, the average lifetime, when what must be funded is the *unlucky* one. Exercise 1 finds the honest SIP: the monthly amount at which P(lasts to 90) reaches 90%, roughly half again what the calculator blessed, and writes the one-line critique of every smooth-average illustration ever shown to a client.
+
+**Why order matters, sequence-of-returns risk.** 10B's cleanest demonstration: thirty retirement years, identical set of annual returns, just *reversed*, good years first versus bad years first. Identical averages; opposite fates. During *withdrawal*, early losses are lethal: each withdrawal in a down market sells a bigger slice of a shrinking corpus, and the eventual recovery arrives to a portfolio too small to ride it. (In *accumulation* the effect flips, early crashes are cheap SIP purchases.) This is why "average return" is nearly meaningless for a retiree, why retirement planning is Monte Carlo planning, and why the SIP-heavy Indian wealth industry increasingly runs exactly this machinery.
+
+---
+
+## Lesson 10.4 — The Tornado Grows Up: NPV as a Distribution (10B, Part 2)
+
+Module 4's tornado wiggled one assumption at a time. Module 7 warned that optimisers exploit point estimates. Here is the graduation: **wiggle everything at once, ten thousand times.**
+
+MoneyMart's 40-store rollout: ₹120 crore upfront, seven years of cash flows, with revenue growth and margin drawn from stated distributions rather than plugged in as points. The output is not an NPV, it's an **NPV distribution**, and it changes the board sentence completely:
+
+> Before: *"NPV is ₹34 crore. Approve."*
+> After: *"Median NPV ₹34 crore, but a roughly 1-in-5 chance of destroying value, and the plausible downside is −₹40 crore. Do we have the balance sheet for that tail, and can we stage the rollout to buy the option to stop?"*
+
+That final clause is Module 7's optionality thinking with a probability attached, two labs meeting. The exercises push into professional territory: **the simulation tornado** (correlate each uncertain input with NPV across paths, growth dominates, freed-up WACC barely moves the tail), and the subtle killer, **correlated inputs**: in recessions, growth and margin fall *together*, and rebuilding with 0.6 correlation fattens the loss tail measurably. Independence, the default assumption of every quick model, **systematically flatters the downside.** Knowing that sentence is worth the whole lab.
+
+> **📓 Do notebook 10B now.**
+
+---
+
+## Lesson 10.5 — VaR and the Fat-Tail Payoff (10C)
+
+Module 3 showed you the most important picture in quantitative finance, real return distributions have tails far fatter than the bell curve allows. 10C is where that picture finally gets a price tag.
+
+**VaR in one honest sentence:** *95% one-day VaR is the loss so bad that only 5% of days are worse.* Not a worst case; not a ceiling; a **percentile of the loss distribution**, which is why simulation is its natural habitat: build the distribution, read the percentile.
+
+10C builds two worlds for a ₹10-crore book. **World A** simulates tomorrow from a normal distribution with history's mean and std. **World B**, the **bootstrap**, simulates tomorrow by drawing *actual past days* at random, with replacement: no distribution assumed, fat tails included free, one line of numpy. At the 95% level the worlds roughly agree, the bell curve is fine in the middle. Deeper in the tail they diverge violently: losses beyond 3–4% are **multiples more likely** in the real world than the normal world admits. The log-scale histogram makes it unmissable: identical middles, divergent tails, and every pre-2008 risk system that assumed normality was *most wrong exactly where being wrong costs most*.
+
+Alongside VaR, 10C quietly introduces its successor: **Expected Shortfall**, *if* we breach VaR, how bad is the average breach? Two lines of code apart from VaR, a philosophy apart (it answers the question VaR dodges), and the direction global regulation has moved (Basel's market-risk framework shifted from VaR to ES). Quote them together, always.
+
+**Ten days out**, the textbook multiplies 1-day VaR by √10; Monte Carlo doesn't need the shortcut, draw ten real days, compound, read the percentile. The two answers land close but not identical, and the divergence carries the lab's creed:
+
+> **When assumptions and counting disagree, counting wins.**
+
+The exercises are the professional layer: **regime-split VaR** (calm-window vs choppy-window, and the sentence that must accompany whichever you report); the **block bootstrap** (draw ten *consecutive* days instead of ten independent ones, preserving 9B's volatility clustering widens the tail, because bad days arrive together; honesty costs more); and the capstone-quality **VaR backtest**, walk through history computing rolling VaR and counting next-day breaches. A calibrated 95% VaR breaches ~5% of days, and ours does, but the breaches *cluster* in the regime-shift years, exposing trailing-window VaR's known weakness: it is always late to a new regime. Which is why real desks pair it with stress tests, and why your bias-check's regime question was never optional.
+
+> **📓 Do notebook 10C now.**
+
+---
+
+## Lesson 10.6 — The AI Sidebar
+
+**Green, the scenario writer.** AI is excellent at helping you *enumerate what to simulate*:
+
+> *"I'm Monte-Carlo-ing a retail rollout NPV with uncertain growth, margin and WACC. What real-world dependencies between these inputs am I ignoring, and how would each change the loss tail?"*
+
+It will surface correlation structures (recession links, cost-inflation links) that your independent draws silently deny: 10B's Exercise 3, generalised.
+
+**Red, distribution laundering.** Ask AI for "Monte Carlo code for stock returns" and you will almost always receive a normal distribution, because that's what the textbooks it learned from use. The code runs beautifully and understates the tail by construction. You now hold the antidote in one line (`rng.choice(actual_returns, N)`), and the tell to check in any generated simulation: **where do the tails come from, an assumption, or the data?**
+
+---
+
+## Lesson 10.7 — The Stream Connector
+
+- **Corporate finance:** project NPV distributions and P(NPV<0) are exactly 10B's second half, increasingly standard in capex committees that have been burned by base cases.
+- **Asset management:** goal-based planning (education corpus, retirement) *is* 10B's first half; every serious financial-planning platform runs this simulation, and the SIP-adequacy question is a daily client conversation.
+- **Banking:** loan-loss distributions under Ind AS 109 scenarios, and ICAAP stress capital, simulation is the regulator-accepted way to turn scenario weights into capital numbers.
+- **Markets:** VaR and ES *are* the market-risk desk (10C is a junior risk analyst's actual toolkit), and derivative pricing engines are Monte Carlo pointed at payoffs, the same `cumprod` core with a payoff function at the end.
+
+---
+
+## Module 10 Checklist
+
+- [ ] You can state the method in one sentence and its creed in another (assumptions vs counting)
+- [ ] You derived √t by watching it, and can connect it to √252 and to Monte Carlo error's 1/√N
+- [ ] You simulate prices multiplicatively and can explain what breaks when you don't
+- [ ] Seed discipline is automatic, and your reporting policy survives a seed change
+- [ ] You can run the retirement engine, find the honest SIP, and explain sequence risk with the reversed-returns demo
+- [ ] You can turn a base-case NPV into a distribution, read P(NPV<0), build a simulation tornado, and say why independence flatters
+- [ ] You can compute VaR and ES by bootstrap, defend the bootstrap against the bell curve on log-scale evidence, and backtest a VaR
+- [ ] You know VaR's three honest sentences and why breaches clustering in regime shifts is expected, not scandalous
+- [ ] Notebooks 10A–10C complete · exercises attempted before solutions · quiz passed
+
+**Badge earned: Futurist 🎲**
+
+Next: **Module 11: Lab 3: Algorithmic Trading.** The MA crossover has been waiting since 9B; Module 6 loaded the presumption of guilt; you now own the cost of being wrong about tails. Time to backtest a strategy the honest way, costs, slippage, biases and all, and find out what survives.

@@ -1,0 +1,144 @@
+{
+  "questions": [
+    {
+      "id": "q1",
+      "type": "single",
+      "prompt": "WHERE vs HAVING:",
+      "options": [
+        "Identical",
+        "WHERE filters rows before grouping; HAVING filters groups after",
+        "HAVING is faster",
+        "WHERE only works on text"
+      ],
+      "answer": 1,
+      "explanation": "HAVING COUNT(*) >= 100 is the 'never trust a rate on 3 people' rule as syntax.",
+      "difficulty": "medium"
+    },
+    {
+      "id": "q2",
+      "type": "single",
+      "prompt": "Every selected column must be in GROUP BY or an aggregate because:",
+      "options": [
+        "Style rule",
+        "Otherwise the value per group is ambiguous \u2014 PostgreSQL protects you",
+        "Performance",
+        "Legacy quirk"
+      ],
+      "answer": 1,
+      "explanation": "Which client_id would 'the' segment row show? SQL refuses to guess.",
+      "difficulty": "medium"
+    },
+    {
+      "id": "q3",
+      "type": "single",
+      "prompt": "Test for missing values in SQL:",
+      "options": [
+        "= NULL",
+        "IS NULL",
+        "== None",
+        "ISNULL()"
+      ],
+      "answer": 1,
+      "explanation": "NULL is not equal to anything, including itself; = NULL silently matches nothing.",
+      "difficulty": "medium"
+    },
+    {
+      "id": "q4",
+      "type": "single",
+      "prompt": "LEFT JOIN clients to transactions keeps:",
+      "options": [
+        "Only matched rows",
+        "Every client, transactions where they exist",
+        "Every transaction only",
+        "Random rows"
+      ],
+      "answer": 1,
+      "explanation": "The pandas how='left' twin \u2014 and the anti-survivorship choice here.",
+      "difficulty": "easy"
+    },
+    {
+      "id": "q5",
+      "type": "single",
+      "prompt": "A CTE (WITH clause) is:",
+      "options": [
+        "A temporary index",
+        "A named intermediate result \u2014 like assigning a DataFrame to a variable",
+        "A join type",
+        "A backup"
+      ],
+      "answer": 1,
+      "explanation": "Each step becomes independently testable \u2014 the tracer-bullet habit in SQL.",
+      "difficulty": "easy"
+    },
+    {
+      "id": "q6",
+      "type": "single",
+      "prompt": "RANK() OVER (PARTITION BY segment ORDER BY aum_inr DESC) gives:",
+      "options": [
+        "One row per segment",
+        "Each client's rank within their segment, all rows kept",
+        "Total AUM per segment",
+        "An error"
+      ],
+      "answer": 1,
+      "explanation": "Windows add context without collapsing rows \u2014 the interview separator.",
+      "difficulty": "medium"
+    },
+    {
+      "id": "q7",
+      "type": "single",
+      "prompt": "SUM(aum_inr) OVER () \u2014 with an empty OVER \u2014 returns:",
+      "options": [
+        "Zero",
+        "The grand total on every row, enabling share-of-total in one step",
+        "Row-wise sum",
+        "NULL"
+      ],
+      "answer": 1,
+      "explanation": "x / SUM(x) OVER () = percentage of total, no self-join needed.",
+      "difficulty": "hard"
+    },
+    {
+      "id": "q8",
+      "type": "single",
+      "prompt": "The professional division of labour is:",
+      "options": [
+        "SQL for everything",
+        "SQL to get and pre-shape data where it lives; pandas to explore, iterate and chart",
+        "pandas for everything",
+        "Excel in the middle"
+      ],
+      "answer": 1,
+      "explanation": "Fluent analysts do both in the same hour.",
+      "difficulty": "easy"
+    },
+    {
+      "id": "q9",
+      "type": "single",
+      "prompt": "Exercise 3 asks you to reproduce every SQL answer in pandas because:",
+      "options": [
+        "Repetition for its own sake",
+        "Two independent routes to the same number is verification \u2014 if they differ, one of your mental models is wrong",
+        "pandas is more correct",
+        "SQL rounds differently"
+      ],
+      "answer": 1,
+      "explanation": "Cross-verification is the strongest correctness check an analyst has.",
+      "difficulty": "medium"
+    },
+    {
+      "id": "q10",
+      "type": "single",
+      "prompt": "Text values in SQL take:",
+      "options": [
+        "Double quotes",
+        "Single quotes",
+        "Backticks",
+        "No quotes"
+      ],
+      "answer": 1,
+      "explanation": "segment = 'HNI'. Double quotes mean identifiers in PostgreSQL.",
+      "difficulty": "easy"
+    }
+  ]
+}

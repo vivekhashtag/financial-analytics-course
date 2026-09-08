@@ -1,0 +1,40 @@
+{
+ "exercises": [
+  {
+   "id": "ex1",
+   "title": "The sell side",
+   "notebookRef": "11A Ex1",
+   "requiresAttempt": true
+  },
+  {
+   "id": "ex2",
+   "title": "Tune the maker's dial",
+   "notebookRef": "11A Ex2",
+   "requiresAttempt": true
+  },
+  {
+   "id": "ex3",
+   "title": "Build the inventory limiter",
+   "notebookRef": "11A Ex3",
+   "requiresAttempt": true
+  },
+  {
+   "id": "ex4",
+   "title": "The parameter graveyard",
+   "notebookRef": "11B Ex1",
+   "requiresAttempt": true
+  },
+  {
+   "id": "ex5",
+   "title": "The cost dial of death",
+   "notebookRef": "11B Ex2",
+   "requiresAttempt": true
+  },
+  {
+   "id": "ex6",
+   "title": "The regime cut",
+   "notebookRef": "11B Ex3",
+   "requiresAttempt": true
+  }
+ ]
+}

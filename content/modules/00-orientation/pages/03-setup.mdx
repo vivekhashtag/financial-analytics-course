@@ -1,0 +1,45 @@
+---
+title: Setting Up (Colab First)
+slug: setup
+---
+
+## Path A — Google Colab (default, nothing to install)
+
+1. Have a Google account.
+2. Click any **Open in Colab** button in this course. The notebook opens in your browser.
+3. **File → Save a copy in Drive**, do this *first*, every time, or your edits vanish.
+4. Press `Shift + Enter` to run a cell.
+
+<Callout type="warn">
+Colab runs Python on Google's computers, not yours. Files you upload disappear when the session ends, which is why every course notebook loads data by URL instead.
+</Callout>
+
+### Colab survival kit
+
+| Task | How |
+|---|---|
+| Run a cell | `Shift + Enter` |
+| Add a cell | `+ Code` / `+ Text` buttons |
+| Save your work | File → Save a copy in Drive |
+| Load course data | Already in the notebook — a `pd.read_csv(URL)` line |
+| Things froze | Runtime → Restart runtime |
+
+## Path B — Local Jupyter (optional, one command)
+
+No Anaconda. It's a 4 GB download for what two commands give you.
+
+```bash
+# 1. Install Python 3.10+ from python.org, ticking "Add to PATH"
+# 2. Then:
+pip install notebook pandas numpy matplotlib seaborn
+# 3. Launch:
+jupyter notebook
+```
+
+Later modules add packages as needed (`pip install yfinance`, `streamlit`, `plotly`). Every notebook lists its own requirements in the first cell.
+
+## Your first notebook
+
+<NotebookCard id="00_setup_check" />
+
+It prints a greeting, checks your three core libraries, builds a small NIFTY 50 table, and draws a line chart. **If you see a chart, you're ready.**

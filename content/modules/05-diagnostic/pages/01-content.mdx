@@ -1,0 +1,168 @@
+# Module 5 · Diagnostic Analytics: Why Did It Happen?
+
+*Reading time: about 75 minutes, interleaved with two notebooks: **5A** (variance decomposition & attribution) and **5B** (cohorts, drivers, and the traps of "why"). This is the second rung of the analytics ladder, and the rung where analysis stops being reporting and starts being thinking.*
+
+---
+
+## Lesson 5.1 — The Thirty-Second Question
+
+Present the finest descriptive exhibit of your life, the reconciled waterfall, the annotated trend, and time how long the room stays satisfied. About thirty seconds. Then someone senior leans forward and asks the only question they were ever going to ask:
+
+> **"Okay. But *why*?"**
+
+Everything in Module 4 was preparation for this moment, and everything in this module is the professional answer to it. Diagnostic analytics is the discipline of explaining a difference, why revenue moved, why the fund trailed, why clients are leaving, in a way that is *quantified, exhaustive, and honest about its limits*.
+
+Those three adjectives are the whole module:
+
+- **Quantified**: "marketing underperformed" is an opinion; "price contributed +₹412 crore and volume +₹987 crore" is a diagnosis.
+- **Exhaustive**: the named parts must **add back up to the whole difference, exactly**. A decomposition that doesn't reconcile has a leak, and a leak means a wrong story. (You'll type a reconciliation check after every decomposition in this module. It's the auditability pillar, again, forever.)
+- **Honest about limits**: diagnostics establishes *association* and eliminates *measured* suspects. It does not, by itself, establish *causation*, and the final lesson of this module is precisely where that line sits and how professionals speak on each side of it.
+
+One more reframe before the tools. Amateurs treat "why" as a search for **the** cause. Professionals treat it as a **decomposition followed by an investigation**: split the difference into named parts, adjust for what you can measure, rank the surviving hypotheses, and state what test would separate them. That four-step shape repeats through both notebooks, and it is the deliverable interviewers are probing for when they ask case questions.
+
+---
+
+## Lesson 5.2 — One Move, Three Rooms: Variance Decomposition
+
+Here is the core diagnostic move, learnable in one sitting because it is *the same move* everywhere it appears: **take one difference and split it into named parts that add back up.**
+
+### Room one: Price × Volume (the FP&A room)
+
+MoneyMart's revenue grew. Did we sell *more*, or sell *dearer*? Revenue = transactions × ticket size, and since your dataset has revenue and ticket size, the transaction count is derivable from the identity (deriving the missing driver is itself a diagnostic skill; notebook 5A opens with it). The change then splits into three exact pieces:
+
+- **Volume effect** = (new volume − old volume) × *old* price, "more units, at last year's prices"
+- **Price effect** = (new price − old price) × *old* volume, "dearer units, on last year's volume"
+- **Interaction** = the corner piece: extra volume × extra price, belonging purely to neither
+
+Why "old price" and "old volume"? Because each effect must isolate *one* change while freezing the other at its baseline, that freezing is what makes the parts meaningful, and the leftover corner is the honest cost of the method. Firms differ on where they park the interaction (fold into price, split pro-rata); **whichever convention you use, state it**, hidden conventions are how two analysts both "reconcile" and still disagree.
+
+5A draws the result as a *variance waterfall*, Module 4's chart, now carrying a why, and then Exercise 1 asks the next why down: volume grew, but was that **more stores or more sales per store**? Same identity trick, one level deeper. Diagnosis is recursive; you stop when the parts become actionable.
+
+### Room two: the cost bridge
+
+Same move, pointed at profit. EBITDA changed year on year; the bridge steps through revenue's contribution and each cost line's bite, reconciling to the actual change. One sign convention to burn in now, because it silently breaks more variance walks than any other bug: **a cost *increase* is a *negative* step for profit.** Flip signs deliberately, reconcile religiously.
+
+Exercise 2 pays off Module 4's cliffhanger: for the COVID year, computing each cost line's %-change *relative to* revenue's %-change yields a **flexibility ratio**, near 1 means fully variable (COGS), near 0 means stubbornly fixed (employee costs). The stubborn lines are *why* profit fell so much harder than sales. That phenomenon, **operating leverage**, is no longer a phrase; it's a number you computed.
+
+### Room three: Brinson attribution (the fund desk)
+
+Your portfolio beat its benchmark by 1.4%. Skill at **picking sectors**, or skill at **picking stocks**? The Brinson decomposition splits active return into:
+
+- **Allocation** = (your sector weight − benchmark's) × (that sector's benchmark return − the benchmark total), *did you overweight the right places?*
+- **Selection** = your weight × (your stocks' return in the sector − the sector's benchmark return), *within each place, did your picks win?*
+
+5A builds a toy two-sector version on your NSE universe, reconciles it to the active return, and Exercise 3 delivers the insight by flipping the sector bet: allocation flips sign with the bet, while **selection barely moves, because picks are judged *within* sectors, insulated from the bet.** That separation is the entire reason the industry uses this decomposition: it distinguishes two genuinely different skills that pay two genuinely different salaries.
+
+**The pattern to carry out of 5A:** price/volume, cost bridge, allocation/selection, three costumes, one move. Name the parts. Freeze the baselines. Reconcile. State the convention.
+
+> **📓 Do notebook 5A now.**
+
+---
+
+## Lesson 5.3 — Cohorts: Following the People Who Started Together
+
+Notebook 5B turns from *numbers that changed* to *people who left*, the wealth firm's churn problem, and opens with the diagnostic tool built for populations: the **cohort**.
+
+A cohort is a group defined by a shared starting moment: everyone onboarded in 2022, every loan disbursed in Q3. The power of cutting by cohort is separating two stories that a blended average smears together: *"our clients are changing"* (a vintage story, newer intakes behave differently) versus *"our clients age predictably"* (a lifecycle story, everyone behaves this way at this tenure).
+
+5B's cohort chart shows newer cohorts churning more, and then immediately teaches the module's recurring reflex: **is that a why, or two patterns wearing one coat?** Newer cohorts are also simply *younger relationships*, and in a snapshot dataset, cohort and tenure are nearly aliases (a 2025 joiner *cannot* have 100-month tenure, most cells of the cohort × tenure grid are structurally empty). Exercise 1 makes you build that grid and watch the vintage story mostly dissolve into a tenure story, and then write the genuinely professional conclusion: *this snapshot cannot separate them; separating them requires churn-date data, not a churn flag.* Knowing what your data **cannot** answer, and saying so, is a diagnostic skill of the first rank.
+
+---
+
+## Lesson 5.4 — Driver Hunting, and the Mix Trap
+
+### The disciplined comparison
+
+The workhorse of "why is X happening": split by a candidate driver, compare rates, **always with counts** (Module 3's rule, a rate without its base is noise in a suit). The cleanest driver in the client book: **products held**. Churn falls monotonically from 34% at one product to 10% at six, every single step down. Strong evidence that product depth and retention travel together. *What exactly that licenses you to conclude* is deferred, deliberately, to Lesson 5.6, sit with the gradient, and with your urge to turn it into a recommendation.
+
+### The mix trap — adjust before you blame
+
+Now the chart somebody will absolutely put in a deck: the **RM league table**. Churn by relationship manager spans 8% to 36%. The deck's next slide writes itself: retrain the bottom three.
+
+Not so fast: RMs serve different **client mixes**, and mix drives churn all by itself (Mass churns at ~25%, Affluent at ~13%). The fix is **standardisation**: compute each RM's *expected* churn given their segment mix (their mix percentages × the segment baseline rates), and judge only the **residual**, the part mix cannot explain. Same logic as adjusting school results for intake before ranking schools.
+
+And here 5B delivers a more valuable lesson than a tidy reversal would have: in this data, **mix explains almost nothing**, expected churn barely varies across RMs while actual churn spans 28 points. The spread *survives* adjustment. Does that convict the bottom RMs? **No.** It acquits one measured suspect (segment mix; Exercise 2 acquits a second, city). The honest next sentence, and this phrasing is worth memorising as a template, is:
+
+> *"The gap is not explained by segment or city mix. Remaining candidates: genuine skill differences, unmeasured client factors, and small-sample noise (n ≈ 40 per RM). Here is how we would test each."*
+
+**Diagnostics that ends in a ranked list of suspects plus a test plan is finished. Diagnostics that ends in a firing is malpractice.**
+
+---
+
+## Lesson 5.5 — The Hidden-Populations Trap
+
+The most intellectually delicious lesson in the module, and it's sitting in your real data.
+
+**Does having an SIP retain clients?** The overall comparison: 20.0% churn with SIP, 20.9% without. Verdict: no effect. Case closed, and wrong. Split by segment and the "no effect" **shatters into opposite effects**: in Affluent, HNI and Ultra-HNI, SIP clients churn markedly *less* (6+ points less in HNI); in Mass, SIP clients churn slightly *more*. Averaged together, opposite truths cancel into a shrug.
+
+> **The average was not wrong. It was answering a question nobody should ask**, "what is the SIP effect for a client who is a blend of all segments?" No such client exists.
+
+This is the everyday form of a famous statistical monster: **Simpson's paradox**, where aggregation doesn't just *hide* an effect but *reverses its sign*. 5B includes a constructed two-RM demonstration (clearly labelled as constructed): RM A beats RM B *inside every single segment*, yet looks worse overall, because A holds the high-churn Mass book. Better in every part, worse in the whole, purely from mix. The takeaway question to ask of any comparison, forever: **"better, at what mix?"**
+
+Practical doctrine that falls out of Lessons 5.4–5.5 combined: **never trust an aggregate comparison until you've cut it by the most obvious grouping variable.** One cut. It takes a minute, and it is the single highest-value habit in diagnostic work.
+
+---
+
+## Lesson 5.6 — What "Why" Can Honestly Claim
+
+You hold a monotonic gradient (products vs churn). The recommendation is straining at the leash: *cross-sell to reduce churn!* This lesson is the leash.
+
+The gradient is consistent with (at least) three different worlds:
+
+1. **A causes B**, holding more products genuinely causes retention (switching costs, engagement, entanglement)
+2. **B causes A**, clients who were going to stay anyway *accumulate* products over their longer relationships
+3. **C causes both**, an unmeasured factor (satisfaction, trust, wealth trajectory) drives buying *and* staying
+
+Your snapshot cannot distinguish them, and the cross-sell recommendation only pays off in world one. Push products in world two or three and you get costs, annoyed clients, and unchanged churn.
+
+What *would* distinguish the worlds? In ascending order of strength: **timing data** (did the products arrive before the retention, or after the loyalty was already evident?); **natural comparisons** (clients pushed into products by a policy change vs those who chose them); and the gold standard, an **experiment**, offer the product push to a random half of at-risk clients, compare churn. Randomisation severs world two and world three at the root, which is why experiments settle what observation cannot. (Quasi-experimental methods for when experiments are impossible are advanced-course territory; the *instinct*, always ask "compared to what, assigned how?", is this course's territory.)
+
+So here is the complete diagnostic deliverable, the shape of the answer to every "why" for the rest of your career:
+
+1. **The decomposition**, named parts, reconciled to the whole (5A)
+2. **The adjusted comparisons**, measured confounders tested and acquitted or convicted (5.4)
+3. **The segment cuts**, hidden populations surfaced (5.5)
+4. **The candidate mechanisms**, all of them, not your favourite
+5. **The test plan**, what evidence would separate the candidates
+
+Deliver those five and you are doing diagnostics. Deliver a chart and a hunch and you are doing decoration with confidence.
+
+> **📓 Do notebook 5B now.** Exercise 3 has a sting worth savouring: "Aggressive" risk-profile clients look safest overall, and the within-segment cut plus one tiny high-churn cell forces you to reason about *who self-selects into calling themselves aggressive*.
+
+---
+
+## Lesson 5.7 — The AI Sidebar
+
+**Green, the hypothesis expander.** After your decomposition, AI is excellent at widening the suspect list before you settle:
+
+> *"Revenue variance decomposes to +₹987cr volume, +₹412cr price. Volume split: 80% new stores, 20% same-store. Generate ten candidate explanations for why same-store growth is weak, ordered by how easily each could be tested with internal data."*
+
+You'll get two angles you hadn't considered. Diagnostics rewards breadth *before* depth, and breadth is cheap to buy from a language model.
+
+**Red, the mechanism fabricator.** Paste a correlation and ask "why is this happening?", and AI will return a fluent, confident causal story, because generating plausible mechanisms is precisely what language models do best. It has no access to your world; it cannot know which of the three worlds you're in. **A fluent mechanism is not evidence for that mechanism.** Use AI to *enumerate* candidate explanations, never to *adjudicate* them, adjudication needs data, cuts, and tests, and that part is your job.
+
+---
+
+## Lesson 5.8 — The Stream Connector
+
+- **Corporate finance:** the monthly business review *is* Lesson 5.2, price/volume/mix on revenue, a cost bridge on margin, and a same-store split; FP&A analysts run this loop twelve times a year.
+- **Asset management:** Brinson attribution is a production system in every fund house; "allocation or selection?" is asked of every portfolio manager every quarter, in exactly the arithmetic you ran.
+- **Banking:** vintage (cohort) analysis of loan books is *the* credit-risk diagnostic, regulators require it, and mix-adjustment is how a bank tells "our underwriting worsened" from "we grew in a riskier segment."
+- **Markets:** trade post-mortems decompose P&L into market move, timing, and execution cost, the same reconciling-bridge discipline pointed at a single trade.
+
+---
+
+## Module 5 Checklist
+
+- [ ] You can decompose a revenue change into price, volume and interaction, and your bridge reconciles
+- [ ] You can state the baseline-freezing logic ("old price times new volume") and *why* the interaction term exists
+- [ ] You quantified operating leverage and can explain flexibility ratios to a non-analyst
+- [ ] You can run a Brinson split and explain why selection is insulated from the sector bet
+- [ ] You standardise before you compare (expected-given-mix, judge the residual), and you know an acquitted confounder convicts nobody
+- [ ] You cut every aggregate by the obvious grouping variable, and can narrate the SIP story and the constructed Simpson's reversal from memory
+- [ ] You can name the three worlds behind any gradient, and the tests that would separate them
+- [ ] Notebooks 5A–5B complete · exercises attempted before solutions · quiz passed
+
+**Badge earned: Root-Causer 🔎**
+
+Next: Module 6: Predictive Analytics. You can now explain the past with discipline. The next question in the meeting is already loaded: **"fine, so what happens next quarter?"** Baselines, trends, honest forecast evaluation, and the four biases waiting exactly where Module 1 promised they would be. (And the ML border, clearly signposted.)

@@ -1,0 +1,40 @@
+{
+ "exercises": [
+  {
+   "id": "ex1",
+   "title": "Split volume: stores vs same-store",
+   "notebookRef": "5A Ex1",
+   "requiresAttempt": true
+  },
+  {
+   "id": "ex2",
+   "title": "Quantify operating leverage",
+   "notebookRef": "5A Ex2",
+   "requiresAttempt": true
+  },
+  {
+   "id": "ex3",
+   "title": "Flip the Brinson bet",
+   "notebookRef": "5A Ex3",
+   "requiresAttempt": true
+  },
+  {
+   "id": "ex4",
+   "title": "Cohort \u00d7 tenure grid",
+   "notebookRef": "5B Ex1",
+   "requiresAttempt": true
+  },
+  {
+   "id": "ex5",
+   "title": "Standardise by city",
+   "notebookRef": "5B Ex2",
+   "requiresAttempt": true
+  },
+  {
+   "id": "ex6",
+   "title": "Risk-profile within segments",
+   "notebookRef": "5B Ex3",
+   "requiresAttempt": true
+  }
+ ]
+}

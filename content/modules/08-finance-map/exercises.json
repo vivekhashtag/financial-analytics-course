@@ -1,0 +1,28 @@
+{
+ "exercises": [
+  {
+   "id": "ex1",
+   "title": "Walk the Gordon cliff",
+   "notebookRef": "8B Ex1",
+   "requiresAttempt": true
+  },
+  {
+   "id": "ex2",
+   "title": "Regression comps",
+   "notebookRef": "8B Ex2",
+   "requiresAttempt": true
+  },
+  {
+   "id": "ex3",
+   "title": "Recession football field",
+   "notebookRef": "8B Ex3",
+   "requiresAttempt": true
+  },
+  {
+   "id": "ex4",
+   "title": "Sixteen sentences across the grid",
+   "notebookRef": "map",
+   "requiresAttempt": true
+  }
+ ]
+}
