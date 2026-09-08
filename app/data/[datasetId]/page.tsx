@@ -111,7 +111,7 @@ df.info()`;
                   {ds.quirks.map((q) => (
                     <tr key={q.code} className="border-b border-border last:border-b-0">
                       <td className="px-3 py-3 align-top">
-                        <span className="flex h-6 w-6 items-center justify-center rounded-full bg-warn/12 text-xs font-bold uppercase text-warn">
+                        <span className="flex h-6 w-6 items-center justify-center rounded-full bg-warn/12 font-mono text-xs font-semibold uppercase text-warn">
                           {q.code}
                         </span>
                       </td>

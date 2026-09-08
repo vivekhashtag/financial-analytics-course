@@ -21,7 +21,7 @@ export function MoreCourses() {
               href={course.href}
               target="_blank"
               rel="noopener noreferrer"
-              className="flex h-full items-start gap-3 rounded-md border border-border bg-surface p-4 no-underline transition-all duration-base ease-token hover:-translate-y-0.5 hover:border-border hover:bg-bg hover:shadow-card"
+              className="lift flex h-full items-start gap-3 rounded-md border border-border bg-surface p-4 no-underline hover:bg-bg"
             >
               <span className="mt-0.5 flex h-8 w-8 shrink-0 items-center justify-center rounded-md bg-surface-alt text-muted">
                 <CourseIcon name={course.icon} size={17} />

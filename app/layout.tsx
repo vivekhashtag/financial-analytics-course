@@ -1,4 +1,5 @@
 import type { Metadata, Viewport } from 'next';
+import { Inter, JetBrains_Mono, Sora } from 'next/font/google';
 import './globals.css';
 import { ProgressProvider } from '@/components/progress/ProgressProvider';
 import { SiteHeader } from '@/components/shell/SiteHeader';
@@ -6,6 +7,43 @@ import { SiteFooter } from '@/components/shell/SiteFooter';
 import type { MenuGroup } from '@/components/shell/ModuleMenu';
 import { firstPageHref, getAllModules, getExercises, getQuiz } from '@/lib/content';
 import { PARTS } from '@/lib/parts';
+
+/**
+ * Fonts are self-hosted by next/font: the files are emitted into
+ * .next/static/media and served from our own origin, so there is no request to
+ * fonts.gstatic.com and no third-party connection to wait on.
+ *
+ * `display: 'swap'` plus next/font's automatic size-adjusted fallback metrics
+ * is what keeps CLS at zero — text paints immediately in a fallback whose
+ * metrics are scaled to match the real face, so the swap doesn't reflow.
+ *
+ * Weights are pinned to the ones the design actually uses. Anything outside
+ * these would be synthesised by the browser, so the codebase avoids them:
+ * Sora at 600/700 (headings), Inter at 400/500/600 (everything else — note no
+ * 700, so UI chrome uses font-semibold not font-bold), JetBrains Mono 400/500.
+ */
+const sora = Sora({
+  subsets: ['latin'],
+  weight: ['600', '700'],
+  display: 'swap',
+  variable: '--font-heading',
+});
+
+const inter = Inter({
+  subsets: ['latin'],
+  weight: ['400', '500', '600'],
+  display: 'swap',
+  variable: '--font-body',
+});
+
+const jetbrainsMono = JetBrains_Mono({
+  subsets: ['latin'],
+  weight: ['400', '500'],
+  display: 'swap',
+  variable: '--font-mono',
+});
+
+const fontVariables = `${sora.variable} ${inter.variable} ${jetbrainsMono.variable}`;
 
 export const metadata: Metadata = {
   title: {
@@ -54,8 +92,8 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   const groups = menuGroups();
 
   return (
-    <html lang="en">
-      <body className="min-h-screen bg-bg text-ink">
+    <html lang="en" className={fontVariables}>
+      <body className="min-h-screen bg-bg font-body text-ink">
         <ProgressProvider>
           <a
             href="#main"

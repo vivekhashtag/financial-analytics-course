@@ -12,25 +12,27 @@ import { CodePeek, MdxPre } from '@/components/widgets/CodePeek';
 import { CourseMetroMap } from '@/components/widgets/CourseMetroMap';
 import { DatasetPreview } from '@/components/widgets/DatasetPreview';
 import { DatasetTable } from '@/components/widgets/DatasetTable';
+import { DataPipelineFlow } from '@/components/widgets/DataPipelineFlow';
 import { DecisionTree } from '@/components/widgets/DecisionTree';
 import { Download } from '@/components/widgets/Download';
 import { ExerciseList } from '@/components/widgets/ExerciseList';
 import { FlipCards } from '@/components/widgets/FlipCards';
+import { FourQuestionLadder } from '@/components/widgets/FourQuestionLadder';
 import { IconRow } from '@/components/widgets/IconRow';
 import { MissingWidget } from '@/components/widgets/MissingWidget';
 import { NotebookCard } from '@/components/widgets/NotebookCard';
+import { OrderBookMini } from '@/components/widgets/OrderBookMini';
 import { Quiz } from '@/components/widgets/Quiz';
 import { SortingGame } from '@/components/widgets/SortingGame';
 import { StatCounter } from '@/components/widgets/StatCounter';
 import { TrustReportForm } from '@/components/widgets/TrustReportForm';
-import {
-  CrisisChart,
-  DistributionCompare,
-  MissingCalendar,
-  PriceDiscrepancy,
-  SourceTable,
-  StreamlitCard,
-} from '@/components/widgets/stubs';
+import { StreamlitCard } from '@/components/widgets/stubs';
+import { ModuleChart } from '@/components/charts/ModuleChart';
+import { CrisisChart } from '@/components/widgets/CrisisChart';
+import { DistributionCompare } from '@/components/widgets/DistributionCompare';
+import { MissingCalendar } from '@/components/widgets/MissingCalendar';
+import { PriceDiscrepancy } from '@/components/widgets/PriceDiscrepancy';
+import { SourceTable } from '@/components/widgets/SourceTable';
 
 /**
  * The widget registry from CONTENT_SCHEMA.md. Content references these by name;
@@ -47,6 +49,7 @@ const widgets = {
   CodePeek,
   CourseMetroMap,
   CrisisChart,
+  DataPipelineFlow,
   DatasetPreview,
   DatasetTable,
   DecisionTree,
@@ -54,9 +57,12 @@ const widgets = {
   Download,
   ExerciseList,
   FlipCards,
+  FourQuestionLadder,
   IconRow,
   MissingCalendar,
+  ModuleChart,
   NotebookCard,
+  OrderBookMini,
   PriceDiscrepancy,
   Quiz,
   SortingGame,

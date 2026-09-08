@@ -1,6 +1,8 @@
 'use client';
 
 import { useProgress } from '@/components/progress/ProgressProvider';
+import { Meter } from '@/components/motion/Meter';
+import tokens from '@/schema/tokens.json';
 
 /** Live points / completion tally for an ExerciseList header. */
 export function ExerciseTally({
@@ -20,13 +22,8 @@ export function ExerciseTally({
 
   return (
     <div className="flex items-center gap-3">
-      <div className="h-1.5 w-24 overflow-hidden rounded-full bg-surface-alt">
-        <div
-          className="h-full rounded-full bg-success transition-[width] duration-slow ease-token"
-          style={{ width: `${pct}%` }}
-        />
-      </div>
-      <span className="chip bg-surface-alt text-muted">
+      <Meter value={pct} className="h-1.5 w-24" color={tokens.color.semantic.success} />
+      <span className="chip bg-surface-alt tabular-nums text-muted">
         {done.length}/{ids.length} done
         {points > 0 && ` · ${pct}%`}
       </span>

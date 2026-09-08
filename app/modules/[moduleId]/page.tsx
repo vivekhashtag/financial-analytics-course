@@ -8,6 +8,8 @@ import { AISidebarInline } from '@/components/widgets/AISidebarInline';
 import { BadgeCard } from '@/components/shell/BadgeCard';
 import { getAllModules, getExercises, getModule, getQuiz, totalPoints } from '@/lib/content';
 import { part } from '@/lib/parts';
+import { Reveal } from '@/components/motion/Reveal';
+import { DataPipelineFlow } from '@/components/widgets/DataPipelineFlow';
 
 interface Params {
   moduleId: string;
@@ -73,7 +75,7 @@ export default async function ModuleOverview({ params }: { params: Promise<Param
         )}
 
         {/* What you'll be able to do */}
-        <section>
+        <Reveal as="section">
           <h2 className="text-xl font-semibold text-ink">What you&apos;ll be able to do</h2>
           <ul className="mt-3 space-y-2">
             {mod.learningOutcomes.map((outcome, i) => (
@@ -87,10 +89,10 @@ export default async function ModuleOverview({ params }: { params: Promise<Param
               </li>
             ))}
           </ul>
-        </section>
+        </Reveal>
 
         {/* Pages */}
-        <section>
+        <Reveal as="section">
           <div className="flex flex-wrap items-end justify-between gap-3">
             <h2 className="text-xl font-semibold text-ink">The pages</h2>
             {firstPage && (
@@ -107,7 +109,7 @@ export default async function ModuleOverview({ params }: { params: Promise<Param
                   href={`/modules/${mod.id}/${page.slug}`}
                   className="flex items-center gap-3 bg-bg px-4 py-3 no-underline transition-colors duration-fast ease-token hover:bg-surface"
                 >
-                  <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-surface-alt text-xs font-bold text-muted">
+                  <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-surface-alt text-xs font-semibold tabular-nums text-muted">
                     {i + 1}
                   </span>
                   <span className="min-w-0 flex-1 text-sm font-medium text-ink">{page.title}</span>
@@ -116,11 +118,11 @@ export default async function ModuleOverview({ params }: { params: Promise<Param
               </li>
             ))}
           </ol>
-        </section>
+        </Reveal>
 
         {/* Notebooks */}
         {mod.notebooks.length > 0 && (
-          <section>
+          <Reveal as="section">
             <h2 className="text-xl font-semibold text-ink">
               Notebooks{' '}
               <span className="text-sm font-normal text-muted">
@@ -132,12 +134,12 @@ export default async function ModuleOverview({ params }: { params: Promise<Param
                 <NotebookCard key={nb.id} moduleId={mod.id} notebook={nb} />
               ))}
             </div>
-          </section>
+          </Reveal>
         )}
 
         {/* Streamlit apps — download and run locally, never embedded. */}
         {mod.streamlitApps.length > 0 && (
-          <section>
+          <Reveal as="section">
             <h2 className="text-xl font-semibold text-ink">Streamlit apps</h2>
             <p className="mt-1 text-sm text-muted">
               Download and run these on your own machine in VS Code — they are never embedded here.
@@ -166,11 +168,11 @@ export default async function ModuleOverview({ params }: { params: Promise<Param
                 </div>
               ))}
             </div>
-          </section>
+          </Reveal>
         )}
 
         {/* Exercises + quiz */}
-        <section className="grid gap-4 sm:grid-cols-2">
+        <Reveal as="section" className="grid gap-4 sm:grid-cols-2">
           {exercises.length > 0 && (
             <Link
               href={`/modules/${mod.id}/exercises`}
@@ -205,11 +207,11 @@ export default async function ModuleOverview({ params }: { params: Promise<Param
               </span>
             </Link>
           )}
-        </section>
+        </Reveal>
 
         {/* Case study */}
         {mod.caseStudy && (
-          <section className="card overflow-hidden">
+          <Reveal as="section" className="card overflow-hidden">
             <div className="border-b border-border bg-surface px-4 py-2.5">
               <p className="text-xs font-semibold uppercase tracking-widest text-muted">
                 Case study
@@ -227,22 +229,22 @@ export default async function ModuleOverview({ params }: { params: Promise<Param
                 </p>
               )}
             </div>
-          </section>
+          </Reveal>
         )}
 
         {/* AI sidebar */}
         {mod.aiSidebar && (
-          <section>
+          <Reveal as="section">
             <h2 className="text-xl font-semibold text-ink">Using AI on this module</h2>
             <div className="mt-3">
               <AISidebarInline module={mod.id} />
             </div>
-          </section>
+          </Reveal>
         )}
 
         {/* Stream connector */}
         {mod.streamConnector && (
-          <section>
+          <Reveal as="section">
             <h2 className="text-xl font-semibold text-ink">Where this shows up at work</h2>
             <dl className="mt-3 grid gap-3 sm:grid-cols-2">
               {Object.entries(mod.streamConnector).map(([key, value]) => (
@@ -254,12 +256,12 @@ export default async function ModuleOverview({ params }: { params: Promise<Param
                 </div>
               ))}
             </dl>
-          </section>
+          </Reveal>
         )}
 
         {/* Bias check ritual */}
         {mod.biasCheck?.enabled && mod.biasCheck.prompt && (
-          <section className="rounded-lg border-l-4 border-warn bg-warn/[0.06] p-4">
+          <Reveal as="section" className="rounded-lg border-l-4 border-warn bg-warn/[0.06] p-4">
             <h2 className="flex items-center gap-2 text-base font-semibold text-ink">
               <Icon name="shield" size={16} className="text-warn" />
               The bias check
@@ -268,11 +270,22 @@ export default async function ModuleOverview({ params }: { params: Promise<Param
             <p className="mt-2 text-xs text-muted">
               This ritual repeats in every lab from Module 9 on. By Module 12 it should be reflex.
             </p>
-          </section>
+          </Reveal>
+        )}
+
+        {/* Module 3 is the cleaning pipeline in practice, so the diagram lives
+            here rather than on Module 8 (the map module, which has no chart). */}
+        {mod.id === '03-pandas' && (
+          <Reveal as="section">
+            <h2 className="text-xl font-semibold text-ink">The shape of the work</h2>
+            <div className="mt-3">
+              <DataPipelineFlow />
+            </div>
+          </Reveal>
         )}
 
         {/* Badge + time */}
-        <section className="grid gap-4 sm:grid-cols-2">
+        <Reveal as="section" className="grid gap-4 sm:grid-cols-2">
           {mod.badge && <BadgeCard badge={mod.badge} moduleId={mod.id} />}
           <div className="card flex items-center gap-3 p-4">
             <span className="flex h-10 w-10 items-center justify-center rounded-full bg-surface-alt text-muted">
@@ -288,7 +301,7 @@ export default async function ModuleOverview({ params }: { params: Promise<Param
               <p className="text-xs text-muted">{part(mod.part).label}</p>
             </div>
           </div>
-        </section>
+        </Reveal>
       </div>
     </ModuleShell>
   );

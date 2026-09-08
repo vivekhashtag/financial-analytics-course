@@ -5,14 +5,15 @@
   "scripts": {
     "validate": "node scripts/validate-content.mjs",
     "sync-static": "node scripts/sync-static.mjs",
-    "predev": "npm run validate && npm run sync-static",
+    "predev": "npm run validate && npm run sync-static && npm run prebake-charts",
     "dev": "next dev",
-    "prebuild": "npm run validate && npm run sync-static",
+    "prebuild": "npm run validate && npm run sync-static && npm run prebake-charts",
     "build": "next build",
     "start": "next start",
     "lint": "eslint app components lib scripts --ext .ts,.tsx,.mjs",
     "typecheck": "tsc --noEmit",
-    "check": "npm run validate && npm run typecheck && npm run lint"
+    "check": "npm run validate && npm run typecheck && npm run lint",
+    "prebake-charts": "node scripts/prebake-charts.mjs"
   },
   "dependencies": {
     "ajv": "^8.20.0",
@@ -22,6 +23,7 @@
     "next-mdx-remote": "^5.0.0",
     "react": "^19.2.8",
     "react-dom": "^19.2.8",
+    "recharts": "^2.15.4",
     "remark-gfm": "^4.0.1"
   },
   "devDependencies": {

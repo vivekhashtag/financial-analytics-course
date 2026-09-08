@@ -7,6 +7,7 @@ import { PageReadMarker } from '@/components/shell/PageReadMarker';
 import { ModuleNeeds } from '@/components/shell/ModuleNeeds';
 import { MdxContent } from '@/components/mdx/MdxContent';
 import { MlNextStepCard } from '@/components/widgets/MlNextStepCard';
+import { ModuleChart } from '@/components/charts/ModuleChart';
 
 interface Params {
   moduleId: string;
@@ -54,6 +55,9 @@ export default async function ModulePageRoute({ params }: { params: Promise<Para
         {isFirstPage && <ModuleNeeds mod={mod} />}
 
         <MdxContent source={page.body} codeBlocks={page.codeBlocks} />
+
+        {/* One signature interactive exhibit per module, on its content page. */}
+        {isFirstPage && <ModuleChart moduleId={moduleId} />}
 
         {isMlSignpost && <MlNextStepCard />}
       </article>

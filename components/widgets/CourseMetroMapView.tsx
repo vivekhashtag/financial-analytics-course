@@ -2,8 +2,11 @@
 
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { useMemo } from 'react';
+import { useMemo, useState } from 'react';
 import { useProgress } from '@/components/progress/ProgressProvider';
+import { useInView } from '@/components/motion/Reveal';
+import { formatMinutes } from '@/lib/format';
+import tokens from '@/schema/tokens.json';
 import type { PartId } from '@/lib/types';
 
 export interface Station {
@@ -104,6 +107,8 @@ function MetroSvg({
 }) {
   const { hydrated, moduleProgress } = useProgress();
   const { cols, colGap, rowGap, padX, padY } = geometry;
+  const { ref, inView } = useInView<SVGSVGElement>({ threshold: 0.2 });
+  const [hovered, setHovered] = useState<number | null>(null);
 
   const rows = Math.ceil(stations.length / cols);
   const width = padX * 2 + colGap * (cols - 1);
@@ -119,38 +124,117 @@ function MetroSvg({
     return { x: padX + col * colGap, y: padY + row * rowGap };
   });
 
+  const state = (id: string) => {
+    if (!hydrated) return { done: false, started: false };
+    const p = moduleProgress(id);
+    return {
+      done: p.quizPassed,
+      started:
+        p.pagesRead.length > 0 || p.notebooksDownloaded.length > 0 || p.quizScore !== null,
+    };
+  };
+
+  // The furthest station with any history — the "you are here" of the journey.
+  const furthestIndex = hydrated
+    ? stations.reduce((acc, s, i) => (state(s.id).started || state(s.id).done ? i : acc), -1)
+    : -1;
+
+  // The whole line as one path, so it can draw itself in a single stroke.
+  const linePath = points
+    .map((p, i) => `${i === 0 ? 'M' : 'L'} ${p.x} ${p.y}`)
+    .join(' ');
+  // Rough path length: every hop is axis-aligned, so this is exact enough for
+  // a dash offset and avoids needing getTotalLength() from the DOM.
+  const lineLength = points
+    .slice(1)
+    .reduce((sum, p, i) => sum + Math.abs(p.x - points[i].x) + Math.abs(p.y - points[i].y), 0);
+
   return (
     <svg
+      ref={ref}
       viewBox={`0 0 ${width} ${height}`}
-      className="h-auto w-full"
+      className="h-auto w-full overflow-visible"
       role="img"
-      aria-label="Course map: 16 modules across four parts and a capstone"
+      aria-label={`Course map: ${stations.length} modules across four parts and a capstone`}
+      onMouseLeave={() => setHovered(null)}
     >
       <title>Course map</title>
 
-      {/* The line: a grey underlay, then one coloured segment per hop so each
-          takes the Part colour of the station it arrives at. */}
+      {/* The grey bed, always present so the layout never shifts. */}
       {points.slice(1).map((p, i) => (
-        <Segment key={`under-${stations[i + 1].id}`} from={points[i]} to={p} color="#E3E8EF" width={9} />
+        <Segment
+          key={`under-${stations[i + 1].id}`}
+          from={points[i]}
+          to={p}
+          color="#E3E8EF"
+          width={9}
+        />
       ))}
+
+      {/* One coloured segment per hop, so each carries its Part's colour. A
+          completed hop reads at full strength; hops ahead of the learner sit
+          back, so progress is legible in the line itself. */}
       {points.slice(1).map((p, i) => (
-        <Segment key={stations[i + 1].id} from={points[i]} to={p} color={stations[i + 1].color} width={5} />
+        <Segment
+          key={stations[i + 1].id}
+          from={points[i]}
+          to={p}
+          color={stations[i + 1].color}
+          width={5}
+          opacity={state(stations[i + 1].id).done ? 1 : 0.55}
+        />
       ))}
+
+      {/* The draw-on: a white curtain laid over the whole line, retreating
+          along it. `stroke-dashoffset` on one path — a single paint property,
+          no layout, ~1.2s, and it stops when it's done. */}
+      <path
+        d={linePath}
+        fill="none"
+        stroke={tokens.color.bg}
+        strokeWidth={13}
+        strokeLinecap="butt"
+        strokeDasharray={lineLength}
+        strokeDashoffset={inView ? -lineLength : 0}
+        style={{ transition: 'stroke-dashoffset 1200ms cubic-bezier(.4,0,.2,1)' }}
+        aria-hidden="true"
+        pointerEvents="none"
+      />
 
       {points.map((p, i) => {
         const station = stations[i];
-        const done = hydrated && moduleProgress(station.id).quizPassed;
-        const started =
-          hydrated &&
-          (moduleProgress(station.id).pagesRead.length > 0 ||
-            moduleProgress(station.id).notebooksDownloaded.length > 0);
+        const { done, started } = state(station.id);
         const isCurrent = station.id === currentId;
+        const isFurthest = i === furthestIndex;
+        const isHovered = hovered === i;
 
         return (
-          <g key={station.id}>
-            <Link href={`/modules/${station.id}`} aria-label={`Module ${station.number}: ${station.title}`}>
+          <g
+            key={station.id}
+            onMouseEnter={() => setHovered(i)}
+            onFocus={() => setHovered(i)}
+            onBlur={() => setHovered(null)}
+          >
+            <Link
+              href={`/modules/${station.id}`}
+              aria-label={`Module ${station.number}: ${station.title}`}
+            >
               {/* generous hit area */}
               <circle cx={p.x} cy={p.y} r={26} fill="transparent" className="cursor-pointer" />
+
+              {/* The learner's furthest station breathes — a soft halo, one of
+                  the two looping effects allowed on a page. */}
+              {isFurthest && (
+                <circle
+                  cx={p.x}
+                  cy={p.y}
+                  r={17}
+                  fill={station.color}
+                  className="animate-halo"
+                  style={{ transformOrigin: `${p.x}px ${p.y}px` }}
+                  aria-hidden="true"
+                />
+              )}
 
               {isCurrent && (
                 <circle
@@ -164,45 +248,52 @@ function MetroSvg({
                 />
               )}
 
-              <circle
-                cx={p.x}
-                cy={p.y}
-                r={13}
-                fill={done || started ? station.color : '#FFFFFF'}
-                stroke={station.color}
-                strokeWidth={3}
-                className="transition-all duration-base ease-token"
-              />
-
-              {done && (
-                <path
-                  d={`M ${p.x - 5} ${p.y} l 3.5 3.5 L ${p.x + 6} ${p.y - 4.5}`}
-                  fill="none"
-                  stroke="#FFFFFF"
-                  strokeWidth={2.4}
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
+              {/* Station scales on hover — transform only, so it stays on the
+                  compositor and never nudges the layout. */}
+              <g
+                style={{
+                  transform: isHovered ? 'scale(1.18)' : 'scale(1)',
+                  transformOrigin: `${p.x}px ${p.y}px`,
+                  transition: 'transform 160ms cubic-bezier(.16,.84,.44,1)',
+                }}
+              >
+                <circle
+                  cx={p.x}
+                  cy={p.y}
+                  r={13}
+                  fill={done || started ? station.color : '#FFFFFF'}
+                  stroke={station.color}
+                  strokeWidth={3}
                 />
-              )}
 
-              {!done && (
-                <text
-                  x={p.x}
-                  y={p.y + 4}
-                  textAnchor="middle"
-                  className="pointer-events-none select-none font-sans text-[11px] font-bold"
-                  fill={started ? '#FFFFFF' : station.color}
-                >
-                  {station.number}
-                </text>
-              )}
+                {done ? (
+                  <path
+                    d={`M ${p.x - 5} ${p.y} l 3.5 3.5 L ${p.x + 6} ${p.y - 4.5}`}
+                    fill="none"
+                    stroke="#FFFFFF"
+                    strokeWidth={2.4}
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  />
+                ) : (
+                  <text
+                    x={p.x}
+                    y={p.y + 4}
+                    textAnchor="middle"
+                    className="pointer-events-none select-none font-body text-[11px] font-semibold tabular-nums"
+                    fill={started ? '#FFFFFF' : station.color}
+                  >
+                    {station.number}
+                  </text>
+                )}
+              </g>
 
               {!compact && (
                 <text
                   x={p.x}
                   y={p.y + 34}
                   textAnchor="middle"
-                  className="pointer-events-none select-none font-sans text-[10px] font-medium"
+                  className="pointer-events-none select-none font-body text-[10px] font-medium"
                   fill="#5B6B84"
                 >
                   {truncate(station.title, 22)}
@@ -212,7 +303,55 @@ function MetroSvg({
           </g>
         );
       })}
+
+      {/* Tooltip last, so it paints over neighbouring stations. */}
+      {hovered !== null && <Tooltip station={stations[hovered]} at={points[hovered]} state={state(stations[hovered].id)} />}
     </svg>
+  );
+}
+
+/** Hover card for a station: title, time, badge, progress state. */
+function Tooltip({
+  station,
+  at,
+  state,
+}: {
+  station: Station;
+  at: { x: number; y: number };
+  state: { done: boolean; started: boolean };
+}) {
+  const lines = [
+    `${formatMinutes(station.minutes)}${station.badge ? ` · ${station.badge}` : ''}`,
+    state.done ? 'Complete' : state.started ? 'In progress' : 'Not started',
+  ];
+
+  const w = 186;
+  const h = 58;
+  const x = Math.max(4, at.x - w / 2);
+  const y = at.y - h - 24;
+
+  return (
+    <g className="pointer-events-none animate-pop-in" aria-hidden="true">
+      <rect
+        x={x}
+        y={y}
+        width={w}
+        height={h}
+        rx={8}
+        fill="#FFFFFF"
+        stroke={station.color}
+        strokeWidth={1.5}
+      />
+      <text x={x + 10} y={y + 21} className="font-body text-[11px] font-semibold" fill="#0F172A">
+        {truncate(`${station.number} · ${station.title}`, 26)}
+      </text>
+      <text x={x + 10} y={y + 36} className="font-body text-[10px]" fill="#5B6B84">
+        {truncate(lines[0], 30)}
+      </text>
+      <text x={x + 10} y={y + 49} className="font-body text-[10px] font-medium" fill={station.color}>
+        {lines[1]}
+      </text>
+    </g>
   );
 }
 
@@ -225,11 +364,13 @@ function Segment({
   to,
   color,
   width,
+  opacity = 1,
 }: {
   from: { x: number; y: number };
   to: { x: number; y: number };
   color: string;
   width: number;
+  opacity?: number;
 }) {
   return (
     <line
@@ -240,6 +381,7 @@ function Segment({
       stroke={color}
       strokeWidth={width}
       strokeLinecap="round"
+      opacity={opacity}
     />
   );
 }

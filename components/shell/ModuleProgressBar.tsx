@@ -2,6 +2,7 @@
 
 import { Icon } from '@/components/ui/Icon';
 import { moduleCompletion, useProgress } from '@/components/progress/ProgressProvider';
+import { Meter } from '@/components/motion/Meter';
 
 interface Totals {
   pages: number;
@@ -62,12 +63,7 @@ export function ModuleProgressBar({
     <div className="mt-5">
       <div className="flex flex-wrap items-center gap-x-4 gap-y-2">
         <div className="flex items-center gap-2">
-          <div className="h-2 w-32 overflow-hidden rounded-full bg-border">
-            <div
-              className="h-full rounded-full transition-[width] duration-slow ease-token"
-              style={{ width: `${pct}%`, background: 'var(--accent)' }}
-            />
-          </div>
+          <Meter value={pct} className="h-2 w-32" trackClassName="bg-border" />
           <span className="text-xs font-semibold text-ink tabular-nums">{pct}%</span>
         </div>
 

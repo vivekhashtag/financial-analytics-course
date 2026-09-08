@@ -280,7 +280,7 @@ function MenuRow({
       >
         <span
           aria-hidden="true"
-          className="flex h-7 w-7 shrink-0 items-center justify-center rounded-md text-xs font-bold"
+          className="flex h-7 w-7 shrink-0 items-center justify-center rounded-md text-xs font-semibold tabular-nums"
           style={{
             backgroundColor: state === 'complete' ? color : `${color}18`,
             color: state === 'complete' ? '#FFFFFF' : color,

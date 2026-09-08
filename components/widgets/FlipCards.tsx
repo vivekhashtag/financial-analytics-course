@@ -60,7 +60,7 @@ export function FlipCards({ cards }: { cards: FlipCardSpec[] }) {
             >
               <div className="flex items-center gap-2">
                 <span
-                  className="flex h-7 w-7 items-center justify-center rounded-md text-xs font-bold"
+                  className="flex h-7 w-7 items-center justify-center rounded-md text-xs font-semibold tabular-nums"
                   style={{ backgroundColor: `${color}18`, color }}
                 >
                   {i + 1}

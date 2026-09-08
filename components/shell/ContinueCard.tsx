@@ -3,6 +3,7 @@
 import Link from 'next/link';
 import { Icon } from '@/components/ui/Icon';
 import { moduleCompletion, useProgress } from '@/components/progress/ProgressProvider';
+import { Meter } from '@/components/motion/Meter';
 
 export interface ResumeModule {
   id: string;
@@ -81,12 +82,7 @@ export function ContinueCard({ modules }: { modules: ResumeModule[] }) {
             </p>
 
             <div className="mt-3 flex items-center gap-2.5">
-              <div className="h-1.5 w-32 overflow-hidden rounded-full bg-surface-alt">
-                <div
-                  className="h-full rounded-full transition-[width] duration-slow ease-token"
-                  style={{ width: `${pct}%`, background: 'var(--accent)' }}
-                />
-              </div>
+              <Meter value={pct} className="h-1.5 w-32" />
               <span className="text-xs font-semibold tabular-nums text-muted">
                 {pct}% of this module
               </span>

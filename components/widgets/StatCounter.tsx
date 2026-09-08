@@ -91,7 +91,7 @@ function StatCard({ stat, run, delay }: { stat: Stat; run: boolean; delay: numbe
 
   return (
     <div className="card flex flex-col gap-2 p-5 transition-shadow duration-base ease-token hover:shadow-lift">
-      <div className="font-sans text-3xl font-bold tabular-nums accent-text">
+      <div className="font-body text-3xl font-semibold tabular-nums accent-text">
         {stat.prefix}
         {shown.toLocaleString('en-IN', {
           minimumFractionDigits: decimals,

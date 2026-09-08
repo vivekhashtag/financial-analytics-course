@@ -2,6 +2,7 @@ import Link from 'next/link';
 import type { ReactNode } from 'react';
 import { Icon } from '@/components/ui/Icon';
 import { part } from '@/lib/parts';
+import { formatMinutes } from '@/lib/format';
 import { getExercises, getQuiz, moduleNeighbours } from '@/lib/content';
 import type { CourseModule } from '@/lib/types';
 import { ModuleSidebar, type SidebarEntry } from './ModuleSidebar';
@@ -213,9 +214,6 @@ function buildFlow(mod: CourseModule, entries: SidebarEntry[], activeHref: strin
   return { prev, next };
 }
 
-export function formatMinutes(minutes: number): string {
-  if (minutes < 60) return `${minutes} min`;
-  const hours = Math.floor(minutes / 60);
-  const rest = minutes % 60;
-  return rest ? `${hours} h ${rest} min` : `${hours} h`;
-}
+
+// Re-exported so existing imports keep working; the helper lives in lib/format.
+export { formatMinutes };

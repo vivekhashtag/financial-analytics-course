@@ -16,7 +16,7 @@ export function BadgeCard({ badge, moduleId }: { badge: Badge; moduleId: string 
     >
       <span
         className={`flex h-10 w-10 items-center justify-center rounded-full ${
-          earned ? 'bg-success text-white' : 'bg-surface-alt text-muted'
+          earned ? 'bg-success text-white animate-spring-pop' : 'bg-surface-alt text-muted'
         }`}
       >
         <Icon name={badge.icon ?? 'award'} size={19} />

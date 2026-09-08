@@ -128,7 +128,8 @@ export function QuizView({ moduleId, moduleTitle, questions, passMark, badge }: 
 
           {passed && badge && (
             <div className="mt-4 flex items-center gap-3 rounded-md border border-success/25 bg-bg px-4 py-3">
-              <span className="flex h-10 w-10 items-center justify-center rounded-full bg-success/12 text-success">
+              {/* one-time spring: the badge arriving is the payoff of the module */}
+              <span className="flex h-10 w-10 items-center justify-center rounded-full bg-success/12 text-success animate-spring-pop">
                 <Icon name={badge.icon ?? 'award'} size={20} />
               </span>
               <div>
@@ -171,13 +172,13 @@ function QuestionCard({
       className={`card overflow-hidden transition-colors duration-base ease-token ${
         checked
           ? correct
-            ? 'border-success/40'
+            ? 'border-success/40 animate-pulse-correct'
             : 'border-danger/40'
           : ''
       }`}
     >
       <div className="flex items-start gap-3 px-4 pt-4">
-        <span className="mt-0.5 flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-surface-alt text-xs font-bold text-muted">
+        <span className="mt-0.5 flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-surface-alt text-xs font-semibold tabular-nums text-muted">
           {index + 1}
         </span>
         <div className="min-w-0 flex-1">
@@ -226,7 +227,7 @@ function QuestionCard({
         </div>
       ) : (
         question.explanation && (
-          <div className="border-t border-border bg-surface/60 px-4 py-3 text-sm text-ink animate-fade-up">
+          <div className="border-t border-border bg-surface/60 px-4 py-3 text-sm text-ink animate-slide-open">
             <span className="font-semibold">Why: </span>
             <InlineCode text={question.explanation} />
           </div>

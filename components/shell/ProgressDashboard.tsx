@@ -4,6 +4,7 @@ import Link from 'next/link';
 import { useState } from 'react';
 import { Icon } from '@/components/ui/Icon';
 import { moduleCompletion, useProgress } from '@/components/progress/ProgressProvider';
+import { Meter } from '@/components/motion/Meter';
 import type { Badge, PartId } from '@/lib/types';
 
 export interface ModuleRow {
@@ -56,7 +57,7 @@ export function ProgressDashboard({ rows }: { rows: ModuleRow[] }) {
             <span className="flex h-8 w-8 items-center justify-center rounded-md bg-primary/10 text-primary">
               <Icon name={s.icon} size={16} />
             </span>
-            <p className="mt-2.5 text-2xl font-bold text-ink tabular-nums">{s.value}</p>
+            <p className="mt-2.5 text-2xl font-semibold text-ink tabular-nums">{s.value}</p>
             <p className="text-xs text-muted">{s.label}</p>
           </div>
         ))}
@@ -164,12 +165,7 @@ export function ProgressDashboard({ rows }: { rows: ModuleRow[] }) {
                     </td>
                     <td className="whitespace-nowrap px-3 py-3">
                       <div className="flex items-center gap-2">
-                        <div className="h-1.5 w-16 overflow-hidden rounded-full bg-surface-alt">
-                          <div
-                            className="h-full rounded-full"
-                            style={{ width: `${pct}%`, backgroundColor: r.color }}
-                          />
-                        </div>
+                        <Meter value={pct} className="h-1.5 w-16" color={r.color} />
                         <span className="tabular-nums text-xs text-muted">{pct}%</span>
                       </div>
                     </td>

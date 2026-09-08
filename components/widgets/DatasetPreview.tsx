@@ -102,7 +102,7 @@ export function DatasetPreview({
             <ul className="mt-2 space-y-1.5">
               {ds.quirks.map((q) => (
                 <li key={q.code} className="flex items-start gap-2 text-sm">
-                  <span className="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-warn/12 text-[11px] font-bold uppercase text-warn">
+                  <span className="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-warn/12 font-mono text-[11px] font-semibold uppercase text-warn">
                     {q.code}
                   </span>
                   <span className="text-ink">

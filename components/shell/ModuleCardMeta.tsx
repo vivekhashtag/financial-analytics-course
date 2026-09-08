@@ -2,6 +2,7 @@
 
 import { Icon } from '@/components/ui/Icon';
 import { moduleCompletion, useProgress } from '@/components/progress/ProgressProvider';
+import { Meter } from '@/components/motion/Meter';
 import type { Badge } from '@/lib/types';
 
 /** Progress footer for a module card on /modules. */
@@ -25,12 +26,7 @@ export function ModuleCardMeta({
 
   return (
     <div className="mt-1 flex items-center gap-2 border-t border-border pt-3">
-      <div className="h-1.5 flex-1 overflow-hidden rounded-full bg-surface-alt">
-        <div
-          className="h-full rounded-full transition-[width] duration-slow ease-token"
-          style={{ width: `${pct}%`, background: 'var(--accent)' }}
-        />
-      </div>
+      <Meter value={pct} className="h-1.5 flex-1" />
       <span className="text-xs font-semibold tabular-nums text-muted">{pct}%</span>
       {earned && badge && (
         <span className="chip bg-success/10 text-success" title={`${badge.label} earned`}>

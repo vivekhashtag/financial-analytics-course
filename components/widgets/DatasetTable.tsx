@@ -46,7 +46,7 @@ export function DatasetTable({ ids }: { ids?: string[] }) {
                   </Link>
                   <p className="mt-0.5 font-mono text-xs text-muted">{ds.id}</p>
                 </td>
-                <td className="whitespace-nowrap px-3 py-3 align-top font-mono text-xs text-muted">
+                <td className="whitespace-nowrap px-3 py-3 align-top text-xs tabular-nums text-muted">
                   {ds.rows.toLocaleString('en-IN')} × {ds.cols}
                 </td>
                 <td className="px-3 py-3 align-top text-xs text-muted">{ds.grain}</td>

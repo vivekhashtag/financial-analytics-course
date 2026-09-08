@@ -103,7 +103,7 @@ export function CodePeek({
                     className="relative rounded-sm bg-primary/10 px-0.5 ring-1 ring-primary/30"
                   >
                     <span className={TOKEN_CLASS[t.kind]}>{t.value}</span>
-                    <sup className="ml-0.5 font-sans text-[10px] font-bold text-primary">
+                    <sup className="ml-0.5 font-body text-[10px] font-semibold text-primary">
                       {t.pin}
                     </sup>
                   </span>
@@ -123,7 +123,7 @@ export function CodePeek({
           <ol className="space-y-2">
             {annotations.map((a, i) => (
               <li key={i} className="flex items-start gap-2.5 text-sm">
-                <span className="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-primary text-[11px] font-bold text-white">
+                <span className="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-primary text-[11px] font-semibold tabular-nums text-white">
                   {i + 1}
                 </span>
                 <span className="text-ink">

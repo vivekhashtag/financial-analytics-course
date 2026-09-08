@@ -50,7 +50,7 @@ export function SiteHeader({ groups }: { groups: MenuGroup[] }) {
               >
                 {item.label}
                 {item.href === '/progress' && badges > 0 && (
-                  <span className="ml-1.5 rounded-full bg-success/12 px-1.5 py-0.5 text-xs font-bold text-success">
+                  <span className="ml-1.5 rounded-full bg-success/12 px-1.5 py-0.5 text-xs font-semibold tabular-nums text-success">
                     {badges}
                   </span>
                 )}

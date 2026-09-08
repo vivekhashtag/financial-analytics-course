@@ -2,6 +2,9 @@ import Link from 'next/link';
 import { Icon } from '@/components/ui/Icon';
 import { CourseMetroMap } from '@/components/widgets/CourseMetroMap';
 import { ContinueCard, type ResumeModule } from '@/components/shell/ContinueCard';
+import { Reveal } from '@/components/motion/Reveal';
+import { HeroGeometry, PartGeometry } from '@/components/visual/PartGeometry';
+import { FourQuestionLadder } from '@/components/widgets/FourQuestionLadder';
 import { AboutAuthor } from '@/components/shell/AboutAuthor';
 import { MoreCourses } from '@/components/shell/MoreCourses';
 import { getAllModules, getDatasets, getExercises, getQuiz } from '@/lib/content';
@@ -55,8 +58,12 @@ export default function Landing() {
   return (
     <div>
       {/* hero */}
-      <section className="border-b border-border bg-gradient-to-br from-primary/[0.07] via-transparent to-part-B/[0.05]">
-        <div className="mx-auto max-w-wide px-4 py-16 sm:py-24">
+      <section className="relative overflow-hidden border-b border-border bg-gradient-to-br from-primary/[0.07] via-transparent to-part-B/[0.05]">
+        {/* Decorative: a scatter resolving into a trend, in the Part accents.
+            Sits behind the copy, hidden below lg so it never crowds the text. */}
+        <HeroGeometry className="pointer-events-none absolute -right-8 top-1/2 hidden w-[38rem] -translate-y-1/2 opacity-[0.55] lg:block" />
+
+        <div className="relative mx-auto max-w-wide px-4 py-16 sm:py-24">
           <p className="chip accent-bg-soft accent-text">
             <Icon name="compass" size={13} />
             India-first · Colab-first · deliberately no machine learning
@@ -93,7 +100,7 @@ export default function Landing() {
               { k: `~${totalHours} h`, v: 'of work, start to capstone' },
             ].map((s) => (
               <div key={s.v}>
-                <dt className="text-2xl font-bold text-ink">{s.k}</dt>
+                <dt className="text-2xl font-semibold tabular-nums text-ink">{s.k}</dt>
                 <dd className="text-sm text-muted">{s.v}</dd>
               </div>
             ))}
@@ -104,7 +111,7 @@ export default function Landing() {
       <ContinueCard modules={resumable} />
 
       {/* the metro map */}
-      <section className="mx-auto max-w-wide px-4 py-14">
+      <Reveal as="section" className="mx-auto max-w-wide px-4 py-14">
         <h2 className="text-2xl font-bold text-ink">The journey</h2>
         <p className="mt-2 max-w-content text-muted">
           Four parts converging on one capstone. Every station is clickable, and the map fills in
@@ -113,21 +120,23 @@ export default function Landing() {
         <div className="mt-6">
           <CourseMetroMap />
         </div>
-      </section>
+      </Reveal>
 
       {/* promises */}
       <section className="border-y border-border bg-surface">
         <div className="mx-auto max-w-wide px-4 py-14">
-          <h2 className="text-2xl font-bold text-ink">What you&apos;ll be able to do</h2>
+          <Reveal>
+            <h2 className="text-2xl font-bold text-ink">What you&apos;ll be able to do</h2>
+          </Reveal>
           <ul className="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-            {PROMISES.map((p) => (
-              <li key={p.title} className="card p-5">
+            {PROMISES.map((p, i) => (
+              <Reveal as="li" key={p.title} delay={i * 70} className="card p-5">
                 <span className="flex h-10 w-10 items-center justify-center rounded-md bg-primary/10 text-primary">
                   <Icon name={p.icon} size={19} />
                 </span>
                 <h3 className="mt-3 text-base font-semibold text-ink">{p.title}</h3>
                 <p className="mt-1.5 text-sm text-muted">{p.text}</p>
-              </li>
+              </Reveal>
             ))}
           </ul>
         </div>
@@ -135,33 +144,51 @@ export default function Landing() {
 
       {/* the parts */}
       <section className="mx-auto max-w-wide px-4 py-14">
-        <h2 className="text-2xl font-bold text-ink">The four parts</h2>
-        <p className="mt-1.5 text-sm text-muted">Pick a part to jump to its modules.</p>
+        <Reveal>
+          <h2 className="text-2xl font-bold text-ink">The four parts</h2>
+          <p className="mt-1.5 text-sm text-muted">Pick a part to jump to its modules.</p>
+        </Reveal>
 
         <ol className="mt-5 space-y-3">
-          {PARTS.filter((p) => modules.some((m) => m.part === p.id)).map((p) => {
+          {PARTS.filter((p) => modules.some((m) => m.part === p.id)).map((p, i) => {
             const inPart = modules.filter((m) => m.part === p.id);
             return (
-              <li key={p.id} style={{ '--accent': p.color } as React.CSSProperties}>
+              <Reveal
+                as="li"
+                key={p.id}
+                delay={i * 70}
+                style={{ '--accent': p.color } as React.CSSProperties}
+              >
                 <Link
                   href={`/modules#${partAnchor(p.id)}`}
-                  className="card flex flex-wrap items-center gap-x-5 gap-y-2 p-4 no-underline transition-all duration-base ease-token hover:-translate-y-0.5 hover:shadow-lift"
+                  className="card lift relative flex flex-wrap items-center gap-x-5 gap-y-2 overflow-hidden p-4 no-underline"
                   style={{ borderLeftWidth: 4, borderLeftColor: p.color }}
                 >
-                  <span className="text-sm font-semibold" style={{ color: p.color }}>
+                  {/* Decorative Part mark: the shape of what the Part teaches. */}
+                  <PartGeometry
+                    part={p.id}
+                    opacity={0.16}
+                    className="pointer-events-none absolute right-3 top-1/2 hidden h-16 w-24 -translate-y-1/2 sm:block"
+                  />
+                  <span className="relative text-sm font-semibold" style={{ color: p.color }}>
                     {p.label}
                   </span>
-                  <span className="min-w-0 flex-1 text-sm text-muted">{p.tagline}</span>
-                  <span className="flex shrink-0 items-center gap-2 text-xs text-muted">
+                  <span className="relative min-w-0 flex-1 text-sm text-muted">{p.tagline}</span>
+                  <span className="relative flex shrink-0 items-center gap-2 text-xs tabular-nums text-muted">
                     Modules {inPart[0].number}
                     {inPart.length > 1 && `–${inPart[inPart.length - 1].number}`}
                     <Icon name="arrow-right" size={14} className="accent-text" />
                   </span>
                 </Link>
-              </li>
+              </Reveal>
             );
           })}
         </ol>
+
+        {/* The four questions are named just above; this is where they get built. */}
+        <div className="mt-8" style={{ '--accent': partColor('B') } as React.CSSProperties}>
+          <FourQuestionLadder />
+        </div>
       </section>
 
       {/* honesty block */}

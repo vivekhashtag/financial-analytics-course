@@ -5,6 +5,8 @@ import { formatMinutes } from '@/components/shell/ModuleShell';
 import { ModuleCardMeta } from '@/components/shell/ModuleCardMeta';
 import { getAllModules, getExercises, getQuiz } from '@/lib/content';
 import { PARTS, partAnchor } from '@/lib/parts';
+import { Reveal } from '@/components/motion/Reveal';
+import { PartGeometry } from '@/components/visual/PartGeometry';
 
 export const metadata: Metadata = {
   title: 'All modules',
@@ -40,26 +42,32 @@ export default function ModulesIndex() {
               className="scroll-mt-20"
               style={{ '--accent': p.color } as React.CSSProperties}
             >
-              <div className="flex flex-wrap items-baseline gap-x-3 gap-y-1 border-b border-border pb-3">
-                <h2 className="text-xl font-semibold accent-text">{p.label}</h2>
-                <p className="text-sm text-muted">{p.tagline}</p>
+              <div className="relative flex flex-wrap items-baseline gap-x-3 gap-y-1 overflow-hidden border-b border-border pb-3">
+                {/* Decorative Part mark, sitting behind the heading. */}
+                <PartGeometry
+                  part={p.id}
+                  opacity={0.13}
+                  className="pointer-events-none absolute -top-2 right-0 hidden h-20 w-32 sm:block"
+                />
+                <h2 className="relative text-xl font-semibold accent-text">{p.label}</h2>
+                <p className="relative text-sm text-muted">{p.tagline}</p>
               </div>
 
               <ul className="mt-5 grid gap-4 md:grid-cols-2 xl:grid-cols-3">
-                {inPart.map((mod) => {
+                {inPart.map((mod, cardIndex) => {
                   const quiz = getQuiz(mod.id);
                   const exercises = getExercises(mod.id);
 
                   return (
-                    <li key={mod.id}>
+                    <Reveal as="li" key={mod.id} delay={Math.min(cardIndex * 60, 240)}>
                       <Link
                         href={`/modules/${mod.id}`}
-                        className="card group flex h-full flex-col gap-3 p-5 no-underline transition-all duration-base ease-token hover:-translate-y-0.5 hover:shadow-lift"
+                        className="card lift group flex h-full flex-col gap-3 p-5 no-underline"
                         style={{ borderTopWidth: 3, borderTopColor: p.color }}
                       >
                         <div className="flex items-start justify-between gap-3">
                           <span
-                            className="flex h-9 w-9 shrink-0 items-center justify-center rounded-md text-sm font-bold"
+                            className="flex h-9 w-9 shrink-0 items-center justify-center rounded-md text-sm font-semibold tabular-nums"
                             style={{ backgroundColor: `${p.color}18`, color: p.color }}
                           >
                             {mod.number}
@@ -113,7 +121,7 @@ export default function ModulesIndex() {
                           }}
                         />
                       </Link>
-                    </li>
+                    </Reveal>
                   );
                 })}
               </ul>

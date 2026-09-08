@@ -39,7 +39,7 @@ export function ExerciseCard({
       }`}
     >
       <header className="flex flex-wrap items-start gap-3 border-b border-border bg-surface px-4 py-3">
-        <span className="mt-0.5 flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-surface-alt text-xs font-bold text-muted">
+        <span className="mt-0.5 flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-surface-alt text-xs font-semibold tabular-nums text-muted">
           {index + 1}
         </span>
         <div className="min-w-0 flex-1">

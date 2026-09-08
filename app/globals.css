@@ -15,7 +15,7 @@
   }
 
   body {
-    @apply bg-bg text-ink font-sans antialiased;
+    @apply bg-bg font-body text-ink antialiased;
   }
 
   ::selection {
@@ -27,17 +27,30 @@
     --tw-ring-color: var(--accent);
   }
 
+  /* Sora for every heading and, by inheritance, the module and Part headers.
+     Element selectors, so `.prose-course h2` (which sets only size/spacing)
+     still inherits the family. Sora runs a little wide, so the negative
+     tracking is a touch stronger than it was for Inter. */
   h1,
   h2,
   h3,
   h4 {
-    @apply font-semibold tracking-[-0.01em] text-ink;
+    @apply font-heading font-semibold tracking-[-0.018em] text-ink;
     text-wrap: balance;
   }
 
   code,
-  pre {
+  pre,
+  kbd,
+  samp {
     @apply font-mono;
+  }
+
+  /* Figures should align in columns wherever they are compared. Inter's
+     tabular set is what makes ragged numbers in tables line up. */
+  th,
+  td {
+    font-variant-numeric: tabular-nums;
   }
 }
 
@@ -137,7 +150,8 @@
   }
 
   .prose-course :not(pre) > code {
-    @apply rounded-sm bg-surface-alt px-1.5 py-0.5 text-[0.85em] text-ink;
+    @apply rounded-sm bg-surface-alt px-1.5 py-0.5 text-ink;
+    font-size: theme('fontSize.prose-code[0]');
   }
 
   .prose-course pre {
@@ -237,6 +251,33 @@
   }
 }
 
+@layer components {
+  /* ------------------------------------------------------------- motion */
+
+  /* Press state for every button primitive: a 1px settle, no colour change,
+     so it reads as physical rather than as a state change. */
+  .btn:active:not(:disabled) {
+    transform: translateY(1px);
+  }
+
+  /* Card lift, shared by module cards and anything else that navigates. */
+  .lift {
+    @apply transition-all duration-base ease-token;
+  }
+
+  .lift:hover {
+    @apply -translate-y-0.5 shadow-lift;
+  }
+
+}
+
+/*
+ * The reduced-motion contract: everything above is off. Covers CSS animations,
+ * CSS transitions, and the inline transitions the Reveal components set — the
+ * `transition-duration` override applies regardless of where the transition was
+ * declared, and Reveal additionally short-circuits its observer so elements
+ * mount in their final state.
+ */
 @media (prefers-reduced-motion: reduce) {
   html {
     scroll-behavior: auto;
@@ -245,8 +286,17 @@
   *,
   *::before,
   *::after {
+    animation-delay: 0ms !important;
     animation-duration: 0.01ms !important;
     animation-iteration-count: 1 !important;
+    transition-delay: 0ms !important;
     transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+
+  /* Hover lift and press states are motion too. */
+  .lift:hover,
+  .btn:active:not(:disabled) {
+    transform: none;
   }
 }

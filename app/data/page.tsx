@@ -51,7 +51,7 @@ export default function DataIndex() {
                     </h2>
                     <p className="mt-0.5 font-mono text-xs text-muted">{ds.id}</p>
                   </div>
-                  <span className="chip shrink-0 bg-surface-alt font-mono text-muted">
+                  <span className="chip shrink-0 bg-surface-alt tabular-nums text-muted">
                     {ds.rows.toLocaleString('en-IN')} × {ds.cols}
                   </span>
                 </div>
