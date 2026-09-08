@@ -2,6 +2,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 import { cache } from 'react';
 import { prepareMdx, type PreparedMdx } from './mdx-source';
+import { colabBranch, colabRepo, siteUrl } from './env';
 import type {
   CourseModule,
   Dataset,
@@ -212,9 +213,11 @@ export const findNotebook = cache(
   },
 );
 
-const COLAB_REPO = process.env.NEXT_PUBLIC_COLAB_REPO ?? '';
-const COLAB_BRANCH = process.env.NEXT_PUBLIC_COLAB_BRANCH ?? 'main';
-const SITE_URL = (process.env.NEXT_PUBLIC_SITE_URL ?? '').replace(/\/$/, '');
+// Normalised and never-throwing — see lib/env.ts. A malformed value disables
+// the feature it powers; it must never be able to fail the build.
+const COLAB_REPO = colabRepo();
+const COLAB_BRANCH = colabBranch();
+const SITE_URL = siteUrl();
 
 /** Download path — notebooks are mirrored into public/ by scripts/sync-static.mjs. */
 export function assetHref(file: string): string {

@@ -7,6 +7,7 @@ import { SiteFooter } from '@/components/shell/SiteFooter';
 import type { MenuGroup } from '@/components/shell/ModuleMenu';
 import { firstPageHref, getAllModules, getExercises, getQuiz } from '@/lib/content';
 import { PARTS } from '@/lib/parts';
+import { siteUrlObject } from '@/lib/env';
 
 /**
  * Fonts are self-hosted by next/font: the files are emitted into
@@ -52,9 +53,10 @@ export const metadata: Metadata = {
   },
   description:
     'A hands-on financial analytics course: data literacy, Python, pandas and SQL, the four analytics questions, the finance map, and four labs — all on Indian market data.',
-  metadataBase: process.env.NEXT_PUBLIC_SITE_URL
-    ? new URL(process.env.NEXT_PUBLIC_SITE_URL)
-    : undefined,
+  // Never construct a URL from the raw env var here: an unparseable value
+  // throws at build time and takes the whole deployment down. siteUrlObject()
+  // returns null instead, which Next treats as "no metadataBase".
+  metadataBase: siteUrlObject() ?? undefined,
 };
 
 export const viewport: Viewport = {

@@ -4,6 +4,7 @@ import type { Metadata } from 'next';
 import { Icon } from '@/components/ui/Icon';
 import { CodePeek } from '@/components/widgets/CodePeek';
 import { datasetModules, getCsvPreview, getDataset, getDatasets } from '@/lib/content';
+import { siteUrl } from '@/lib/env';
 
 interface Params {
   datasetId: string;
@@ -34,7 +35,7 @@ export default async function DatasetPage({ params }: { params: Promise<Params> 
 
   const loadSnippet = `import pandas as pd
 
-BASE = "${process.env.NEXT_PUBLIC_SITE_URL ?? 'https://<course-domain>'}/data/"
+BASE = "${siteUrl() ?? 'https://<course-domain>'}/data/"
 df = pd.read_csv(BASE + "${ds.id}.csv")
 df.info()`;
 
