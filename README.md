@@ -96,6 +96,11 @@ Gating is soft everywhere except the attempt-first solution gate, which is the
 one wall the course means to keep. `/progress` shows everything and can reset
 a module or the lot.
 
+## Where things stand
+
+**** — current deployment state, what is done, and the exact
+next actions. Start there after a break.
+
 ## UI specification
 
 `docs/UI-SPEC.md` is the working spec for the UI layer — what each piece does,
