@@ -98,8 +98,9 @@ a module or the lot.
 
 ## Where things stand
 
-**** — current deployment state, what is done, and the exact
-next actions. Start there after a break.
+**`docs/STATUS.md`** — current deployment state, an inventory of what is built,
+the known gaps, the operational gotchas, and the exact next actions. Start there
+after a break, then read `docs/UI-SPEC.md` for the UI decisions.
 
 ## UI specification
 
