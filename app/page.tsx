@@ -8,7 +8,8 @@ import { FourQuestionLadder } from '@/components/widgets/FourQuestionLadder';
 import { AboutAuthor } from '@/components/shell/AboutAuthor';
 import { MoreCourses } from '@/components/shell/MoreCourses';
 import { getAllModules, getDatasets, getExercises, getQuiz } from '@/lib/content';
-import { PARTS, partAnchor, partColor } from '@/lib/parts';
+import { PARTS, part, partAnchor, partColor } from '@/lib/parts';
+import { getAppendices } from '@/lib/appendices';
 
 const PROMISES = [
   {
@@ -36,6 +37,7 @@ const PROMISES = [
 export default function Landing() {
   const modules = getAllModules();
   const datasets = getDatasets();
+  const appendices = getAppendices();
   const totalHours = Math.round(modules.reduce((s, m) => s + m.estimatedMinutes, 0) / 60);
   const notebooks = modules.reduce((s, m) => s + m.notebooks.length, 0);
 
@@ -184,6 +186,27 @@ export default function Landing() {
             );
           })}
         </ol>
+
+        {/* Beside the Parts rather than in them: the appendices are reference
+            material, and the row is deliberately quieter than a Part. */}
+        <div className="mt-3" style={{ '--accent': partColor('appendix') } as React.CSSProperties}>
+          <Link
+            href="/appendices"
+            className="card lift flex flex-wrap items-center gap-x-5 gap-y-2 border-dashed p-4 no-underline"
+            style={{ borderLeftWidth: 4, borderLeftColor: partColor('appendix') }}
+          >
+            <span className="text-sm font-semibold accent-text">
+              {appendices.length} appendices
+            </span>
+            <span className="min-w-0 flex-1 text-sm text-muted">
+              {part('appendix').tagline}
+            </span>
+            <span className="flex shrink-0 items-center gap-2 text-xs text-muted">
+              Beside the course
+              <Icon name="arrow-right" size={14} className="accent-text" />
+            </span>
+          </Link>
+        </div>
 
         {/* The four questions are named just above; this is where they get built. */}
         <div className="mt-8" style={{ '--accent': partColor('B') } as React.CSSProperties}>

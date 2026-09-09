@@ -6,6 +6,7 @@ import { useCallback, useEffect, useId, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
 import { Icon } from '@/components/ui/Icon';
 import { moduleCompletion, useProgress } from '@/components/progress/ProgressProvider';
+import { APPENDIX_PROGRESS_KEY } from '@/lib/progress-keys';
 
 export interface MenuModule {
   id: string;
@@ -16,11 +17,25 @@ export interface MenuModule {
   totals: { pages: number; notebooks: number; exercises: number; hasQuiz: boolean };
 }
 
+export interface MenuAppendix {
+  slug: string;
+  letter: string;
+  title: string;
+  href: string;
+}
+
 export interface MenuGroup {
   partId: string;
   label: string;
   color: string;
   modules: MenuModule[];
+  /**
+   * Set instead of `modules` for the appendices group. They are listed with a
+   * read marker rather than a completion percentage — appendix progress is
+   * deliberately outside the module arithmetic (see APPENDIX_PROGRESS_KEY), so
+   * showing a percentage here would invent a number.
+   */
+  appendices?: MenuAppendix[];
 }
 
 const SITE_LINKS = [
@@ -117,7 +132,9 @@ export function ModuleMenu({ groups }: { groups: MenuGroup[] }) {
   }, [open]);
 
   const currentModuleId = /^\/modules\/([^/]+)/.exec(pathname)?.[1] ?? null;
+  const currentAppendixSlug = /^\/appendices\/([^/]+)/.exec(pathname)?.[1] ?? null;
   const moduleCount = groups.reduce((n, g) => n + g.modules.length, 0);
+  const appendixCount = groups.reduce((n, g) => n + (g.appendices?.length ?? 0), 0);
 
   const drawer = (
     <div className="fixed inset-0 z-[100]">
@@ -141,7 +158,10 @@ export function ModuleMenu({ groups }: { groups: MenuGroup[] }) {
         <header className="flex shrink-0 items-center justify-between gap-3 border-b border-border px-4 py-3">
           <div>
             <p className="text-sm font-semibold text-ink">Course navigation</p>
-            <p className="text-xs text-muted">{moduleCount} modules</p>
+            <p className="text-xs text-muted">
+              {moduleCount} modules
+              {appendixCount > 0 && ` · ${appendixCount} appendices`}
+            </p>
           </div>
           <button
             type="button"
@@ -194,14 +214,23 @@ export function ModuleMenu({ groups }: { groups: MenuGroup[] }) {
                 </h2>
 
                 <ul className="mt-2 space-y-0.5">
-                  {group.modules.map((mod) => (
-                    <MenuRow
-                      key={mod.id}
-                      mod={mod}
-                      color={group.color}
-                      current={mod.id === currentModuleId}
-                    />
-                  ))}
+                  {group.appendices
+                    ? group.appendices.map((a) => (
+                        <AppendixMenuRow
+                          key={a.slug}
+                          appendix={a}
+                          color={group.color}
+                          current={a.slug === currentAppendixSlug}
+                        />
+                      ))
+                    : group.modules.map((mod) => (
+                        <MenuRow
+                          key={mod.id}
+                          mod={mod}
+                          color={group.color}
+                          current={mod.id === currentModuleId}
+                        />
+                      ))}
                 </ul>
               </section>
             ))}
@@ -316,6 +345,63 @@ function MenuRow({
           title={label}
         >
           <Icon name={STATE_ICON[state]} size={state === 'not-started' ? 18 : 15} />
+        </span>
+      </Link>
+    </li>
+  );
+}
+
+/**
+ * An appendix in the drawer. Same shape as MenuRow so the group does not read
+ * as a different kind of list, but the status line is read / not read: there is
+ * no percentage to show, by design.
+ */
+function AppendixMenuRow({
+  appendix,
+  color,
+  current,
+}: {
+  appendix: MenuAppendix;
+  color: string;
+  current: boolean;
+}) {
+  const { hydrated, has } = useProgress();
+  const read = hydrated && has(APPENDIX_PROGRESS_KEY, 'pagesRead', appendix.slug);
+
+  return (
+    <li>
+      <Link
+        href={appendix.href}
+        aria-current={current ? 'page' : undefined}
+        className={`flex items-center gap-3 rounded-md px-2 py-2 no-underline transition-colors duration-fast ease-token ${
+          current ? 'bg-surface ring-1 ring-inset' : 'hover:bg-surface'
+        }`}
+        style={current ? ({ '--tw-ring-color': `${color}66` } as React.CSSProperties) : undefined}
+      >
+        <span
+          aria-hidden="true"
+          className="flex h-7 w-7 shrink-0 items-center justify-center rounded-md text-xs font-semibold"
+          style={{
+            backgroundColor: read ? color : `${color}18`,
+            color: read ? '#FFFFFF' : color,
+          }}
+        >
+          {appendix.letter}
+        </span>
+
+        <span className="min-w-0 flex-1">
+          <span className="block truncate text-sm font-medium text-ink">{appendix.title}</span>
+          <span className={`block text-xs ${read ? 'text-success' : 'text-muted/70'}`}>
+            {read ? 'Read' : 'Not read yet'}
+          </span>
+        </span>
+
+        <span
+          aria-hidden="true"
+          className={`shrink-0 ${read ? 'text-success' : 'text-border'}`}
+          title={read ? 'Read' : 'Not read yet'}
+        >
+          <Icon name={read ? 'check-circle' : 'dot'} size={read ? 15 : 18} />
         </span>
       </Link>
     </li>

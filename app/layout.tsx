@@ -6,7 +6,8 @@ import { SiteHeader } from '@/components/shell/SiteHeader';
 import { SiteFooter } from '@/components/shell/SiteFooter';
 import type { MenuGroup } from '@/components/shell/ModuleMenu';
 import { firstPageHref, getAllModules, getExercises, getQuiz } from '@/lib/content';
-import { PARTS } from '@/lib/parts';
+import { getAppendices } from '@/lib/appendices';
+import { PARTS, part } from '@/lib/parts';
 import { siteUrlObject } from '@/lib/env';
 
 /**
@@ -69,7 +70,9 @@ export const viewport: Viewport = {
 function menuGroups(): MenuGroup[] {
   const modules = getAllModules();
 
-  return PARTS.filter((p) => modules.some((m) => m.part === p.id)).map((p) => ({
+  const partGroups: MenuGroup[] = PARTS.filter((p) =>
+    modules.some((m) => m.part === p.id),
+  ).map((p) => ({
     partId: p.id,
     label: p.label,
     color: p.color,
@@ -88,6 +91,30 @@ function menuGroups(): MenuGroup[] {
         },
       })),
   }));
+
+  // The appendices close the drawer, below the Capstone. No module carries
+  // part: 'appendix', so the filter above never produces this group — it is
+  // appended from the appendix registry instead.
+  const appendixPart = part('appendix');
+  const appendices = getAppendices();
+
+  return appendices.length
+    ? [
+        ...partGroups,
+        {
+          partId: appendixPart.id,
+          label: appendixPart.label,
+          color: appendixPart.color,
+          modules: [],
+          appendices: appendices.map((a) => ({
+            slug: a.slug,
+            letter: a.letter,
+            title: a.title,
+            href: `/appendices/${a.slug}`,
+          })),
+        },
+      ]
+    : partGroups;
 }
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {

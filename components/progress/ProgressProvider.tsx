@@ -213,7 +213,18 @@ export function useProgress(): ProgressApi {
   return ctx;
 }
 
-/** Percentage complete for a module, weighting pages, notebooks, exercises and the quiz. */
+/**
+ * Percentage complete for a module, weighting pages, notebooks, exercises and
+ * the quiz.
+ *
+ * Only ever called with a real module's totals, which is what keeps the
+ * appendices out of it. Their pages are marked read against the
+ * `APPENDIX_PROGRESS_KEY` pseudo-module (see lib/progress-keys.ts), and every
+ * caller of this function — the drawer, the module cards, `/progress`, the
+ * metro map — builds its list from `getAllModules()`, so the appendix bucket is
+ * never one of the rows. Called with it anyway, `totals` would be all zeroes
+ * and this returns 0 rather than a wrong number.
+ */
 export function moduleCompletion(
   p: ModuleProgress,
   totals: { pages: number; notebooks: number; exercises: number; hasQuiz: boolean },

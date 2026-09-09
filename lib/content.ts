@@ -113,6 +113,17 @@ function readMdxFile(file: string): PreparedMdx | null {
   return prepareMdx(raw);
 }
 
+/**
+ * The same preparation, for callers that already hold the text — the
+ * appendices, whose bodies are read and trimmed in lib/appendices.ts. Exported
+ * so there is exactly one MDX pipeline: the stray-`<` escaping and the
+ * `code={`…`}` lifting are not optional extras, and a second reader that
+ * skipped them would silently mangle indentation.
+ */
+export function readPreparedMdx(raw: string): PreparedMdx {
+  return prepareMdx(raw.replace(/^﻿/, '').replace(FRONTMATTER, ''));
+}
+
 export const getPage = cache((moduleId: string, slug: string): PageSource | null => {
   const mod = getModule(moduleId);
   const page = mod?.pages.find((p) => p.slug === slug);

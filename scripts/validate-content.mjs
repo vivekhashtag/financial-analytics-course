@@ -230,6 +230,56 @@ const ML_BORDER = /\bML border\b|\bML course\b|not a machine learning course|mac
   }
 }
 
+/* --------------------------------------------------------------- appendices */
+
+/**
+ * The appendices have no module.json, so lib/appendices.ts is their registry.
+ * Cross-check it against content/appendices/ in both directions by reading the
+ * paths out of that source: a referenced file that does not exist is an error,
+ * and a file on disk that nothing references is a warning.
+ *
+ * That second direction is the check that matters. Appendix A's notebook sat in
+ * the package for weeks, downloadable by URL and reachable from nowhere in the
+ * UI, precisely because nothing was watching for content the app never links
+ * to. This is the watch.
+ */
+{
+  const registryPath = path.join(ROOT, 'lib', 'appendices.ts');
+
+  if (!fs.existsSync(registryPath)) {
+    err('lib/appendices.ts is missing — the appendix routes read their registry from it');
+  } else {
+    const source = fs.readFileSync(registryPath, 'utf8');
+    const referenced = new Set(
+      [...source.matchAll(/'((?:content\/appendices|notebooks)\/[^']+)'/g)].map((m) => m[1]),
+    );
+
+    if (referenced.size === 0) {
+      err('lib/appendices.ts references no content files — the appendix pages would be empty');
+    }
+
+    for (const rel of referenced) {
+      if (!exists(rel)) err(`appendix registry: file missing — ${rel}`);
+    }
+
+    const dir = path.join(ROOT, 'content', 'appendices');
+    const onDisk = fs.existsSync(dir)
+      ? fs
+          .readdirSync(dir)
+          .filter((f) => /\.(md|mdx)$/i.test(f))
+          .map((f) => `content/appendices/${f}`)
+      : [];
+
+    if (onDisk.length === 0) warn('content/appendices holds no .md files');
+
+    for (const rel of onDisk) {
+      if (!referenced.has(rel)) {
+        warn(`${rel}: on disk but not in lib/appendices.ts — unreachable from the UI`);
+      }
+    }
+  }
+}
+
 /* ---------------------------------------------------- datasets + notebooks */
 
 const datasetsPath = path.join(ROOT, 'data', 'datasets.json');

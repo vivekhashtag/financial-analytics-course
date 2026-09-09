@@ -43,7 +43,9 @@ export const PARTS: PartMeta[] = [
   {
     id: 'appendix',
     label: 'Appendices',
-    tagline: 'The Excel bridge and the career map',
+    // Four documents beside the course, not a Part of it — no module carries
+    // this id, so the group is built from the registry in lib/appendices.ts.
+    tagline: 'The Excel bridge, the career map, how to ship, and the work itself',
     color: tokens.color.part.appendix,
   },
 ];
