@@ -21,9 +21,12 @@ import { appendixNeighbours, type Appendix } from '@/lib/appendices';
  */
 export function AppendixShell({
   appendix,
+  /** Appendix D needs room for its section rail alongside the prose column. */
+  wide = false,
   children,
 }: {
   appendix: Appendix;
+  wide?: boolean;
   children: ReactNode;
 }) {
   const accent = partColor('appendix');
@@ -85,7 +88,7 @@ export function AppendixShell({
       </header>
 
       <div className="mx-auto max-w-wide px-4 py-8">
-        {children}
+        <div className={wide ? undefined : 'max-w-content'}>{children}</div>
 
         <nav className="mt-12 grid gap-3 border-t border-border pt-6 sm:grid-cols-2">
           {prev ? (

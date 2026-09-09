@@ -1,0 +1,36 @@
+# This repo is worked on with core.autocrlf=true, which means git decides on a
+# per-file basis whether something is text and rewrites its line endings on
+# checkout. For binaries that is corruption, and the one that nearly bit was
+# public/templates/workflows_cheatsheet.pdf: it happens to contain no CR bytes,
+# so git classified it as text and would have injected CRLF into it on a fresh
+# Windows clone — a 19 kB PDF that no longer opens. The .docx files were
+# detected as binary only because their zip container has high-bit bytes early
+# on; that is luck, not a guarantee.
+#
+# So: say it explicitly. Anything a browser downloads or a runtime parses byte
+# for byte is binary.
+*.pdf   binary
+*.docx  binary
+*.xlsx  binary
+*.png   binary
+*.jpg   binary
+*.jpeg  binary
+*.gif   binary
+*.webp  binary
+*.woff  binary
+*.woff2 binary
+*.ico   binary
+
+# Notebooks are JSON and diff usefully as text, but they must not be
+# line-ending-rewritten: Colab and nbformat both read them as UTF-8 with LF,
+# and a CRLF copy changes every line of every diff.
+*.ipynb text eol=lf
+
+# Course data and content: LF everywhere, so a checkout on Windows produces the
+# same bytes the notebooks and the validator were tested against.
+*.csv   text eol=lf
+*.md    text eol=lf
+*.mdx   text eol=lf
+*.json  text eol=lf
+*.py    text eol=lf
+*.sql   text eol=lf

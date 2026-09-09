@@ -38,6 +38,7 @@ export default function Landing() {
   const modules = getAllModules();
   const datasets = getDatasets();
   const appendices = getAppendices();
+  const flagship = appendices.find((a) => a.flagship) ?? null;
   const totalHours = Math.round(modules.reduce((s, m) => s + m.estimatedMinutes, 0) / 60);
   const notebooks = modules.reduce((s, m) => s + m.notebooks.length, 0);
 
@@ -237,6 +238,49 @@ export default function Landing() {
           </ul>
         </div>
       </section>
+
+      {/* The flagship appendix, given its own banner just before the author
+          and related-course blocks: it is the answer to "what is the job
+          actually like", which is the question a student has right after
+          "what will I be able to do". */}
+      {flagship && (
+        <section className="mx-auto max-w-wide px-4 pb-14">
+          <Reveal
+            as="div"
+            style={{ '--accent': partColor('appendix') } as React.CSSProperties}
+          >
+            <Link
+              href={`/appendices/${flagship.slug}`}
+              className="card lift group flex flex-wrap items-center gap-x-5 gap-y-3 p-5 no-underline"
+              style={{
+                borderLeftWidth: 4,
+                borderLeftColor: partColor('appendix'),
+                background: `linear-gradient(120deg, ${partColor('appendix')}12, transparent 55%)`,
+              }}
+            >
+              <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-md text-sm font-semibold text-white"
+                style={{ backgroundColor: partColor('appendix') }}
+              >
+                {flagship.letter}
+              </span>
+              <span className="min-w-0 flex-1">
+                <span className="block text-base font-semibold text-ink">
+                  {flagship.title}
+                </span>
+                <span className="mt-0.5 block text-sm text-muted">{flagship.blurb}</span>
+              </span>
+              <span className="flex shrink-0 items-center gap-2 text-sm font-semibold accent-text">
+                Read Appendix {flagship.letter}
+                <Icon
+                  name="arrow-right"
+                  size={16}
+                  className="transition-transform duration-base ease-token group-hover:translate-x-0.5"
+                />
+              </span>
+            </Link>
+          </Reveal>
+        </section>
+      )}
 
       <AboutAuthor />
       <MoreCourses />

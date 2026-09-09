@@ -36,13 +36,30 @@ export default function AppendicesIndex() {
           <Reveal as="li" key={a.slug} delay={Math.min(i * 60, 240)}>
             <Link
               href={`/appendices/${a.slug}`}
-              className="card lift group flex h-full flex-col gap-3 p-5 no-underline"
-              style={{ borderTopWidth: 3, borderTopColor: accent }}
+              className={`card lift group flex h-full flex-col gap-3 p-5 no-underline ${
+                a.flagship ? 'md:col-span-2' : ''
+              }`}
+              style={
+                a.flagship
+                  ? {
+                      // The flagship gets the accent as a full left edge and a
+                      // faint wash, not a different palette — still the same
+                      // appendix token, just turned up.
+                      borderLeftWidth: 4,
+                      borderLeftColor: accent,
+                      background: `linear-gradient(120deg, ${accent}12, transparent 55%)`,
+                    }
+                  : { borderTopWidth: 3, borderTopColor: accent }
+              }
             >
               <div className="flex items-start justify-between gap-3">
                 <span
                   className="flex h-9 w-9 shrink-0 items-center justify-center rounded-md text-sm font-semibold"
-                  style={{ backgroundColor: `${accent}18`, color: accent }}
+                  style={
+                    a.flagship
+                      ? { backgroundColor: accent, color: '#FFFFFF' }
+                      : { backgroundColor: `${accent}18`, color: accent }
+                  }
                 >
                   {a.letter}
                 </span>
@@ -62,11 +79,26 @@ export default function AppendicesIndex() {
               </div>
 
               <div className="min-w-0 flex-1">
-                <h2 className="text-base font-semibold text-ink">{a.title}</h2>
-                <p className="mt-1 text-sm text-muted">{a.blurb}</p>
+                <h2
+                  className={`font-semibold text-ink ${a.flagship ? 'text-lg' : 'text-base'}`}
+                >
+                  {a.title}
+                </h2>
+                <p className={`mt-1 text-muted ${a.flagship ? 'text-base' : 'text-sm'}`}>
+                  {a.blurb}
+                </p>
               </div>
 
               <ul className="flex flex-wrap gap-x-3 gap-y-1 text-xs text-muted">
+                {a.flagship && (
+                  <li
+                    className="inline-flex items-center gap-1 font-semibold"
+                    style={{ color: accent }}
+                  >
+                    <Icon name="layers" size={12} />
+                    Six practices · steppers · templates
+                  </li>
+                )}
                 <li className="inline-flex items-center gap-1">
                   <Icon name={a.kind === 'notebook' ? 'notebook' : 'file-text'} size={12} />
                   {a.kind === 'notebook' ? 'Download + Colab' : 'Reference reading'}

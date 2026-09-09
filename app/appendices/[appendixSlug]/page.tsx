@@ -4,6 +4,7 @@ import { AppendixShell } from '@/components/shell/AppendixShell';
 import { MdxContent } from '@/components/mdx/MdxContent';
 import { MissingWidget } from '@/components/widgets/MissingWidget';
 import { NotebookCard } from '@/components/widgets/NotebookCard';
+import { WorkItselfPage } from '@/components/appendix/WorkItselfPage';
 import {
   getAppendices,
   getAppendix,
@@ -39,6 +40,17 @@ export default async function AppendixRoute({ params }: { params: Promise<Params
 
   const appendix = getAppendix(appendixSlug);
   if (!appendix) notFound();
+
+  // Appendix D is the flagship: its markdown has a regular six-part structure
+  // that renders as steppers, timelines and chips rather than as prose. Every
+  // other appendix takes the plain path.
+  if (appendix.slug === 'the-work-itself') {
+    return (
+      <AppendixShell appendix={appendix} wide>
+        <WorkItselfPage />
+      </AppendixShell>
+    );
+  }
 
   return (
     <AppendixShell appendix={appendix}>

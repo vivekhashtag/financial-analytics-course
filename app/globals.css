@@ -199,6 +199,22 @@
     @apply my-8;
   }
 
+  /* Appendix D's process steppers.
+     A station body is prose nested inside a list item, so it must not inherit
+     the block spacing that separates top-level prose blocks — the station's
+     own heading already provides the gap, and a leading margin here would
+     push the text off the numbered circle it belongs to. */
+  .station-body > :first-child {
+    @apply !mt-0;
+  }
+  .station-body > :last-child {
+    @apply !mb-0;
+  }
+  .station-body ul,
+  .station-body ol {
+    @apply mt-2;
+  }
+
   /* ----------------------------------------------------------- primitives */
 
   .card {
@@ -298,5 +314,22 @@
   .lift:hover,
   .btn:active:not(:disabled) {
     transform: none;
+  }
+
+  /* Appendix D's scroll-reveals (steppers, timelines) set their start state
+     inline and reach their end state from an effect. The rules above make that
+     transition instant, but the element would still be invisible until the
+     observer runs. These force the finished state in the stylesheet, so a
+     reduced-motion reader gets the fully drawn stepper on first paint — no
+     animation, and no dependency on JS having run to see the content. */
+  .d-reveal {
+    opacity: 1 !important;
+    transform: none !important;
+    transition: none !important;
+  }
+  .d-rail {
+    opacity: 0.28 !important;
+    transform: scaleY(1) !important;
+    transition: none !important;
   }
 }

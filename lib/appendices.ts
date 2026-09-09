@@ -40,6 +40,12 @@ export interface Appendix {
    * "notebook" instead of inventing a number.
    */
   estimatedMinutes: number | null;
+  /**
+   * The one appendix that gets a distinct treatment on the index and a banner
+   * on the home page. Exactly one should carry this; more than one and the
+   * emphasis stops meaning anything.
+   */
+  flagship?: boolean;
 }
 
 export const APPENDICES: Appendix[] = [
@@ -86,11 +92,11 @@ export const APPENDICES: Appendix[] = [
     slug: 'the-work-itself',
     letter: 'D',
     title: 'The Work Itself — Six Jobs Up Close',
-    blurb:
-      'Six finance jobs as a numbered process: the typical day, the documents produced, who pays for it, the India angle.',
+    blurb: 'The real work, up close — six jobs as step-by-step processes.',
     kind: 'page',
     file: 'content/appendices/APPENDIX-D-THE-WORK-ITSELF.md',
     estimatedMinutes: 90, // stated in the file's standfirst
+    flagship: true,
   },
 ];
 
