@@ -3,8 +3,11 @@ import { MissingWidget } from '@/components/widgets/MissingWidget';
 import { Icon } from '@/components/ui/Icon';
 import { readPreparedMdx } from '@/lib/content';
 import { getWorkItself, type Practice } from '@/lib/appendix-d';
-import { templateForPractice } from '@/lib/templates';
+import { getSamplesPack, samplePage, templateForPractice } from '@/lib/templates';
+import { GUIDED } from '@/lib/practice-figures';
 import { CourseChips } from './CourseChips';
+import { GuidedExercise } from './GuidedExercise';
+import { PracticeFigure } from './figures/PracticeFigure';
 import { DayTimeline } from './DayTimeline';
 import { PracticeIcon } from './PracticeIcon';
 import { PracticeNav } from './PracticeNav';
@@ -75,6 +78,9 @@ export function WorkItselfPage() {
 
 function PracticeSection({ practice }: { practice: Practice }) {
   const template = templateForPractice(practice.code);
+  const samples = getSamplesPack();
+  const page = samplePage(practice.code);
+  const guided = GUIDED[practice.code];
 
   return (
     // scroll-mt clears the sticky site header when the nav jumps here.
@@ -88,6 +94,10 @@ function PracticeSection({ practice }: { practice: Practice }) {
       </header>
 
       <div className="prose-course max-w-content">
+        {/* The picture first: it carries the section's one idea before the
+            prose spends four hundred words earning it. */}
+        <PracticeFigure practice={practice.code} />
+
         {practice.intro && <Prose body={practice.intro} />}
 
         {/* The stepper, or the whole section as prose if it could not be built. */}
@@ -136,22 +146,49 @@ function PracticeSection({ practice }: { practice: Practice }) {
           </>
         )}
 
-        {practice.tryThis && <Prose body={practice.tryThis} />}
+        {/* The "Try this" paragraph, wrapped in the guided card. Its text is
+            rendered here and passed through as children, so the card adds a
+            hint, a model answer and a tick without restating a word of it. */}
+        {practice.tryThis && guided && page !== null ? (
+          <GuidedExercise
+            practice={practice.code}
+            hint={guided.hint}
+            modelAnswer={guided.modelAnswer}
+            samplePage={page}
+          >
+            <Prose body={practice.tryThis} />
+          </GuidedExercise>
+        ) : (
+          practice.tryThis && <Prose body={practice.tryThis} />
+        )}
 
-        {/* The practice's own template, where the reader has just been told
-            what the document is for. */}
-        {template?.available && (
-          <p className="not-prose mt-6">
-            <a
-              href={template.href}
-              download
-              className="inline-flex items-center gap-1.5 text-sm font-semibold accent-text no-underline hover:underline"
-            >
-              <Icon name="download" size={14} />
-              Download the working template for this
-              <Icon name="arrow-right" size={14} />
-            </a>
-            <span className="ml-2 text-xs text-muted">{template.name} · .docx</span>
+        {/* The blank and the filled-in version, side by side, where the reader
+            has just been told what the document is for. */}
+        {(template?.available || (samples.available && page !== null)) && (
+          <p className="not-prose mt-6 flex flex-wrap items-center gap-x-5 gap-y-2 border-t border-border pt-4 text-sm">
+            {template?.available && (
+              <a
+                href={template.href}
+                download
+                className="inline-flex items-center gap-1.5 font-semibold accent-text no-underline hover:underline"
+              >
+                <Icon name="file-text" size={14} />
+                Template ↓
+                <span className="font-normal text-muted">{template.name} · .docx</span>
+              </a>
+            )}
+
+            {samples.available && page !== null && (
+              <a
+                href={samples.href}
+                download
+                className="inline-flex items-center gap-1.5 font-semibold accent-text no-underline hover:underline"
+              >
+                <Icon name="eye" size={14} />
+                Worked sample ↓
+                <span className="font-normal text-muted">page {page} of the pack</span>
+              </a>
+            )}
           </p>
         )}
       </div>

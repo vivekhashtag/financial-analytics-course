@@ -72,6 +72,28 @@ export const WORKFLOWS_CHEATSHEET = {
   file: 'templates/workflows_cheatsheet.pdf',
 };
 
+/**
+ * The same six documents, filled in.
+ *
+ * One page per practice in D.1–D.6 order, which is what makes `samplePage`
+ * below a simple ordinal rather than a lookup table. Each page ends with a
+ * "why this works" block, and those three lines are the model answers the
+ * guided exercise cards reveal (see lib/practice-figures.ts) — so the card and
+ * the pack cannot drift apart.
+ */
+export const SAMPLES_PACK = {
+  name: 'See them filled in — six worked samples (PDF)',
+  description:
+    'The same six documents, completed on the course’s own data, each with a note on why it works.',
+  file: 'templates/samples_pack.pdf',
+};
+
+/** Which page of the samples pack belongs to a practice. D.1 is page 1. */
+export function samplePage(practice: string): number | null {
+  const n = Number.parseInt(practice.replace(/^D\./, ''), 10);
+  return Number.isInteger(n) && n >= 1 && n <= 6 ? n : null;
+}
+
 export interface ResolvedTemplate extends WorkTemplate {
   href: string;
   available: boolean;
@@ -88,6 +110,10 @@ export function getWorkTemplates(): ResolvedTemplate[] {
 
 export function getCheatsheet() {
   return resolve(WORKFLOWS_CHEATSHEET);
+}
+
+export function getSamplesPack() {
+  return resolve(SAMPLES_PACK);
 }
 
 /** The template for one practice — used by the inline link at a section's end. */

@@ -1,6 +1,6 @@
 import { Icon } from '@/components/ui/Icon';
 import { PracticeIcon } from './PracticeIcon';
-import { getCheatsheet, getWorkTemplates } from '@/lib/templates';
+import { getCheatsheet, getSamplesPack, getWorkTemplates } from '@/lib/templates';
 import { PRACTICE_LABELS } from '@/lib/appendix-d';
 
 /**
@@ -19,7 +19,11 @@ import { PRACTICE_LABELS } from '@/lib/appendix-d';
 export function TemplateBox() {
   const templates = getWorkTemplates();
   const cheatsheet = getCheatsheet();
-  const missing = templates.filter((t) => !t.available).length + (cheatsheet.available ? 0 : 1);
+  const samples = getSamplesPack();
+  const missing =
+    templates.filter((t) => !t.available).length +
+    (cheatsheet.available ? 0 : 1) +
+    (samples.available ? 0 : 1);
 
   return (
     <section
@@ -65,6 +69,31 @@ export function TemplateBox() {
           </a>
         ) : (
           <Unavailable name={cheatsheet.name} file={cheatsheet.file} />
+        )}
+
+        {/* The worked samples: the blanks above, filled in. Deliberately styled
+            as an outline rather than a second solid button — the two are peers,
+            and two filled buttons of the same weight would compete. */}
+        {samples.available ? (
+          <a
+            href={samples.href}
+            download
+            className="group mt-2.5 flex items-center gap-3 rounded-md border-2 px-4 py-3 text-sm font-semibold no-underline transition-transform duration-base ease-token hover:-translate-y-px"
+            style={{ borderColor: 'var(--accent)', color: 'var(--accent)' }}
+          >
+            <Icon name="eye" size={17} className="shrink-0" />
+            <span className="min-w-0 flex-1">
+              {samples.name}
+              <span className="mt-0.5 block text-xs font-normal text-muted">
+                {samples.description}
+              </span>
+            </span>
+            <Icon name="arrow-right" size={15} className="shrink-0 opacity-70" />
+          </a>
+        ) : (
+          <div className="mt-2.5">
+            <Unavailable name={samples.name} file={samples.file} />
+          </div>
         )}
 
         <p className="mt-5 text-xs font-semibold uppercase tracking-wide text-muted">
@@ -119,7 +148,7 @@ export function TemplateBox() {
             </>
           ) : (
             <>
-              {missing} of the seven templates {missing === 1 ? 'is' : 'are'} not in{' '}
+              {missing} of the eight files {missing === 1 ? 'is' : 'are'} not in{' '}
               <code className="font-mono">public/templates/</code> yet, and {missing === 1 ? 'is' : 'are'}{' '}
               shown greyed out above.
             </>
