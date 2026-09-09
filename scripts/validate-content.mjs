@@ -230,6 +230,51 @@ const ML_BORDER = /\bML border\b|\bML course\b|not a machine learning course|mac
   }
 }
 
+/* ------------------------------------------------- downloadable assets in prose */
+
+/**
+ * Every `<Download file="/…" />` in the lesson text must point at a file that
+ * actually ships.
+ *
+ * The two posters sat referenced-but-absent for weeks: the prose invited the
+ * learner to download something the app could not serve, and nothing was
+ * watching. `Download` degrades to an inert card naming the file, so this is a
+ * warning rather than an error, but it should never be silent again.
+ *
+ * Generated posters come from `scripts/make_posters.py`, which renders them
+ * from the same pages that offer them. Re-run it after editing those pages.
+ */
+{
+  const referenced = new Map(); // url -> [files that reference it]
+
+  const walk = (dir) => {
+    for (const entry of fs.readdirSync(dir, { withFileTypes: true })) {
+      const full = path.join(dir, entry.name);
+      if (entry.isDirectory()) walk(full);
+      else if (/\.mdx?$/i.test(entry.name)) {
+        const text = fs.readFileSync(full, 'utf8');
+        for (const m of text.matchAll(/<Download[^>]*\bfile=["'](\/[^"']+)["']/g)) {
+          const rel = path.relative(ROOT, full).split(path.sep).join('/');
+          if (!referenced.has(m[1])) referenced.set(m[1], []);
+          referenced.get(m[1]).push(rel);
+        }
+      }
+    }
+  };
+
+  const contentDir = path.join(ROOT, 'content');
+  if (fs.existsSync(contentDir)) walk(contentDir);
+
+  for (const [url, sources] of referenced) {
+    const rel = url.replace(/^\//, '');
+    const served =
+      fs.existsSync(path.join(ROOT, 'public', rel)) || fs.existsSync(path.join(ROOT, rel));
+    if (!served) {
+      warn(`<Download> points at a file that does not ship — ${url} (in ${sources.join(', ')})`);
+    }
+  }
+}
+
 /* --------------------------------------------------------------- appendices */
 
 /**

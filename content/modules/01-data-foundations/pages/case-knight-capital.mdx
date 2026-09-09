@@ -1,0 +1,31 @@
+## What happened
+
+On the morning of 1 August 2012, Knight Capital was one of the largest trading firms in the United States. It handled a significant share of all American share trades. By lunchtime it was finished.
+
+The night before, Knight's engineers had installed new trading software on eight servers. Seven took it correctly. On the eighth, one old setting was left behind: a single switch, put there years earlier and long forgotten, that nobody updated.
+
+When the market opened, that one switch woke up a piece of retired code. It began sending real buy and sell orders into the market, fast, and wrongly. Knight's own systems bought high and sold low, over and over, at machine speed, while the people who owned them worked out what was happening.
+
+By the time somebody pulled the plug, 45 minutes had passed. The firm had lost about $440 million, which was more cash than it had. Within days it needed rescuing. Within months it no longer existed on its own.
+
+## Why it matters
+
+Here is the part that puts this story at the start of a data course rather than a programming one.
+
+**Nothing was wrong with Knight's trading models.** The mathematics was fine. The strategy was fine. The code that was *supposed* to run worked. What was wrong was one piece of data, a setting on one machine, that no longer described reality.
+
+Nobody checked it, because nobody thought of a configuration flag as data. It was just a value in a file that had been correct for years.
+
+That is the shape of most analytics disasters in finance. The forecast that embarrasses everyone, the strategy that looks profitable until real money touches it, the credit model that approves loans which default within a quarter: the autopsy rarely blames the maths. It usually finds data that was incomplete, stale, mislabelled, or simply not the thing everyone assumed it was.
+
+> Most analytics failures are data failures wearing a model's clothes.
+
+## The one lesson
+
+**Check the data and the configuration before you trust the machine.**
+
+Not once, at the start. Every time the inputs change, and every time you deploy. Knight's flag had been harmless for years. It became a $440 million liability the moment the code around it changed, and the only thing that would have caught it was somebody asking a dull question about a boring file.
+
+That dull question is the habit this module is built to give you. When you are handed data, the amateur asks *what can I calculate?* The professional asks *what is this, where did it come from, and what is it hiding?* first.
+
+You will practise exactly that in this module's Trust Report, on a dataset with defects planted in it on purpose. Then you will do it again in every lab, because the four biases in Lesson 1.5 are the same question asked four more ways.

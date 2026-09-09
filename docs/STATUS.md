@@ -90,6 +90,15 @@ per-year amounts (so the bars carry shape and no values), and D.5's note ends
 "Maximum loss ₹X per lot" (so the net credit is shown on screen as a stated
 assumption). Do not "finish" these by inventing figures.
 
+**Posters** — `public/posters/ai-charter.pdf` and `four-biases.pdf`, generated
+by `scripts/make_posters.py` from the *same pages that offer them*: the charter's
+do/don't lists are Module 0's `aiSidebar`, the four biases and their "Always ask"
+questions are headings and blockquotes in `05-four-biases.mdx`. Nothing is
+retyped, so a lesson edit plus a re-run reprints a correct poster. Needs
+`python -m pip install reportlab`, and is **not** part of `prebuild` — the Vercel
+build is Node-only, so the PDFs are committed. Helvetica has no rupee glyph, so
+the script rewrites `₹` as `Rs` the way the docx templates already do.
+
 **Work templates** — 8 files in `public/templates/`, 6 `.docx` plus two PDFs
 (the workflows cheat-sheet and the six worked samples). **Not git-ignored** —
 unlike `public/data`, `public/notebooks` and `public/streamlit`, these are source
@@ -125,7 +134,9 @@ subtlety about how reduced motion is handled in two different ways.
 `npm run validate` fails the build on a malformed `module.json`, and since
 `67e3d9a` also cross-checks the appendix registry against `content/appendices/`
 in *both* directions — a referenced file that is missing is an error, and a file
-on disk that nothing links to is a warning. That second direction is the check
+on disk that nothing links to is a warning. It also warns when a
+`<Download file="/…" />` in the lesson text points at a file that does not ship,
+which is the check whose absence let the two posters stay missing. That second direction is the check
 whose absence let Appendix A's notebook sit unreachable for weeks.
 
 **Bundle** — shared baseline **103 kB**, unchanged across every commit in this
@@ -136,15 +147,12 @@ run.
 ## 4. Known gaps
 
 Each renders a labelled placeholder or degrades visibly rather than breaking.
-`npm run validate` reports the first two as warnings on every run.
+`npm run validate` reports the first as a warning on every run.
 
 | Gap | Effect |
 |---|---|
-| `01-data-foundations` → `caseStudy.file: pages/case-knight-capital.mdx` **missing** | `CaseStudyScroll` builds beats from `module.json`, links to Lesson 1.1 |
 | `m1-e03.modelReport: pages/model-trust-report.mdx` **missing** | Trust Report still diffs against per-field `modelAnswer` |
-| `/posters/ai-charter.pdf`, `/posters/four-biases.pdf` — `public/posters/` does not exist | `Download` renders an inert card naming the missing file, not a 404 |
 | `StreamlitCard` | the last remaining placeholder widget |
-| Module 0 prose still says **"the sequel"** — in `pages/01-why-this-course.mdx` and `quiz.json` | needs a `content/` edit; the app cannot fix it. The rest of the course calls it an *intro* ML course (see `ML_INTRO_TITLE`) |
 | Appendix lettering disagrees with the blueprint | `financial-analytics-course-blueprint.md` calls the Excel bridge Appendix B and the career map Appendix C. On disk and in the app: **A** Excel bridge, **B** career map, **C** Ship It, **D** The Work Itself. The app is self-consistent; the blueprint is the stale one |
 
 **Not built:** auth, database, certificates, in-browser Python, the Module 4+
@@ -156,7 +164,9 @@ lab widgets (`Frontier3D`, `MonteCarloPaths`, `OrderBookViewer`,
 `content/appendices/` not existing; Appendix A's notebook being unreachable;
 the README claiming five built widgets were placeholders; `BASE = "data/"`
 breaking every notebook in Colab; the last orphan notebook; `datasets.json`'s
-six stale `usedIn` ids; and quiz pass marks being stored two different ways.
+six stale `usedIn` ids; quiz pass marks being stored two different ways; the two
+posters the prose offered but could not serve; the Knight Capital case study
+existing only as metadata; and Module 0 calling the ML course "the sequel".
 
 ---
 

@@ -1,5 +1,5 @@
 import { MDXRemote } from 'next-mdx-remote/rsc';
-import remarkGfm from 'remark-gfm';
+import { MDX_OPTIONS } from './mdx-options';
 import type { MDXComponents } from 'mdx/types';
 
 import { AICharterCards } from '@/components/widgets/AICharterCards';
@@ -129,28 +129,7 @@ export function MdxContent({
     <MDXRemote
       source={source}
       components={baseComponents(codeBlocks)}
-      options={{
-        parseFrontmatter: false,
-        mdxOptions: { remarkPlugins: [remarkGfm] },
-
-        // next-mdx-remote 6 blocks JS expressions in MDX by default, which
-        // strips every expression prop this content is built on —
-        // `tree={[…]}`, `stats={[…]}`, `cards={[…]}`, `codeIndex={0}`. With
-        // blockJS left at its default, DecisionTree receives `tree:
-        // undefined` and the build dies prerendering Module 2's structures
-        // page.
-        //
-        // Turning it off is safe *here specifically*: every MDX file is
-        // first-party, lives in this repo, and is schema-validated in CI.
-        // There is no path for a third party to submit MDX. If that ever
-        // changes — user-supplied or CMS-authored MDX — this must go back to
-        // true and the affected props move into module.json instead.
-        blockJS: false,
-
-        // Still enforced: no eval, Function, process, require or other
-        // dangerous globals, even with JS expressions allowed.
-        blockDangerousJS: true,
-      }}
+      options={MDX_OPTIONS}
     />
   );
 }
