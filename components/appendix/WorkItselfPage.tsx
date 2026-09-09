@@ -47,9 +47,28 @@ export function WorkItselfPage() {
         <TemplateBox />
       </div>
 
-      {/* Rail from lg up, pill bar above the content below that. */}
-      <div className="mt-8 lg:flex lg:items-start lg:gap-10">
-        <div className="lg:order-2 lg:w-56 lg:shrink-0">
+      {/*
+        Rail from lg up, pill bar pinned under the header below that.
+
+        Two things here are load-bearing for `position: sticky`, and both were
+        the bug:
+
+        1. **No `items-start`.** This row used to carry `lg:items-start`, which
+           made the rail column shrink to the height of the nav itself. A sticky
+           element can only travel inside its containing block, so the rail
+           unpinned a few hundred pixels in and the reader lost it for the rest
+           of the article. The row now uses the default `stretch`, and the rail
+           column is explicitly `lg:self-stretch`, so its containing block is as
+           tall as the six sections beside it.
+
+        2. **`contents` below lg.** On mobile this wrapper would be its own
+           short block for exactly the same reason, so the pill bar could not
+           travel either. `display: contents` removes the wrapper from the box
+           tree under lg, which makes the nav a direct child of *this* div — the
+           full-height one — and the bar then pins for the whole page.
+      */}
+      <div className="mt-8 lg:flex lg:gap-10">
+        <div className="contents lg:order-2 lg:block lg:w-56 lg:shrink-0 lg:self-stretch">
           <PracticeNav
             practices={doc.practices.map((p) => ({
               id: p.id,

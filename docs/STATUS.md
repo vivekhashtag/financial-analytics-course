@@ -1,48 +1,40 @@
 # Project status — where to pick up
 
-Last updated at commit `5a9716b`.
+Last updated at commit `430284b`.
 
 **Read this first, then `docs/UI-SPEC.md`** for why each UI decision was made and
 what was deliberately left undone.
 
 ---
 
-## 1. Start here tomorrow
+## 1. Start here
 
-Two items. **One redeploy handles both.**
+Nothing is blocking. The two items that opened this file for the last month —
+the Colab environment variable and the unshipped `5a9716b` — are both done and
+verified live. What remains is a short list of content gaps (§4) and two checks
+that need a human at a browser (§5).
 
-### ① Set the Colab variable
+### Verified live on 2026-09-09
 
-```
-Vercel → project → Settings → Environment Variables
-  Name:  NEXT_PUBLIC_COLAB_REPO
-  Value: vivekhashtag/financial-analytics-course
-  Scope: Production
-→ Save → Redeploy
-```
+Checked against the deployed site, by content-type rather than status code:
 
-Confirmed live on 2026-09-08: **0 real Colab URLs**, every notebook card showing
-the inert *"Colab link not configured"* state. Downloads work regardless (3 per
-notebook page). GitHub already serves the notebooks publicly (raw fetch → 200),
-so the buttons start working the moment this is set.
+| | |
+|---|---|
+| `NEXT_PUBLIC_COLAB_REPO` | **set** — a module page serves 12 real `colab.research.google.com` URLs and **0** "Colab link not configured" states |
+| Deployed commit | `430284b`, the current `main` |
+| `/`, `/appendices`, `/appendices/the-work-itself`, `/appendices/excel-bridge`, `/progress` | all `200` |
+| all 8 files in `public/templates/` | `200`, correct MIME (`application/pdf`, `…wordprocessingml.document`) |
+| `notebooks/03a_dataframe_fundamentals.ipynb` | serves with the patched `os.path.exists` BASE line |
+| Appendix D | figures, guided cards and the samples button all present in the live HTML |
 
-`NEXT_PUBLIC_*` is inlined at build time — **the redeploy is required**, the
-running deployment will not pick it up.
+### Still worth doing, when convenient
 
-### ② Ship `5a9716b`
-
-The live site is `60da56b`. Commit `5a9716b` (the `next-mdx-remote` v6 upgrade,
-which clears a high-severity advisory) is on GitHub but **not deployed**. The
-redeploy in ① brings it along.
-
-### Optional, in the same visit
-
-- `NEXT_PUBLIC_SITE_URL` = `https://<your production domain>` — used for
-  canonical URLs and the `pd.read_csv(BASE + …)` snippet on dataset pages. Safe
-  to leave unset. Since `60da56b` a malformed value can no longer fail the build.
-- **Find the short production domain.** The current link is the git-branch alias
-  (`…-git-main-…`), which is long and changes meaning if you rename the branch.
-  Vercel → Domains has the stable one.
+- **Find the short production domain.** The link below is still the git-branch
+  alias (`…-git-main-…`), which is long and changes meaning if the branch is
+  renamed. Vercel → Domains has the stable one.
+- **`NEXT_PUBLIC_SITE_URL`** is still unset. Safe to leave: it only affects
+  canonical URLs and the `pd.read_csv(BASE + …)` snippet on dataset pages, and
+  since `60da56b` a malformed value cannot fail the build.
 
 ---
 
@@ -50,86 +42,123 @@ redeploy in ① brings it along.
 
 **Live:** https://financial-analytics-course-git-main-vivek-dhandapanis-projects.vercel.app
 **Repo:** https://github.com/vivekhashtag/financial-analytics-course (public)
-**Deployed commit:** `60da56b` · **Latest commit:** `5a9716b`
-
-Verified live, checking content-types rather than just status codes:
-
-| | |
-|---|---|
-| 11 routes sampled | all `200 text/html`, 22 kB–344 kB |
-| `nifty50_prices.csv` | `text/csv`, 72,008 B |
-| `nse_stock_universe.csv` | `text/csv`, 923,408 B |
-| notebooks + solutions | correct type and size |
-| `chart-data/*.json` | `application/json` |
-| Streamlit `.py` | serves |
-| widgets + charts | `DecisionTree`, `SourceTable`, `MissingCalendar`, `DistributionCompare`, M6 chart slot all rendering |
+**Deployed commit:** `430284b` · **Latest commit:** `430284b` — in step
 
 ---
 
 ## 3. What was built
 
-16 modules · 41 MDX pages · 44 notebooks · 8 routes · 78 components ·
-9 lib modules · 4 scripts. Deps: `next`, `react`, `next-mdx-remote`,
-`remark-gfm`, `recharts`, `ajv`, `clsx`.
+16 modules · 4 appendices · 41 module MDX pages · 44 notebooks · 11 routes ·
+96 components · 14 lib modules · 5 scripts · 8 work templates. Deps: `next`,
+`react`, `next-mdx-remote`, `remark-gfm`, `recharts`, `ajv`, `clsx`. No new
+dependency has been added since the first build.
 
 **Shell and routing** — `/`, `/modules`, `/modules/[moduleId]`,
 `/modules/[moduleId]/[pageSlug]`, `.../quiz`, `.../exercises`, `/data`,
-`/data/[datasetId]`, `/progress`. `ModuleShell` gives every module route a
-Part-coloured header, sidebar, breadcrumbs and prev/next.
+`/data/[datasetId]`, `/progress`, and since `67e3d9a` `/appendices` and
+`/appendices/[appendixSlug]`.
 
 **Content pipeline** — `lib/content.ts` reads `content/modules/*`;
 `lib/mdx-source.ts` prepares each MDX body. Two non-obvious fixes live there and
 must not be removed: stray-`<` escaping (for prose like `P(NPV<0)`), and lifting
 `code={…}` props out before MDX sees them (MDX's parser silently ate two spaces
-of Python indentation).
+of Python indentation). `readPreparedMdx` is the exported entry point, so the
+appendices and Appendix D's parsed fragments go through the *same* pipeline
+rather than a second reader that would skip those two fixes.
 
-**Progress** — `ProgressProvider`, `localStorage` only, no backend. Pages read,
-notebooks taken, exercises, quiz scores, badges, per-widget state.
+**Appendices** (`67e3d9a`) — `lib/appendices.ts` is the registry; there is no
+`module.json` for them, deliberately, since they have no quiz, exercises or
+badge. `/appendices` lists four cards; B, C and D render from
+`content/appendices/*.md`; A is a page around the `appendix_a_excel_bridge`
+notebook, which is what took that notebook off the orphan list. Progress is
+tracked under an `appendices` pseudo-module (`lib/progress-keys.ts`) and is
+deliberately outside module completion and the metro map.
 
-**Widgets** — 45 files. All content-referenced widgets are real except
-`StreamlitCard`. Includes the five that were placeholders until this session:
-`SourceTable`, `PriceDiscrepancy`, `DistributionCompare`, `MissingCalendar`,
-`CrisisChart` — all driven from real `/data` files via `lib/series.ts`.
+**Appendix D, the flagship** (`01b522b`, `430284b`) — `lib/appendix-d.ts` parses
+the six practices out of the markdown at build time: 34 stations, 41 day-timeline
+entries, 33 course-mapping chips. It **never writes** `content/`. Every block
+degrades: a section whose stations cannot be recovered renders as ordinary prose,
+so a content edit can cost the page its stepper but never its text. On top of
+that: a sticky scroll-spy section nav, six inline-SVG figures (one per practice),
+six guided exercise cards, and the work-templates box.
 
-**Charts** — 8 signature charts, M4–M12 (M8 skipped as the map module; its
-pipeline diagram sits on M3's overview). recharts, lazily loaded, **fully
-code-split — zero occurrences in the 103 kB shared baseline**. Data pre-baked by
-`scripts/prebake-charts.mjs` into git-ignored `public/chart-data/` (51 kB).
+**Figure provenance** — `lib/practice-figures.ts` holds the figure numbers, each
+citing the line of the appendix it came from. Three gaps are visible in the UI
+rather than filled in: D.3's ₹24 cr of adjustments is never split per line in the
+text (so the drops are equal and only the total is labelled), D.6's ladder has no
+per-year amounts (so the bars carry shape and no values), and D.5's note ends
+"Maximum loss ₹X per lot" (so the net credit is shown on screen as a stated
+assumption). Do not "finish" these by inventing figures.
+
+**Work templates** — 8 files in `public/templates/`, 6 `.docx` plus two PDFs
+(the workflows cheat-sheet and the six worked samples). **Not git-ignored** —
+unlike `public/data`, `public/notebooks` and `public/streamlit`, these are source
+files with no generator. The samples pack's per-page "why this works" block is
+the source of the model answers the guided cards reveal, so the two cannot drift.
+
+**Notebooks** (`6984258`) — every notebook's `BASE` now auto-detects:
+`"data/"` locally, the raw GitHub URL in Colab. Before this, the first cell of
+32 notebooks raised `FileNotFoundError` in Colab.
+
+**Progress** — `ProgressProvider`, `localStorage` only, no backend.
+
+**Widgets** — every content-referenced widget is real except `StreamlitCard`,
+the last remaining placeholder. The five that were placeholders in the first
+build (`SourceTable`, `PriceDiscrepancy`, `DistributionCompare`,
+`MissingCalendar`, `CrisisChart`) have been real since `01b522b`'s predecessor
+and are driven from `/data` files via `lib/series.ts`.
+
+**Charts** — 8 signature charts, M4–M12, recharts, lazily loaded, fully
+code-split — **zero occurrences in the shared baseline**. Appendix D's six
+figures are hand-rolled inline SVG rather than recharts, which keeps that route
+off the chart bundle entirely.
 
 **Typography** — Sora / Inter / JetBrains Mono via `next/font`, self-hosted,
 metric-adjusted fallbacks → CLS zero by construction. Inter loads 400/500/600
 only, so **non-heading text must use `font-semibold`, not `font-bold`**.
 
-**Motion** — scroll-reveal, animated meters, metro-map draw-on and station halo,
-quiz/badge micro-interactions. Transform/opacity only. All off under
-`prefers-reduced-motion`.
-
-**Content pass** — `scripts/dedash.mjs` replaced 1,091 em dashes across 41 MDX
-files by mechanical rule. Idempotent; defaults to a dry run.
+**Motion** — scroll-reveal, animated meters, metro-map draw-on, the Appendix D
+steppers, timelines and figures. Transform/opacity only. See §5 for the one
+subtlety about how reduced motion is handled in two different ways.
 
 **CI** — `.github/workflows/ci.yml` runs validate → typecheck → lint → build.
-`npm run validate` fails the build on a malformed `module.json`.
+`npm run validate` fails the build on a malformed `module.json`, and since
+`67e3d9a` also cross-checks the appendix registry against `content/appendices/`
+in *both* directions — a referenced file that is missing is an error, and a file
+on disk that nothing links to is a warning. That second direction is the check
+whose absence let Appendix A's notebook sit unreachable for weeks.
+
+**Bundle** — shared baseline **103 kB**, unchanged across every commit in this
+run.
 
 ---
 
 ## 4. Known gaps
 
-Each renders a labelled placeholder rather than breaking:
+Each renders a labelled placeholder or degrades visibly rather than breaking.
+`npm run validate` reports the first two as warnings on every run.
 
 | Gap | Effect |
 |---|---|
 | `01-data-foundations` → `caseStudy.file: pages/case-knight-capital.mdx` **missing** | `CaseStudyScroll` builds beats from `module.json`, links to Lesson 1.1 |
 | `m1-e03.modelReport: pages/model-trust-report.mdx` **missing** | Trust Report still diffs against per-field `modelAnswer` |
-| `/posters/ai-charter.pdf`, `/posters/four-biases.pdf` | `Download` renders inert, names the missing file |
-| `StreamlitCard` | last remaining placeholder |
-| Module 0 prose still says **"the sequel"** | needs a `content/` edit — the app can't fix it |
-| `datasets.json` `usedIn` uses pre-final module ids | resolved by number prefix |
-| Modules 4+ `quiz.passingScore: 70` is a percentage | read as % when it exceeds the question count |
-| `09c_seasonal_forecasting.ipynb`, `appendix_a_excel_bridge.ipynb` | referenced by no `module.json` |
+| `/posters/ai-charter.pdf`, `/posters/four-biases.pdf` — `public/posters/` does not exist | `Download` renders an inert card naming the missing file, not a 404 |
+| `StreamlitCard` | the last remaining placeholder widget |
+| Module 0 prose still says **"the sequel"** — in `pages/01-why-this-course.mdx` and `quiz.json` | needs a `content/` edit; the app cannot fix it. The rest of the course calls it an *intro* ML course (see `ML_INTRO_TITLE`) |
+| `datasets.json` `usedIn` uses 6 pre-final module ids (`04-descriptive`, `08a-four-streams`, `08b-investment-banking`, `09-lab-timeseries`, `10-lab-simulation`, `11-lab-hft`) | resolved by number prefix; the dataset page says how many it could not match |
+| 11 modules set `quiz.passingScore: 70` against 6-question quizzes | read as a percentage when it exceeds the question count |
+| `notebooks/09c_seasonal_forecasting.ipynb` — **the only orphan left** | referenced by no `module.json`. Almost certainly a stale duplicate of `09c_forecasting_seasonal.ipynb` (10,160 B), which *is* referenced by `09-lab-time-series`. Diff them and delete one |
+| Appendix lettering disagrees with the blueprint | `financial-analytics-course-blueprint.md` calls the Excel bridge Appendix B and the career map Appendix C. On disk and in the app: **A** Excel bridge, **B** career map, **C** Ship It, **D** The Work Itself. The app is self-consistent; the blueprint is the stale one |
 
 **Not built:** auth, database, certificates, in-browser Python, the Module 4+
 lab widgets (`Frontier3D`, `MonteCarloPaths`, `OrderBookViewer`,
 `ForecastSlider`, `BiasCheckBlock`), Module 3.5's hosted database.
+
+**Resolved since the last revision of this file:** the Colab variable; shipping
+`5a9716b`; the career map having no content at all (now Appendix B);
+`content/appendices/` not existing; Appendix A's notebook being unreachable;
+the README claiming five built widgets were placeholders; and `BASE = "data/"`
+breaking every notebook in Colab.
 
 ---
 
@@ -141,9 +170,52 @@ perfectly green build. The fix was a no-cache redeploy of the *same commit*. Two
 code theories were chased and both were wrong — `vercel.json` header patterns
 (they parse fine) and `next-mdx-remote@5` (the same commit deployed fine on it).
 
-**`.next` was being cleared mid-session** on this Windows machine, producing an
-all-zero bundle report and an empty-directory audit. Add the project folder to
-antivirus exclusions. If bundle sizes read `0 B`, `rm -rf .next && npm run build`.
+**Verify with content-types, not status codes.** A failed Vercel deployment
+serves `200 text/html` for *every* path, including `.csv` and `.pdf` — status
+codes alone will report a broken site as healthy.
+
+**`.gitattributes` exists for a reason — do not delete it.** This repo is worked
+on with `core.autocrlf=true`. With no attributes file, git classified
+`workflows_cheatsheet.pdf` as *text* and would have injected CRLF into it on a
+fresh Windows clone, producing a PDF that no longer opens. It survived only
+because that file happens to contain zero CR bytes. PDFs, Office files and fonts
+are now marked binary, and notebooks/CSVs pinned to `eol=lf`.
+
+**`public/templates/` is committed; the other `public/` subfolders are not.**
+`public/data`, `public/notebooks` and `public/streamlit` are mirrors regenerated
+by `scripts/sync-static.mjs` in `prebuild` and are git-ignored. `templates/` has
+no generator — the files are sources. Do not add it to `.gitignore`.
+
+**Appendix D's section rail depends on its parent stretching — do not add
+`items-start` back.** The rail unpinned partway down the article, and the cause
+was `lg:items-start` on the two-column row: it made the rail column shrink to
+the height of the nav itself, and `position: sticky` can only travel inside its
+containing block. The row now uses the default `stretch` with an explicit
+`lg:self-stretch` on the rail column. Below `lg` the wrapper is
+`display: contents`, which takes it out of the box tree so the pill bar's
+containing block becomes the full-height row instead of its own short wrapper.
+Any change to that row's alignment will silently unpin the nav again — the
+symptom is subtle, because the rail looks fine for the first screenful.
+
+**The scroll-spy scores visible pixels, not `intersectionRatio`.** It used an
+IntersectionObserver scored by ratio, which is a fraction of the *target's* own
+height: a section taller than the viewport can never score above roughly
+viewport/section, so the long sections lost to whichever short one was clipping
+the fold. It is now one rAF-throttled scroll handler measuring visible pixels
+across the six sections, plus an explicit rule that force-activates the last
+item within 100px of the document end — otherwise D.6 can be unreachable once
+the page bottoms out. If you reintroduce an observer, the ratio trap comes back.
+
+**Reduced motion is handled two different ways, on purpose.** The global rule in
+`globals.css` collapses every transition to `0.01ms !important`, which beats
+inline styles for that longhand. On top of that, the steppers and timelines carry
+`.d-reveal` / `.d-rail` classes that force their finished state *in the
+stylesheet*, because those elements start at `opacity: 0` and would otherwise be
+invisible until JS ran. The six Appendix D figures deliberately do **not** get
+those classes: they animate several different transforms (`scaleY`, `rotate`,
+`translate`), so a blanket `transform: none` would park D.1's arrow at the top
+and D.6's coverage needle at zero. They reach their true final values from the
+observer instead, which fires immediately under reduced motion.
 
 **`next-mdx-remote` v6 blocks JS in MDX by default.** `blockJS: false` is set in
 `components/mdx/MdxContent.tsx` because this content depends on expression props
@@ -151,13 +223,24 @@ antivirus exclusions. If bundle sizes read `0 B`, `rm -rf .next && npm run build
 If MDX ever becomes user-supplied, this must revert and those props move into
 `module.json`.
 
-**`public/data`, `public/notebooks`, `public/streamlit` are git-ignored** — they
-are mirrors regenerated by `scripts/sync-static.mjs` in `prebuild`. Colab reads
-the root `notebooks/`, so Open-in-Colab is unaffected.
+**`.next` was being cleared mid-session** on this Windows machine, producing an
+all-zero bundle report. Add the project folder to antivirus exclusions. If bundle
+sizes read `0 B`, `rm -rf .next && npm run build`.
 
-**Verify with content-types, not status codes.** A failed Vercel deployment
-serves `200 text/html` for *every* path, including `.csv` — status codes alone
-will report a broken site as healthy.
+**Two checks still need a human at a browser.** Neither has been verified by
+anything but code inspection and a simulated round-trip:
+
+1. **The Colab click-through.** Open in Colab from the live site, confirm the
+   first cell shows the `os.path.exists` line, run it, see a DataFrame. What
+   *has* been verified: GitHub serves the patched notebooks, and running the
+   patched logic from a directory with no `data/` loads real DataFrames off the
+   raw URL (1,277×6 for `nifty50_prices`).
+2. **Appendix D's interactions.** Scrolling the figures, dragging the D.5
+   slider, and ticking an "I did this" box then reloading. What *has* been
+   verified: the DOM contains all six figures, the slider and its live readout,
+   and six complete guided cards; and the `localStorage` contract was exercised
+   with the real `STORAGE_KEY` and the real `load`/`toggle` semantics — tick two,
+   reload, both present; untick one, reload, correct one remains.
 
 ---
 
@@ -167,14 +250,19 @@ will report a broken site as healthy.
 npm run dev        # validate + sync-static + prebake-charts, then dev server
 npm run build      # same gates, then production build
 npm run check      # validate + typecheck + lint
-npm run validate   # content schema gate on its own
+npm run validate   # content schema + appendix registry gate on its own
 
-node scripts/dedash.mjs          # dry run (report only)
-node scripts/dedash.mjs --write  # apply
+node scripts/dedash.mjs                    # em-dash pass (dry run)
+node scripts/fix-notebook-base.mjs         # notebook BASE pass (dry run)
 ```
+
+Both content scripts default to a dry run and print a report; pass `--write` to
+apply. `fix-notebook-base.mjs` is idempotent and reports
+PATCHED / ALREADY-PATCHED / NO-BASE-FOUND with counts — run it after adding any
+notebook, then `npm run sync-static`.
 
 After any change, confirm `content/` is untouched:
 
 ```bash
-find content -type f | sort | xargs sha256sum   # compare to a pre-change baseline
+git status --porcelain content/    # must be empty
 ```

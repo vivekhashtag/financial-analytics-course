@@ -1,20 +1,22 @@
 # Financial Analytics Course — Complete Content Package
 
-India-first, theory + hands-on financial analytics course. Beginner-safe (no prior finance or coding assumed), Colab-first, NO machine learning (signposted for the sequel course).
+India-first, theory + hands-on financial analytics course. Beginner-safe (no prior finance or coding assumed), Colab-first, NO machine learning — the border is signposted at Module 6, which hands off to a separate *Introduction to Machine Learning* course (`ML_INTRO_TITLE` in `lib/links.ts`).
 
 ## What's in this repo
-- `BUILD_BRIEF.md` — **START HERE (Claude Code):** the full build specification for the Next.js course site
+- `docs/STATUS.md` — **START HERE:** deployment state, inventory, gaps, gotchas, next actions
+- `BUILD_BRIEF.md` — the original Phase 2 build spec. **Historical**: it describes a Modules 0–2 vertical slice and lists five components as acceptable stubs. All 16 modules render and those five are built
 - `schema/` — CONTENT_SCHEMA.md, module.schema.json (all 16 module.json files validate ✓), tokens.json (design tokens)
 - `content/modules/` — 16 modules (0 → 13): module.json + full learner text (MDX) + quiz.json + exercises.json
-- `content/appendices/` — career map (Appendix B); Appendix A is a notebook
-- `notebooks/` — 27 execution-tested notebooks + `solutions/` (10 solution notebooks)
+- `content/appendices/` — the three prose appendices: **B** career map, **C** Ship It, **D** The Work Itself. Appendix **A** (the Excel bridge) is a notebook, not a page. Registry: `lib/appendices.ts`
+- `notebooks/` — 44 execution-tested notebooks including `solutions/` (12 solution notebooks)
 - `streamlit/` — m4_price_dashboard.py and capstone_app.py (both smoke-tested)
 - `data/` — 5 synthetic datasets + DATASET_REGISTRY.md + datasets.json + generator (seed 42, byte-reproducible)
+- `public/templates/` — 8 Appendix D work templates (6 .docx + workflows cheat-sheet + worked samples). **Committed, not generated** — unlike the other `public/` subfolders
 - `sql/` — 01_schema.sql + 02_seed_core.sql for Neon/Supabase PostgreSQL (Module 3.5)
 
-## Build order (per BUILD_BRIEF.md)
-1. Shell + Module 2 vertical slice → 2. remaining modules render from content/ → 3. widgets → 4. deploy (Vercel).
-Owner tasks: public GitHub repo (Colab links need it), Neon/Supabase for Module 3.5, Vercel deploy.
+Note: the blueprint numbers the appendices differently (Excel bridge = B, career
+map = C). The app and the files on disk use A–D as listed above; the blueprint is
+the stale one.
 
 ---
 
@@ -40,11 +42,15 @@ npm run check        # validate + typecheck + lint
   references JSON Schema can't: every page, notebook, solution, quiz, exercise
   and Streamlit file a module points at must exist; slugs must be unique and
   must not collide with the `quiz` / `exercises` routes; quiz answers must index
-  real options. A schema failure exits non-zero and fails the build.
+  real options. It also cross-checks the appendix registry in `lib/appendices.ts`
+  against `content/appendices/` in both directions. A schema failure or a
+  missing referenced file exits non-zero and fails the build.
 - **`npm run sync-static`** — mirrors `data/*.csv`, `notebooks/**/*.ipynb` and
   `streamlit/*.py` into `public/`, so they serve at `/data/*.csv`,
-  `/notebooks/*.ipynb` and `/streamlit/*.py`. `public/data` and
-  `public/notebooks` are generated and git-ignored.
+  `/notebooks/*.ipynb` and `/streamlit/*.py`. `public/data`,
+  `public/notebooks` and `public/streamlit` are generated and git-ignored.
+  `public/templates` is **not** — those 8 files have no generator and are
+  committed sources. Do not add them to `.gitignore`.
 
 ## Deploy (Vercel)
 
@@ -66,9 +72,27 @@ content/modules/<id>/module.json   → lib/content.ts  → routes + nav + gating
 content/modules/<id>/pages/*.mdx   → lib/mdx-source.ts → components/mdx/MdxContent.tsx
 content/modules/<id>/quiz.json     → <Quiz moduleId>
 content/modules/<id>/exercises.json→ <ExerciseList moduleId> (+ SortingGame / BiasDetective / TrustReportForm)
+content/appendices/*.md            → lib/appendices.ts → /appendices, /appendices/[slug]
+  └ APPENDIX-D-THE-WORK-ITSELF.md  → lib/appendix-d.ts → steppers, timelines, chips, figures
 data/datasets.json                 → /data, /data/[datasetId], <DatasetTable>, <DatasetPreview>
+public/templates/*                 → lib/templates.ts → the Appendix D templates box
 schema/tokens.json                 → tailwind.config.ts (the only source of colour, type, spacing)
 ```
+
+The appendices have no `module.json` — no quiz, no exercises, no badge, so a
+schema would be four fields of nothing. `lib/appendices.ts` is their contract
+instead, and `npm run validate` cross-checks it against `content/appendices/`
+**in both directions**: a referenced file that is missing fails the build, and a
+file on disk that nothing links to is reported as unreachable. That second
+direction is the check whose absence let Appendix A's notebook sit orphaned.
+
+`lib/appendix-d.ts` recovers Appendix D's structure — six practices, 34
+stations, 41 day-timeline entries, 33 course-mapping chips — by *reading* the
+markdown at build time. It never writes it, and every block degrades to plain
+prose if it cannot be parsed, so a content edit can cost that page its stepper
+but never its text. Figure numbers live in `lib/practice-figures.ts`, each citing
+the line of the appendix it came from; where the text states no number the figure
+goes without one rather than inventing it.
 
 `lib/mdx-source.ts` does two things to each MDX body before compilation, and
 both are worth knowing about:
@@ -117,18 +141,26 @@ each case:
 |---|---|
 | `01-data-foundations` → `caseStudy.file: pages/case-knight-capital.mdx` missing | `<CaseStudyScroll />` builds its beats from `module.json` and links to Lesson 1.1 in the full module text. |
 | `01-data-foundations` → `m1-e03.modelReport: pages/model-trust-report.mdx` missing | The Trust Report still diffs against the per-field `modelAnswer` values, which are present. |
-| `/posters/ai-charter.pdf`, `/posters/four-biases.pdf` referenced by `<Download />` | Renders an inert card naming the missing file, not a 404 link. |
-| `SourceTable`, `PriceDiscrepancy`, `DistributionCompare`, `MissingCalendar`, `CrisisChart` | Deferred by the brief. Labelled placeholders; the prose around each already explains the point. |
-| `datasets.json` `usedIn` uses pre-final module ids (`04-descriptive`, `09-lab-timeseries`, `10-lab-simulation`, `11-lab-hft`, `08a-four-streams`, `08b-investment-banking`) | Resolved by number prefix, and the dataset page says how many ids it could not match. |
-| Modules 4+ set `quiz.passingScore: 70` where Modules 0–3.5 use an absolute count | Read as a percentage when it exceeds the question count. |
-| `notebooks/09c_seasonal_forecasting.ipynb` and `notebooks/appendix_a_excel_bridge.ipynb` are referenced by no `module.json` | Downloadable by URL but unreachable from the UI. |
+| `/posters/ai-charter.pdf`, `/posters/four-biases.pdf` referenced by `<Download />` — `public/posters/` does not exist | Renders an inert card naming the missing file, not a 404 link. |
+| `StreamlitCard` | The last remaining placeholder widget. Module overviews already render the download + run command. |
+| Module 0 prose still calls the ML course **"the sequel"** — in `pages/01-why-this-course.mdx` and `quiz.json` | Needs a `content/` edit; the app cannot fix it. Everywhere else the course calls it an *intro* ML course (`ML_INTRO_TITLE` in `lib/links.ts`). |
+| `datasets.json` `usedIn` uses 6 pre-final module ids (`04-descriptive`, `09-lab-timeseries`, `10-lab-simulation`, `11-lab-hft`, `08a-four-streams`, `08b-investment-banking`) | Resolved by number prefix, and the dataset page says how many ids it could not match. |
+| 11 modules set `quiz.passingScore: 70` against 6-question quizzes, where Modules 0–3.5 use an absolute count | Read as a percentage when it exceeds the question count. |
+| `notebooks/09c_seasonal_forecasting.ipynb` is referenced by no `module.json` — the only orphan left | Downloadable by URL but unreachable from the UI. Almost certainly a stale duplicate of `09c_forecasting_seasonal.ipynb`, which **is** referenced by `09-lab-time-series`. Diff them and delete one. |
+| Appendix lettering disagrees with `financial-analytics-course-blueprint.md` | The blueprint calls the Excel bridge Appendix B and the career map Appendix C. On disk and in the app: **A** Excel bridge, **B** career map, **C** Ship It, **D** The Work Itself. The app is self-consistent; the blueprint is the stale one. |
+
+Closed since the first build: the career map having no content at all (it is now
+Appendix B), `content/appendices/` not existing, Appendix A's notebook being
+unreachable from the UI, and every notebook's `BASE = "data/"` failing in Colab.
+`SourceTable`, `PriceDiscrepancy`, `DistributionCompare`, `MissingCalendar` and
+`CrisisChart` were placeholders in the first build and have been real components
+since — each driven from a `/data` file through `lib/series.ts`.
 
 ## Not built in this phase
 
 Auth, database, certificates, in-browser Python, Module 4+ chart widgets
 (`Frontier3D`, `MonteCarloPaths`, `OrderBookViewer`, `ForecastSlider`,
-`BiasCheckBlock`), `StreamlitCard` (module overviews already render the
-download + run command), and the Module 3.5 hosted database.
+`BiasCheckBlock`), `StreamlitCard`, and the Module 3.5 hosted database.
 
 ## Content passes
 
