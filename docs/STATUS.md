@@ -1,6 +1,6 @@
 # Project status — where to pick up
 
-Last updated at commit `430284b`.
+Last updated at commit `75470e5`, plus the cleanup pass that follows it.
 
 **Read this first, then `docs/UI-SPEC.md`** for why each UI decision was made and
 what was deliberately left undone.
@@ -21,7 +21,7 @@ Checked against the deployed site, by content-type rather than status code:
 | | |
 |---|---|
 | `NEXT_PUBLIC_COLAB_REPO` | **set** — a module page serves 12 real `colab.research.google.com` URLs and **0** "Colab link not configured" states |
-| Deployed commit | `430284b`, the current `main` |
+| Deployed commit | `430284b` at the time of checking; `75470e5` and the cleanup pass followed |
 | `/`, `/appendices`, `/appendices/the-work-itself`, `/appendices/excel-bridge`, `/progress` | all `200` |
 | all 8 files in `public/templates/` | `200`, correct MIME (`application/pdf`, `…wordprocessingml.document`) |
 | `notebooks/03a_dataframe_fundamentals.ipynb` | serves with the patched `os.path.exists` BASE line |
@@ -42,13 +42,13 @@ Checked against the deployed site, by content-type rather than status code:
 
 **Live:** https://financial-analytics-course-git-main-vivek-dhandapanis-projects.vercel.app
 **Repo:** https://github.com/vivekhashtag/financial-analytics-course (public)
-**Deployed commit:** `430284b` · **Latest commit:** `430284b` — in step
+**Deployed commit:** whatever `main` last built · **Latest commit:** the cleanup pass below
 
 ---
 
 ## 3. What was built
 
-16 modules · 4 appendices · 41 module MDX pages · 44 notebooks · 11 routes ·
+16 modules · 4 appendices · 41 module MDX pages · 43 notebooks · 11 routes ·
 96 components · 14 lib modules · 5 scripts · 8 work templates. Deps: `next`,
 `react`, `next-mdx-remote`, `remark-gfm`, `recharts`, `ajv`, `clsx`. No new
 dependency has been added since the first build.
@@ -145,9 +145,6 @@ Each renders a labelled placeholder or degrades visibly rather than breaking.
 | `/posters/ai-charter.pdf`, `/posters/four-biases.pdf` — `public/posters/` does not exist | `Download` renders an inert card naming the missing file, not a 404 |
 | `StreamlitCard` | the last remaining placeholder widget |
 | Module 0 prose still says **"the sequel"** — in `pages/01-why-this-course.mdx` and `quiz.json` | needs a `content/` edit; the app cannot fix it. The rest of the course calls it an *intro* ML course (see `ML_INTRO_TITLE`) |
-| `datasets.json` `usedIn` uses 6 pre-final module ids (`04-descriptive`, `08a-four-streams`, `08b-investment-banking`, `09-lab-timeseries`, `10-lab-simulation`, `11-lab-hft`) | resolved by number prefix; the dataset page says how many it could not match |
-| 11 modules set `quiz.passingScore: 70` against 6-question quizzes | read as a percentage when it exceeds the question count |
-| `notebooks/09c_seasonal_forecasting.ipynb` — **the only orphan left** | referenced by no `module.json`. Almost certainly a stale duplicate of `09c_forecasting_seasonal.ipynb` (10,160 B), which *is* referenced by `09-lab-time-series`. Diff them and delete one |
 | Appendix lettering disagrees with the blueprint | `financial-analytics-course-blueprint.md` calls the Excel bridge Appendix B and the career map Appendix C. On disk and in the app: **A** Excel bridge, **B** career map, **C** Ship It, **D** The Work Itself. The app is self-consistent; the blueprint is the stale one |
 
 **Not built:** auth, database, certificates, in-browser Python, the Module 4+
@@ -157,8 +154,9 @@ lab widgets (`Frontier3D`, `MonteCarloPaths`, `OrderBookViewer`,
 **Resolved since the last revision of this file:** the Colab variable; shipping
 `5a9716b`; the career map having no content at all (now Appendix B);
 `content/appendices/` not existing; Appendix A's notebook being unreachable;
-the README claiming five built widgets were placeholders; and `BASE = "data/"`
-breaking every notebook in Colab.
+the README claiming five built widgets were placeholders; `BASE = "data/"`
+breaking every notebook in Colab; the last orphan notebook; `datasets.json`'s
+six stale `usedIn` ids; and quiz pass marks being stored two different ways.
 
 ---
 
@@ -205,6 +203,16 @@ the fold. It is now one rAF-throttled scroll handler measuring visible pixels
 across the six sections, plus an explicit rule that force-activates the last
 item within 100px of the document end — otherwise D.6 can be unreachable once
 the page bottoms out. If you reintroduce an observer, the ratio trap comes back.
+
+**`quiz.passingScore` is a percentage, always.** It used to be an absolute
+count in Modules 0–3.5 and a percentage in 4+, and `getQuiz` guessed between
+them by treating anything larger than the question count as a percentage — which
+worked only by luck of the numbers, since a 70-question quiz with a 70% pass mark
+would have read as "70 of 70". All 16 modules now store a percentage,
+`module.schema.json` enforces `1..100`, and the interpretation is
+unconditional. Downstream code only ever sees the derived absolute `passMark`.
+Converting cost no learner anything: every module's threshold is unchanged
+(6/8, 7/10 ×4, 5/6 ×11).
 
 **Reduced motion is handled two different ways, on purpose.** The global rule in
 `globals.css` collapses every transition to `0.01ms !important`, which beats

@@ -22,10 +22,10 @@
       "usedIn": [
         "00-orientation",
         "03-pandas",
-        "04-descriptive",
+        "04-descriptive-viz",
         "06-predictive",
-        "09-lab-timeseries",
-        "10-lab-simulation"
+        "09-lab-time-series",
+        "10-lab-monte-carlo"
       ],
       "quirks": [
         {
@@ -152,7 +152,7 @@
         "03-pandas",
         "03b-sql",
         "05-diagnostic",
-        "08a-four-streams"
+        "08-finance-map"
       ],
       "structure": "Churn 20.4% with real gradients: tenure (28% newest quartile to 12% oldest), products held, and segment (Mass 25% vs Affluent 13%). AUM log-normal by segment.",
       "quirks": [
@@ -179,10 +179,10 @@
       "grain": "One fiscal year, FY16-17 to FY25-26",
       "units": "INR crore; ticket size in INR",
       "usedIn": [
-        "04-descriptive",
+        "04-descriptive-viz",
         "05-diagnostic",
         "06-predictive",
-        "08b-investment-banking"
+        "08-finance-map"
       ],
       "structure": "P&L identities hold to +/-0.15 cr: revenue - cogs = gross_profit; gross - opex = ebitda. Learners should verify this.",
       "quirks": [
@@ -216,8 +216,8 @@
         "volume"
       ],
       "usedIn": [
-        "09-lab-timeseries",
-        "11-lab-hft",
+        "09-lab-time-series",
+        "11-lab-algo-trading",
         "12-lab-portfolio"
       ],
       "structure": "Mean pairwise return correlation 0.26; annualised vol 16%-51%. Diversification is visibly real: avg single-stock vol 23.7% vs equal-weight portfolio vol 12.5%.",

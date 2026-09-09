@@ -18,6 +18,7 @@ export function Quiz({ moduleId }: { moduleId: string }) {
       moduleId={moduleId}
       questions={quiz.questions}
       passMark={quiz.passMark}
+      passingPercent={quiz.passingPercent}
       badge={mod.badge}
       moduleTitle={mod.title}
     />

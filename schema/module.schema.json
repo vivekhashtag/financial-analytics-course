@@ -44,7 +44,18 @@
         }
       }
     },
-    "quiz": { "type": ["object","null"], "properties": { "file": {"type":"string"}, "passingScore": {"type":"integer"} } },
+    "quiz": {
+      "type": ["object","null"],
+      "properties": {
+        "file": { "type": "string" },
+        "passingScore": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 100,
+          "description": "Pass mark as a PERCENTAGE of the quiz's questions, 1-100. Never an absolute count. The app rounds up: 70 on a 6-question quiz means 5 of 6."
+        }
+      }
+    },
     "exercises": { "type": ["object","null"], "properties": { "file": {"type":"string"} } },
     "biasCheck": {
       "type": ["object","null"],

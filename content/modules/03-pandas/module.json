@@ -113,7 +113,7 @@
  "streamlitApps": [],
  "quiz": {
   "file": "quiz.json",
-  "passingScore": 7
+  "passingScore": 70
  },
  "exercises": {
   "file": "exercises.json"

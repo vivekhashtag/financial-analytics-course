@@ -9,14 +9,24 @@ interface QuizViewProps {
   moduleId: string;
   moduleTitle: string;
   questions: QuizQuestion[];
+  /** absolute correct answers needed, derived from passingPercent */
   passMark: number;
+  /** the module's stored pass mark, as a percentage */
+  passingPercent: number;
   badge: Badge | null;
 }
 
 /** One answer, shaped by question type. */
 type Answer = number | number[] | string | Record<number, string> | null;
 
-export function QuizView({ moduleId, moduleTitle, questions, passMark, badge }: QuizViewProps) {
+export function QuizView({
+  moduleId,
+  moduleTitle,
+  questions,
+  passMark,
+  passingPercent,
+  badge,
+}: QuizViewProps) {
   const { recordQuiz, awardBadge, moduleProgress, hydrated } = useProgress();
 
   const [answers, setAnswers] = useState<Record<string, Answer>>({});
@@ -63,8 +73,8 @@ export function QuizView({ moduleId, moduleTitle, questions, passMark, badge }: 
         <div>
           <h3 className="text-xl font-semibold text-ink">Quiz</h3>
           <p className="mt-1 text-sm text-muted">
-            {questions.length} questions · pass mark {passMark}/{questions.length}. Instant
-            feedback on every answer.
+            {questions.length} questions · pass mark {passMark}/{questions.length} (
+            {passingPercent}%). Instant feedback on every answer.
           </p>
         </div>
         <div className="flex items-center gap-3">

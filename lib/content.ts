@@ -167,9 +167,19 @@ export function pageNeighbours(mod: CourseModule, slug: string) {
 /* ------------------------------------------------------------------- quiz */
 
 /**
- * `passingScore` is expressed two ways across the content: an absolute number
- * of questions (Modules 0–3.5) and a percentage (Modules 4+, all `70`).
- * Anything larger than the question count is read as a percentage.
+ * `passingScore` is **always a percentage**, 1–100, enforced by
+ * `module.schema.json`.
+ *
+ * It used to be expressed two ways — an absolute count of questions in Modules
+ * 0–3.5, a percentage in Modules 4+ — and this function guessed between them by
+ * treating anything larger than the question count as a percentage. That guess
+ * worked only by luck of the numbers involved: a module with 70 questions and a
+ * 70% pass mark would have been read as "70 of 70". All 16 modules now store a
+ * percentage, so the interpretation is unconditional and the guess is gone.
+ *
+ * `passMark` is the absolute number of correct answers needed, rounded up, and
+ * it is the only form anything downstream sees — `QuizView`, `ProgressDashboard`
+ * and the module overview all take the count, never the percentage.
  */
 export const getQuiz = cache((moduleId: string): Quiz | null => {
   const mod = getModule(moduleId);
@@ -181,11 +191,18 @@ export const getQuiz = cache((moduleId: string): Quiz | null => {
   if (!data?.questions?.length) return null;
 
   const total = data.questions.length;
-  const raw = mod.quiz.passingScore ?? Math.ceil(total * 0.7);
-  const passMark = raw > total ? Math.ceil((total * raw) / 100) : raw;
+  const percent = clampPercent(mod.quiz.passingScore ?? 70);
 
-  return { questions: data.questions, passMark, passingScoreRaw: raw };
+  // At least one right answer, never more than there are questions.
+  const passMark = Math.min(Math.max(Math.ceil((total * percent) / 100), 1), total);
+
+  return { questions: data.questions, passMark, passingPercent: percent };
 });
+
+function clampPercent(v: number): number {
+  if (!Number.isFinite(v)) return 70;
+  return Math.min(Math.max(v, 1), 100);
+}
 
 /* -------------------------------------------------------------- exercises */
 
@@ -325,8 +342,15 @@ function splitCsvLine(line: string): string[] {
 }
 
 /**
- * Which modules use a dataset. `usedIn` predates the final folder names
- * ("04-descriptive" vs "04-descriptive-viz"), so fall back to the number prefix.
+ * Which modules use a dataset.
+ *
+ * Every id in `datasets.json` now names a real module folder, so the exact
+ * match below is the one that fires. The number-prefix fallback is **kept
+ * deliberately as a safety net**: `usedIn` is content, it drifted once already
+ * (six ids predated the final folder names, including an `08a`/`08b` split that
+ * never became folders), and the cost of keeping it is one `find` that never
+ * runs. Without it, a future rename turns a dataset's "used in" list silently
+ * short instead of merely stale.
  */
 export function datasetModules(ds: Dataset): CourseModule[] {
   const all = getAllModules();

@@ -8,7 +8,7 @@ India-first, theory + hands-on financial analytics course. Beginner-safe (no pri
 - `schema/` — CONTENT_SCHEMA.md, module.schema.json (all 16 module.json files validate ✓), tokens.json (design tokens)
 - `content/modules/` — 16 modules (0 → 13): module.json + full learner text (MDX) + quiz.json + exercises.json
 - `content/appendices/` — the three prose appendices: **B** career map, **C** Ship It, **D** The Work Itself. Appendix **A** (the Excel bridge) is a notebook, not a page. Registry: `lib/appendices.ts`
-- `notebooks/` — 44 execution-tested notebooks including `solutions/` (12 solution notebooks)
+- `notebooks/` — 43 execution-tested notebooks including `solutions/` (12 solution notebooks); every one is referenced by a `module.json` or the appendix registry
 - `streamlit/` — m4_price_dashboard.py and capstone_app.py (both smoke-tested)
 - `data/` — 5 synthetic datasets + DATASET_REGISTRY.md + datasets.json + generator (seed 42, byte-reproducible)
 - `public/templates/` — 8 Appendix D work templates (6 .docx + workflows cheat-sheet + worked samples). **Committed, not generated** — unlike the other `public/` subfolders
@@ -144,14 +144,14 @@ each case:
 | `/posters/ai-charter.pdf`, `/posters/four-biases.pdf` referenced by `<Download />` — `public/posters/` does not exist | Renders an inert card naming the missing file, not a 404 link. |
 | `StreamlitCard` | The last remaining placeholder widget. Module overviews already render the download + run command. |
 | Module 0 prose still calls the ML course **"the sequel"** — in `pages/01-why-this-course.mdx` and `quiz.json` | Needs a `content/` edit; the app cannot fix it. Everywhere else the course calls it an *intro* ML course (`ML_INTRO_TITLE` in `lib/links.ts`). |
-| `datasets.json` `usedIn` uses 6 pre-final module ids (`04-descriptive`, `09-lab-timeseries`, `10-lab-simulation`, `11-lab-hft`, `08a-four-streams`, `08b-investment-banking`) | Resolved by number prefix, and the dataset page says how many ids it could not match. |
-| 11 modules set `quiz.passingScore: 70` against 6-question quizzes, where Modules 0–3.5 use an absolute count | Read as a percentage when it exceeds the question count. |
-| `notebooks/09c_seasonal_forecasting.ipynb` is referenced by no `module.json` — the only orphan left | Downloadable by URL but unreachable from the UI. Almost certainly a stale duplicate of `09c_forecasting_seasonal.ipynb`, which **is** referenced by `09-lab-time-series`. Diff them and delete one. |
 | Appendix lettering disagrees with `financial-analytics-course-blueprint.md` | The blueprint calls the Excel bridge Appendix B and the career map Appendix C. On disk and in the app: **A** Excel bridge, **B** career map, **C** Ship It, **D** The Work Itself. The app is self-consistent; the blueprint is the stale one. |
 
 Closed since the first build: the career map having no content at all (it is now
 Appendix B), `content/appendices/` not existing, Appendix A's notebook being
-unreachable from the UI, and every notebook's `BASE = "data/"` failing in Colab.
+unreachable from the UI, every notebook's `BASE = "data/"` failing in Colab, the
+last orphan notebook, `datasets.json`'s six stale `usedIn` ids, and quiz pass
+marks being stored two different ways (all 16 modules now store a percentage —
+see `getQuiz` in `lib/content.ts`).
 `SourceTable`, `PriceDiscrepancy`, `DistributionCompare`, `MissingCalendar` and
 `CrisisChart` were placeholders in the first build and have been real components
 since — each driven from a `/data` file through `lib/series.ts`.

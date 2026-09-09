@@ -63,6 +63,7 @@ export interface CourseModule {
   pages: ModulePage[];
   notebooks: ModuleNotebook[];
   streamlitApps: StreamlitApp[];
+  /** passingScore is a percentage, 1-100 (see module.schema.json) */
   quiz: { file: string; passingScore?: number } | null;
   exercises: { file: string } | null;
   biasCheck: { enabled: boolean; prompt: string | null } | null;
@@ -95,9 +96,10 @@ export interface QuizQuestion {
 
 export interface Quiz {
   questions: QuizQuestion[];
-  /** absolute number of questions needed to pass (already normalised from % if needed) */
+  /** absolute number of correct answers needed to pass, derived from passingPercent */
   passMark: number;
-  passingScoreRaw?: number;
+  /** the module's pass mark as stored: a percentage, 1-100 */
+  passingPercent: number;
 }
 
 /* ---------- exercises ---------- */
