@@ -136,6 +136,34 @@ Bulk, rule-driven edits to `content/` live in `scripts/` so the rule set is
 repeatable and reviewable. They default to a **dry run** and print a report;
 pass `--write` to apply.
 
+### `scripts/fix-notebook-base.mjs`
+
+Makes every notebook's data path work in Colab **and** locally. Each notebook
+opened with `BASE = "data/"`, which is right locally and raises
+`FileNotFoundError` in Colab, where there is no `data/` folder. The script
+replaces that one line with:
+
+```python
+import os
+BASE = "data/" if os.path.exists("data") else "https://raw.githubusercontent.com/vivekhashtag/financial-analytics-course/main/data/"
+```
+
+```bash
+node scripts/fix-notebook-base.mjs            # report only
+node scripts/fix-notebook-base.mjs --write    # apply
+node scripts/fix-notebook-base.mjs --verbose  # list every notebook, not just changes
+```
+
+It edits the raw `.ipynb` text rather than round-tripping the JSON, so cell ids,
+metadata and stored outputs are byte-preserved; the JSON is parsed before and
+after to prove the file is still valid and that no cell other than the target
+changed. Idempotent — a second run reports `ALREADY-PATCHED`. It skips a
+duplicate `import os` where the cell already has one (including
+`import os, pandas as pd`), preserves indentation (the SQL notebooks assign
+`BASE` inside an `else:` block), and reports any notebook with no `BASE` line
+rather than guessing. Run `npm run sync-static` afterwards so `public/notebooks/`
+matches.
+
 ### `scripts/dedash.mjs`
 
 Replaces em dashes with commas or colons in prose across
